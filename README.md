@@ -6,9 +6,9 @@ Users can contribute context data as markdown files via GitHub pull requests.
 
 # Rationale
 
-- LLMs are trained with huge datasets, especially when coding the important bits may not be up to date
-- Providing more precise context about the project, libraries used, available tools and frameworks improves model performance
-- IDEs like cursor are starting develop their own indexing system but this makes it hard to share what’s working
+- LLMs are trained with huge datasets, constrained by a training cut off date
+- Providing more precise context about a project, libraries used, available tools and frameworks improves model performance
+- IDEs like Cursor are starting develop their own indexing system but this makes it hard to share what’s working
 - Serve as an open-source “deterministic checkpoint” that can be used for evals
 
 # Use Cases
