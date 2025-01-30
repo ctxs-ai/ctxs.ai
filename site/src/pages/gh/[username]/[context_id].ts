@@ -16,7 +16,6 @@ export const GET: APIRoute = async ({ params }) => {
             return new Response('Context not found', { status: 404 });
         }
 
-        console.log(entry);
         return new Response(entry.body, {
             status: 200,
             headers: {
@@ -33,7 +32,6 @@ export async function getStaticPaths() {
 
     return contexts.map(entry => {
         const [username, context_id] = entry.id.split('/');
-        console.log({ username, context_id })
         return {
             params: { username, context_id }
         };
