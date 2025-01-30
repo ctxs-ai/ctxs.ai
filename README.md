@@ -78,4 +78,10 @@ In order of discovery -
 
 # Available Contexts
 
-Browse via GitHub for now. Will fix soon :-)
+Browse via GitHub for now (type <kbd>t</kbd> now). Will fix soon :-)
+
+All contexts can also be retrieved via `curl`, e.g.
+
+```
+curl https://ctxs.ai/gh/martinklepsch/babashka
+```
