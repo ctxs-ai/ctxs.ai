@@ -74,7 +74,7 @@ In order of discovery -
 
 # Like this project?
 
-Star the repo and consider sponsoring [@martinklepsch](https://github.com/sponsors/martinklepsch) if you want to help.
+🌟 Star the repo and contribute! 🌟
 
 # Available Contexts
 
