@@ -58,6 +58,7 @@ For now [`ctxs.ai`](https://ctxs.ai) redirects to this repo. Eventually it will 
 Some ideas:
 
 - A command line script to search and download contexts
+- A Model Context Protocol server
 - A web UI to browse and download
 
 For now the README will contain a list of all entries.
