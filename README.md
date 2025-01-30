@@ -45,7 +45,7 @@ For now the README will contain a list of all entries.
 In order of discovery -
 
 - Jim Lowin [The Qualified Self](https://www.jlowin.dev/blog/the-qualified-self)
-- Cursor Notebooks & `.cursorrules`
+- PatrickJS' [awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules)
 - Daniel Rosehill Prompt Library (read the [README](https://github.com/danielrosehill/Prompt-Library), it's great)
 
 # Available Contexts
