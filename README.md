@@ -45,6 +45,7 @@ To add a file use the following template
 title: 
 description: 
 provenance: 
+type: "prompt" or "context"
 ---
 the actual context prompt
 ```
@@ -65,12 +66,11 @@ For now the README will contain a list of all entries.
 
 # Inspirations
 
-In order of discovery -
-
 - Jim Lowin [The Qualified Self](https://www.jlowin.dev/blog/the-qualified-self)
 - llms.txt and [llmstxt.directory](https://llmstxt.directory/)
 - PatrickJS' [awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules)
 - Daniel Rosehill Prompt Library (read the [README](https://github.com/danielrosehill/Prompt-Library), it's great)
+- `shadcn` CLI experience
 
 # Like this project?
 
