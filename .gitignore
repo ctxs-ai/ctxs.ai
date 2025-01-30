@@ -1,3 +1,4 @@
 .clj-kondo/imports
 .clj-kondo/.cache
 .lsp
+site/.astro
