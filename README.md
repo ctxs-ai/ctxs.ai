@@ -29,6 +29,28 @@ The repo contains a namespaces tree of markdown files which can be contributed v
 
 **If you're unsure how to contribute feel free to open an issue with your contribution**.
 
+# How to contribute
+
+ctxs.ai is meant as an open registry for context windows, for now you can add contexts under
+
+```
+./contexts/{your github username}/{context-slug}.md
+```
+
+To add a file use the following template
+
+```md
+
+---
+title: 
+description: 
+provenance: 
+---
+the actual context prompt
+```
+
+`provenance` is meant to provide some background about how the context window was created (hand written, generated, edited, etc.)
+
 # Interface
 
 For now [`ctxs.ai`](https://ctxs.ai) redirects to this repo. Eventually it will serve as a CDN. Think of `unpkg` for prompts and context windows.
@@ -47,6 +69,10 @@ In order of discovery -
 - Jim Lowin [The Qualified Self](https://www.jlowin.dev/blog/the-qualified-self)
 - PatrickJS' [awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules)
 - Daniel Rosehill Prompt Library (read the [README](https://github.com/danielrosehill/Prompt-Library), it's great)
+
+# Like this project?
+
+Star the repo and consider sponsoring [@martinklepsch](https://github.com/sponsors/martinklepsch) if you want to help.
 
 # Available Contexts
 
