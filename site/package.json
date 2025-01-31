@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.2.1",
     "@astrojs/tailwind": "^6.0.0",
     "astro": "^5.1.10",
     "tailwindcss": "^3.4.17"
