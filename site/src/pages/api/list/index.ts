@@ -11,7 +11,7 @@ export const GET: APIRoute = async ({ request }) => {
     console.log(request.url, query);
     const data = contexts.map((context) => {
         return {
-            uri: `ctxs://gh/${context.id}`,
+            uri: `https://ctxs.ai/gh/${context.id}`,
             title: context.data.title,
             description: context.data.description,
         };
