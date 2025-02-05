@@ -448,4 +448,23 @@ Here’s a useful snippet for using Simon Willison’s `llm` command line tool f
             "Explain monads simply")) 
 ```
 
+# Working with Markdown files
 
+Updating front matter in markdown files is best done by using 
+
+```
+(require '[clj-yaml.core :as yaml])
+
+(def some-yaml-str
+  ;; parse this from markdown frontmatter)
+
+(-> (yaml/parse-string some-yaml-string)
+    (assoc :foobar "test")
+    (yaml/generate-string))
+```
+
+# Reporting progress
+
+- Use println to give meaningful updates about progress.
+- Explicitly coerce non string values to strings before printing.
+- Use emojis to highlight sucess / error / warning states.
