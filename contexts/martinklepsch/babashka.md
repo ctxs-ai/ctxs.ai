@@ -10,12 +10,12 @@ description: A condensed description of babashka APIs and concepts
 
 1. When using `fs/glob` to find files for a pattern, do it like this:
 
-```clojure
-(def example-pattern "some-dir/**/*.clj")
+   ```clojure
+   (def example-pattern "some-dir/**/*.clj")
 
-(->> (fs/glob "." example-pattern)
-     (map fs/file))
-```
+   (->> (fs/glob "." example-pattern)
+        (map fs/file))
+   ```
    `pattern` is a regular string
 	   
 2. Some useful flags for file processing scripts
