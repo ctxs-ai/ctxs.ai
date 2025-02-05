@@ -7,6 +7,14 @@ description: A condensed description of babashka APIs and concepts
 
 1. When using `p/process` and `p/shell` a variable list of strings is expected at the end. When creating the command using a vector or similar, be sure to use `apply` so that the vector is unwrapped
 	1. Example: `(apply p/process {} ["echo" "123"])`
+
+1. When using `fs/glob` to find files for a pattern, do it like this:
+
+```
+(->> (fs/glob "." pattern)
+     (map fs/file))
+```
+   `pattern` is a regular string
 	   
 2. Some useful flags for file processing scripts
 	1. `--dry-run` only print actions, don’t execute
