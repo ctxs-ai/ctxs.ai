@@ -10,8 +10,10 @@ description: A condensed description of babashka APIs and concepts
 
 1. When using `fs/glob` to find files for a pattern, do it like this:
 
-```
-(->> (fs/glob "." pattern)
+```clojure
+(def example-pattern "some-dir/**/*.clj")
+
+(->> (fs/glob "." example-pattern)
      (map fs/file))
 ```
    `pattern` is a regular string
@@ -455,12 +457,23 @@ Updating front matter in markdown files is best done by using
 ```
 (require '[clj-yaml.core :as yaml])
 
-(def some-yaml-str
-  ;; parse this from markdown frontmatter)
+(defn extract-frontmatter
+  "Extracts YAML frontmatter from markdown content.
+   Returns [frontmatter remaining-content] or nil if no frontmatter found."
+  [content]
+  (when (str/starts-with? content "---\n")
+    (when-let [end-idx (str/index-of content "\n---\n" 4)]
+      (let [frontmatter (subs content 4 end-idx)
+            remaining (subs content (+ end-idx 5))]
+        [frontmatter remaining]))))
 
-(-> (yaml/parse-string some-yaml-string)
-    (assoc :foobar "test")
-    (yaml/generate-string))
+(defn update-frontmatter
+  "Updates the frontmatter by adding type: post if not present"
+  [markdown-str update-fn]
+  (let [[frontmatter content] (extract-frontmatter markdown-str)
+        data (yaml/parse-string frontmatter)
+        new-frontmatter (yaml/generate-string (update-fn data) :dumper-options {:flow-style :block})]
+    (str "---\n" new-frontmatter "---\n" content)))
 ```
 
 # Reporting progress
