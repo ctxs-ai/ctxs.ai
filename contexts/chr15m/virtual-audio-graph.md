@@ -1,0 +1,624 @@
+## Virtual Audio Graph documentation
+
+virtual-audio-graph is a library for declaratively manipulating the Web Audio API that is inspired by React and virtual-dom. This guide aims to introduce it step-by-step to help you get up and running as quickly as possible.
+
+### Browser support
+
+virtual-audio-graph needs to be run in an environment that supports the web audio API (https://caniuse.com/#feat=audio-api). Make sure you check browser support for all the audio nodes you intend on using as newer audio nodes are often not supported in older browsers.
+
+## Importing
+
+First let's import everything we're going to need for these examples:
+
+```js
+import createVirtualAudioGraph, {
+  bufferSource,
+  createNode,
+  createWorkletNode,
+  delay,
+  gain,
+  oscillator,
+  stereoPanner,
+} from 'virtual-audio-graph'
+```
+
+## Creating a virtual-audio-graph instance
+
+### With No Configuration
+
+Next let's create our virtual-audio-graph instance:
+
+```js
+const virtualAudioGraph = createVirtualAudioGraph()
+```
+
+### With Configuration (Optional)
+
+`createVirtualAudioGraph` optionally takes a configuration object that let's you specify the AudioContext instance to use and the output the audioGraph should be connected to (any valid AudioNode destination). If no audioContext is specified then a new one is automatically created and if no output is specified then it defaults to the audioContext destination.
+
+Here's what it looks like to pass your own configuration to virtual-audio-graph:
+
+```js
+const audioContext = new AudioContext()
+
+const virtualAudioGraph = createVirtualAudioGraph({
+  audioContext,
+  output: audioContext.destination,
+})
+```
+
+Note that the number of instances of AudioContext that can be created is limited so if you already have one it may be best to provide it here.
+
+## virtual-audio-graph instance public interface
+
+Here is everything we can do with our virtual-audio-graph instance:
+
+- `virtualAudioGraph.currentTime`: Getter which gets the currentTime of the audioContext instance.
+- `virtualAudioGraph.update`: Method for updating the audio graph (described in detail below).
+- `virtualAudioGraph.getAudioNodeById`: Method which takes an id and returns the corresponding audioNode or undefined if no such audioNode exists. This is useful if the node has methods (e.g. AnalyserNode.getFloatFrequencyData & OscillatorNode.setPeriodicWave), but in general virtualAudioGraph.update should be used for manipulating the audio graph.
+
+## Rendering our first graph
+
+virtualAudioGraph.update takes an object that represents the underlying audio graph. Each key is used as the id for a particular node and each value specifies all the attributes we need to know about that node.
+
+In this example we are creating a gain node with id 0 and an oscillator node with id 1.
+
+For each virtual audio node factory the first argument configures how to connect the node and the second is optional and configures the parameters to pass to the node:
+
+```js
+const { currentTime } = virtualAudioGraph
+
+virtualAudioGraph.update({
+  0: gain('output', { gain: 0.5 }),
+  1: oscillator(0, { stopTime: currentTime + 1 }),
+})
+```
+
+We can see that the gain node is being connected to "output" which is a special string reserved for the virtual-audio-graph instance output (specified when our virtual-audio-graph instance is created) and has its gain value set to 0.5. We can also see that the oscillator node is being connnected to the gain node (id 0) and has its stopTime set to 1 second from the current time.
+
+## Rendering an empty graph
+
+All the demos in this guide have a stop button that is implemented like this:
+
+```js
+virtualAudioGraph.update({})
+```
+
+Rendering an empty graph removes all the nodes and brings us back to our initial state. The power of virtual-audio-graph is that all the Web Audio API imperative code is handled for us and we don't have to worry about it.
+
+## Another basic graph
+
+```js
+const { currentTime } = virtualAudioGraph
+
+virtualAudioGraph.update({
+  0: gain('output', { gain: 0.2 }),
+  1: oscillator(0, {
+    frequency: 440,
+    stopTime: currentTime + 2.5,
+    type: 'sawtooth',
+  }),
+  2: oscillator(0, {
+    detune: 4,
+    frequency: 554.365,
+    startTime: currentTime + 0.5,
+    stopTime: currentTime + 2.5,
+    type: 'square',
+  }),
+  3: oscillator(0, {
+    detune: -2,
+    frequency: 660,
+    startTime: currentTime + 1,
+    stopTime: currentTime + 2.5,
+    type: 'triangle',
+  }),
+})
+```
+
+We've now connected 3 oscillators to our gain node and provided them with a few more parameters and virtual-audio-graph updates all the underlying audio nodes for us.
+
+## Specifying multiple connections & connecting to AudioParams
+
+The output parameter of the node factory functions is a lot more versatile than just specifying a single connection. You can use it to specify connections to multiple nodes and/or multiple connections to AudioParams of those nodes.
+
+If you wish to make more than 1 connection just use an array with each element as either a node key, the special string "output" or an object with a key property and a destination property that specifies the node and AudioParam to connect to:
+
+```js
+const { currentTime } = virtualAudioGraph
+
+virtualAudioGraph.update({
+  0: gain('output', { gain: 0.2 }),
+  1: oscillator(0, { stopTime: currentTime + 3 }),
+  2: gain({ destination: 'frequency', key: '1' }, { gain: 350 }),
+  3: oscillator([2, 'output'], { frequency: 1, type: 'triangle' }),
+})
+```
+
+In the above example we have connected:
+
+- The GainNode with id 0 to the output
+- The OscillatorNode with id 1 to the GainNode with id 0
+- The GainNode with id 2 to the frequency AudioParam of the OscillatorNode with id 1
+- The OscillatorNode with id 3 to GainNode with id 2 and the output
+
+In this way you can start to specify any sort of graph that the Web Audio API allows
+
+## AudioParam methods
+
+If you're familiar with the Web Audio API you will know that AudioParams have methods as well as values and virtual-audio-graph allows you to update these too. Just specify an array where the first element is the method name as a string and the remaining elements are the arguments for that method. If scheduling multiple values specify an array of these arrays. ([See here for more info on AudioParam methods](https://developer.mozilla.org/en-US/docs/Web/API/AudioParam)).
+
+Here's how to use setValueAtTime:
+
+```js
+const { currentTime } = virtualAudioGraph
+
+virtualAudioGraph.update({
+  0: gain('output', { gain: 0.5 }),
+  1: oscillator(0, {
+    frequency: ['setValueAtTime', 660, currentTime + 1],
+    stopTime: currentTime + 2,
+  }),
+})
+```
+
+And how to use it with linearRampToValueAtTime:
+
+```js
+const { currentTime } = virtualAudioGraph
+
+virtualAudioGraph.update({
+  0: gain('output', { gain: 0.5 }),
+  1: oscillator(0, {
+    frequency: [
+      ['setValueAtTime', 110, currentTime],
+      ['linearRampToValueAtTime', 880, currentTime + 1],
+    ],
+    stopTime: currentTime + 2,
+  }),
+})
+```
+
+exponentialRampToValueAtTime:
+
+```js
+const { currentTime } = virtualAudioGraph
+
+virtualAudioGraph.update({
+  0: gain('output', { gain: 0.5 }),
+  1: oscillator(0, {
+    frequency: [
+      ['setValueAtTime', 110, currentTime],
+      ['exponentialRampToValueAtTime', 880, currentTime + 1],
+    ],
+    stopTime: currentTime + 2,
+  }),
+})
+```
+
+setTargetAtTime:
+
+```js
+const { currentTime } = virtualAudioGraph
+
+virtualAudioGraph.update({
+  0: gain('output', { gain: 0.5 }),
+  1: oscillator(0, {
+    frequency: [
+      ['setValueAtTime', 110, currentTime],
+      ['setTargetAtTime', 880, currentTime, 1],
+    ],
+    stopTime: currentTime + 2,
+  }),
+})
+```
+
+And finally setValueCurveAtTime:
+
+```js
+const { currentTime } = virtualAudioGraph
+
+virtualAudioGraph.update({
+  0: gain('output', { gain: 0.5 }),
+  1: oscillator(0, {
+    frequency: [
+      ['setValueCurveAtTime', Float32Array.of(440, 880, 110, 1760), currentTime, 2],
+    ],
+    stopTime: currentTime + 3,
+  }),
+})
+```
+
+## Creating custom nodes
+
+The audio graph can end up getting very large, repetitive and complicated so virtual-audio-graph gives a means of abstraction for creating encapsulated components that can be reused. These are called custom virtual audio nodes and are created with the createNode function like this:
+
+```js
+const osc = createNode(({
+  gain: gainValue,
+  startTime,
+  stopTime,
+  ...rest,
+}) => {
+  const duration = stopTime - startTime
+  return {
+    0: gain('output', {
+      gain: [
+        ['setValueAtTime', 0, startTime],
+        ['linearRampToValueAtTime', gainValue, startTime + duration * 0.15],
+        ['setValueAtTime', gainValue, stopTime - duration * 0.25],
+        ['linearRampToValueAtTime', 0, stopTime],
+      ],
+    }),
+    1: oscillator(0, { startTime, stopTime, ...rest }),
+  }
+})
+
+const { currentTime } = virtualAudioGraph
+
+virtualAudioGraph.update({
+  0: osc('output', {
+    frequency: 110,
+    gain: 0.2,
+    startTime: currentTime,
+    stopTime: currentTime + 1,
+    type: 'square',
+  }),
+})
+```
+
+createNode takes a function that takes an object and returns a section of audio graph. This section of audio graph works in much the same way as the audio graph that is passed to virtualAudioGraph.update, but the special string "output" now outputs to whatever destinations the custom virtual audio node is connected to.
+
+createNode returns a function that takes 2 arguments, just like the standard virtual audio node factory functions (e.g. oscillator and gain). The first argument represents the node output and the second is an object that is used to configure the section of audio graph as determined in the function passed to createNode.
+
+Here is another example that builds upon the custom node we just created:
+
+```js
+const oscBank = createNode(({
+  frequency,
+  ...rest,
+}) => ({
+  0: osc('output', {
+    frequency,
+    gain: 0.2,
+    type: 'square',
+    ...rest,
+  }),
+  1: osc('output', {
+    detune: 7,
+    frequency: frequency / 4,
+    gain: 0.4,
+    type: 'sawtooth',
+    ...rest,
+  }),
+  2: osc('output', {
+    gain: 0.1,
+    detune: -4,
+    frequency: frequency * 1.5,
+    type: 'triangle',
+    ...rest,
+  }),
+}))
+
+const { currentTime } = virtualAudioGraph
+
+virtualAudioGraph.update({
+  0: oscBank('output', {
+    frequency: 440,
+    startTime: currentTime,
+    stopTime: currentTime + 1,
+  }),
+})
+```
+
+In this way we can start to build up quite advanced graphs, but keep them organized and easy to understand.
+
+## Custom nodes with inputs
+
+Sometimes you will want to connect a node to a custom node and will want to specify which nodes within the custom node that connection is made to. You can do this by passing the string "input" as the 3rd argument in the node constructor as below:
+
+```js
+const pingPongDelay = createNode(({
+  decay,
+  delayTime,
+}) => ({
+  0: stereoPanner('output', { pan: -1 }),
+  1: stereoPanner('output', { pan: 1 }),
+  2: delay([1, 5], { delayTime, maxDelayTime: delayTime }),
+  3: gain(2, { gain: decay }),
+  4: delay([0, 3], { delayTime, maxDelayTime: delayTime }),
+  5: gain(4, { gain: decay }, 'input'), // connections will be made here
+}))
+
+const { currentTime } = virtualAudioGraph
+
+virtualAudioGraph.update({
+  0: pingPongDelay('output', {
+    decay: 0.8,
+    delayTime: 0.25,
+  }),
+  1: oscillator([0, 'output'], { stopTime: currentTime + .2 }),
+})
+```
+
+You can specify as many inputs as you like for custom virtual audio nodes and if an input node has no parameters you can pass null like this:
+
+```js
+5: gain(4, null, 'input')
+```
+
+## Working with audio files
+
+You can work with audio files using [bufferSource](https://github.com/benji6/virtual-audio-graph/blob/master/docs/standard-nodes.md#buffersource). This example shows us loading the kitten wav file and manipulating it with virtual-audio-graph:
+
+```js
+const response = await fetch('kitten.wav')
+const data = await response.arrayBuffer()
+const buffer = await audioContext.decodeAudioData(data)
+
+const { currentTime } = virtualAudioGraph
+
+virtualAudioGraph.update({
+  0: gain('output', { gain: 0.75 }),
+  1: bufferSource(0, {
+    buffer,
+    playbackRate: 1.5,
+    startTime: currentTime,
+    stopTime: currentTime + 1,
+  }),
+  2: bufferSource(0, {
+    buffer,
+    playbackRate: 1,
+    startTime: currentTime + 0.5,
+    stopTime: currentTime + 1.5,
+  }),
+  3: bufferSource(0, {
+    buffer,
+    playbackRate: 0.5,
+    startTime: currentTime + 1,
+    stopTime: currentTime + 2,
+  }),
+})
+```
+
+## AudioWorklet noise generator
+
+AudioWorklets are a fairly new addition to the Web Audio API so these demos won't work in all browsers!
+
+If we have the following noise generator module at `audioWorklets/noise.js`:
+
+```js
+class Noise extends AudioWorkletProcessor {
+  static get parameterDescriptors () {
+    return [{name: 'amplitude', defaultValue: 0.25, minValue: 0, maxValue: 1}]
+  }
+
+  process (inputs, [output], {amplitude}) {
+    for (const outputChannel of output) {
+      for (let i = 0; i < outputChannel.length; i++) {
+        outputChannel[i] = 2 * (Math.random() - 0.5) * amplitude[i]
+      }
+    }
+
+    return true
+  }
+}
+
+registerProcessor('noise', Noise)
+```
+
+Then we can use it in virtual-audio-graph like this:
+
+```js
+audioContext.audioWorklet.addModule('audioWorklets/noise.js')
+  .then(() => {
+    const noise = createWorkletNode('noise')
+
+    virtualAudioGraph.update({
+      0: noise('output', { amplitude: 0.25 }),
+    })
+  })
+```
+
+## AudioWorklet bit crusher
+
+Here is our bit crusher module at `audioWorklets/bitCrusher.js`:
+
+```js
+class BitCrusher extends AudioWorkletProcessor {
+  static get parameterDescriptors () {
+    return [
+      {name: 'bitDepth', defaultValue: 12, minValue: 1, maxValue: 16},
+      {name: 'frequencyReduction', defaultValue: 0.5, minValue: 0, maxValue: 1},
+    ]
+  }
+
+  constructor (options) {
+    super(options)
+    this.lastSampleValue = 0
+    this.phase = 0
+  }
+
+  process ([input], [output], parameters) {
+    const bitDepth = parameters.bitDepth
+    const frequencyReduction = parameters.frequencyReduction
+    for (let channel = 0; channel < input.length; channel++) {
+      const inputChannel = input[channel]
+      const outputChannel = output[channel]
+      for (let i = 0; i < inputChannel.length; ++i) {
+        const step = Math.pow(0.5, bitDepth[i])
+        this.phase += frequencyReduction[i]
+        if (this.phase >= 1) {
+          this.phase -= 1
+          this.lastSampleValue = step * Math.floor(inputChannel[i] / step + 0.5)
+        }
+        outputChannel[i] = this.lastSampleValue
+      }
+    }
+
+    return true
+  }
+}
+
+registerProcessor('bitCrusher', BitCrusher)
+```
+
+And here is how we can use it with virtual-audio-graph:
+
+```js
+audioWorklet.addModule('audioWorklets/bitCrusher.js')
+  .then(() => {
+    const bitCrusher = createWorkletNode('bitCrusher')
+
+    const { currentTime } = virtualAudioGraph
+
+    virtualAudioGraph.update({
+      0: bitCrusher('output', {
+        bitDepth: 1,
+        frequencyReduction: [
+          ['setValueAtTime', 0.01, currentTime],
+          ['linearRampToValueAtTime', 0.05, currentTime + 2],
+          ['exponentialRampToValueAtTime', 0.01, currentTime + 4],
+        ],
+      }),
+      1: oscillator(0, {
+        frequency: 5000,
+        stopTime: currentTime + 4,
+        type: 'sawtooth',
+      }),
+    })
+  })
+```
+
+## Bringing it all together
+
+Here is a full working example that shows off a number of virtual-audio-graph's main features:
+
+```js
+import createVirtualAudioGraph, {
+  createNode,
+  delay,
+  gain,
+  oscillator,
+  stereoPanner,
+} from 'virtual-audio-graph'
+
+const osc = createNode(({
+  gain: gainValue,
+  startTime,
+  stopTime,
+  ...rest,
+}) => {
+  const duration = stopTime - startTime
+  return {
+    0: gain('output', {
+      gain: [
+        ['setValueAtTime', 0, startTime],
+        ['linearRampToValueAtTime', gainValue, startTime + duration * 0.15],
+        ['setValueAtTime', gainValue, stopTime - duration * 0.25],
+        ['linearRampToValueAtTime', 0, stopTime],
+      ],
+    }),
+    1: oscillator(0, { startTime, stopTime, ...rest }),
+  }
+})
+
+const oscBank = createNode(({
+  frequency,
+  ...rest,
+}) => ({
+  0: osc('output', {
+    frequency,
+    gain: 0.2,
+    type: 'square',
+    ...rest,
+  }),
+  1: osc('output', {
+    detune: 7,
+    frequency: frequency / 4,
+    gain: 0.4,
+    type: 'sawtooth',
+    ...rest,
+  }),
+  2: osc('output', {
+    gain: 0.1,
+    detune: -4,
+    frequency: frequency * 1.5,
+    type: 'triangle',
+    ...rest,
+  }),
+}))
+
+const pingPongDelay = createNode(({
+  decay,
+  delayTime,
+}) => ({
+  0: stereoPanner('output', { pan: -1 }),
+  1: stereoPanner('output', { pan: 1 }),
+  2: delay([1, 5], { delayTime, maxDelayTime: delayTime }),
+  3: gain(2, { gain: decay }),
+  4: delay([0, 3], { delayTime, maxDelayTime: delayTime }),
+  5: gain(4, { gain: decay }, 'input'),
+}))
+
+const oscillators = createNode(({
+  currentTime = virtualAudioGraph.currentTime,
+  notes,
+  noteLength,
+}) => notes.reduce(
+  (acc, frequency, i) => {
+    const startTime = currentTime + noteLength * 2 * i
+    acc[i] = oscBank('output', {
+      frequency,
+      startTime,
+      stopTime: startTime + noteLength,
+    })
+    return acc
+  },
+  {}),
+)
+
+const chromaticScale = n => 440 * Math.pow(2, n / 12)
+const noteLength = 0.075
+const up = Array.apply(null, { length: 16 }).map((_, i) => chromaticScale(i))
+const down = [...up].reverse()
+
+virtualAudioGraph.update({
+  1: pingPongDelay('output', {
+    decay: 0.8,
+    delayTime: noteLength * 1.55,
+  }),
+  2: gain(['output', 1], { gain: 0.25 }),
+  3: oscillators(['output', 1], {
+    noteLength,
+    notes: [...up, ...down],
+  }),
+})
+```
+
+## Working with OfflineAudioContext
+
+All the previous examples use [AudioContext](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext), but virtual-audio-graph can work with [OfflineAudioContext](https://developer.mozilla.org/en-US/docs/Web/API/OfflineAudioContext) too. Here is an example of how to render a buffer with OfflineAudioContext and then to play it using AudioContext:
+
+```js
+import createVirtualAudioGraph, {gain, oscillator} from 'virtual-audio-graph'
+
+const offlineAudioContext = new OfflineAudioContext(1, 44100, 44100);
+const offlineVirtualAudioGraph = createVirtualAudioGraph({
+  audioContext: offlineAudioContext,
+});
+offlineVirtualAudioGraph.update({
+  0: gain("output", { gain: 0.5 }),
+  1: oscillator(0),
+});
+const buffer = await offlineAudioContext.startRendering();
+const bufferSourceNode = audioContext.createBufferSource();
+bufferSourceNode.buffer = buffer;
+bufferSourceNode.connect(audioContext.destination);
+bufferSourceNode.start();
+```
+
+### Virtual Audio Graph ClojureScript examples
+
+```clojure
+
+```
