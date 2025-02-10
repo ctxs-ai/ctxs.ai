@@ -1,3 +1,7 @@
+---
+title: IDB Keyval API
+provenance: created using aider conventions
+---
 # IDB Keyval documentation
 
 This is a super-simple promise-based keyval store implemented with IndexedDB, originally based on async-storage by Mozilla.

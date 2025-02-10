@@ -1,3 +1,6 @@
+---
+title: General guidance for software development
+---
 # General guidance
 
 - Please modify files as minimally as possible to accomplish the task.

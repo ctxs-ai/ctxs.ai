@@ -1,3 +1,8 @@
+---
+title: Using Playwright from ClojureScript
+provenance: 
+---
+
 Playwright is a library for controlling the browser and can be used in ClojureScript.
 
 Here's an example of requiring it:

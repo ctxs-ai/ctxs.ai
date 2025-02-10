@@ -1,3 +1,7 @@
+---
+title: Concrete CSS
+
+---
 # Concrete CSS
 
 Concrete.css is a lightweight, classless CSS stylesheet focused on simplicity. It provides automatic dark theme support and serves as an excellent foundation for basic websites.

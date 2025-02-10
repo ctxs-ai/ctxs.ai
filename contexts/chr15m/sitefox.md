@@ -1,3 +1,6 @@
+---
+title: Sitefox ClojureScript Framework
+---
 # Sitefox
 
 Sitefox is a ClojureScript web framework for Node.js, designed for rapid development with batteries included. It uses Express.js under the hood with sensible defaults.

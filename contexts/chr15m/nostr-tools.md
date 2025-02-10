@@ -1,3 +1,6 @@
+---
+title: Nostr Protocol Tools (nostr-tools)
+---
 # ![](https://img.shields.io/github/actions/workflow/status/nbd-wtf/nostr-tools/test.yml) [![JSR](https://jsr.io/badges/@nostr/tools)](https://jsr.io/@nostr/tools) nostr-tools
 
 Tools for developing [Nostr](https://github.com/fiatjaf/nostr) clients.

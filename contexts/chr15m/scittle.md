@@ -1,3 +1,6 @@
+---
+title: Scittle ClojureScript
+---
 # Scittle ClojureScript
 
 I would like you to work on a simple web app using Scittle, a ClojureScript interpreter for the browser.

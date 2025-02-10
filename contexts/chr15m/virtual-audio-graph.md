@@ -1,3 +1,6 @@
+---
+title: virtual-audio-graph library
+---
 ## Virtual Audio Graph documentation
 
 virtual-audio-graph is a library for declaratively manipulating the Web Audio API that is inspired by React and virtual-dom. This guide aims to introduce it step-by-step to help you get up and running as quickly as possible.
