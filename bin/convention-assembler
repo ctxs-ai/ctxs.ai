@@ -20,7 +20,7 @@ if [ "$#" -eq 0 ]; then
     echo "Conventions files available:"
     for file in "$SCRIPT_DIR"/**/*.md; do
         [ -e "$file" ] || { echo "No .md files found."; break; }
-        rel_path="${file#$SCRIPT_DIR}"  # Remove the base directory prefix
+        rel_path="${file#"$SCRIPT_DIR"}"  # Remove the base directory prefix
         rel_path="${rel_path#/}"        # Remove leading slash
         [ "$(basename "$file")" != "README.md" ] && echo -e " - ${rel_path%.md}"
     done
@@ -52,7 +52,7 @@ for arg in "$@"; do
     [[ "$arg" == *.md ]] || arg="$arg.md"
     # Handle both full paths and user/context style paths
     if [[ -f "$SCRIPT_DIR/$arg" ]]; then
-        cat "$SCRIPT_DIR/$arg" | strip_frontmatter
+        strip_frontmatter < "$SCRIPT_DIR/$arg"
     else
         echo "Error: Convention file '$arg' not found in $SCRIPT_DIR" >&2
         exit 1
