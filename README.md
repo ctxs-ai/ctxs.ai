@@ -66,24 +66,24 @@ For now the README will contain a list of all entries.
 
 # Convention Assembler
 
-The `bin/convention-assembler` script helps you combine multiple context files into a single conventions file. It automatically strips frontmatter and concatenates the content.
+The `bin/assemble-conventions` script helps you combine multiple context files into a single conventions file. It automatically strips frontmatter and concatenates the content.
 
 To install it, symlink it into your PATH:
 
 ```bash
-ln -s "$(pwd)/bin/convention-assembler" ~/bin/convention-assembler
+ln -s "$(pwd)/bin/assemble-conventions" ~/bin/assemble-conventions
 ```
 
 Run without arguments to see available context files:
 
 ```bash
-./bin/convention-assembler
+./bin/assemble-conventions
 ```
 
 Create a new conventions file from available contexts:
 
 ```bash
-./bin/convention-assembler user1/context1 user2/context2 > CONVENTIONS.md
+./bin/assemble-conventions user1/context1 user2/context2 > CONVENTIONS.md
 ```
 
 # Inspirations
