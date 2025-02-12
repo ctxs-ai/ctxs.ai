@@ -1,6 +1,6 @@
 ---
 title: Using Playwright from ClojureScript
-provenance: 
+provenance: hand written
 ---
 
 Playwright is a library for controlling the browser and can be used in ClojureScript.
@@ -83,3 +83,5 @@ Run all tests in the file:
 ```clojure
 (t/run-tests 'e2e)
 ```
+
+You can often find the HTML IDs or classes required to locate elements for e2e tests by inspecting the Hiccup forms in the app source code.
