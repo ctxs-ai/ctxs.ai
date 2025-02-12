@@ -27,13 +27,32 @@ if [ "$#" -eq 0 ]; then
     exit 1
 fi
 
+# Function to strip frontmatter from markdown
+strip_frontmatter() {
+    awk '
+        BEGIN { in_frontmatter=0; found_frontmatter=0 }
+        /^---$/ {
+            if (in_frontmatter) {
+                in_frontmatter=0;
+                found_frontmatter=1;
+                next;
+            } else if (NR==1) {
+                in_frontmatter=1;
+                found_frontmatter=1;
+                next;
+            }
+        }
+        !in_frontmatter && (found_frontmatter || NR>1) { print }
+    '
+}
+
 # Concatenate specified conventions files
 for arg in "$@"; do
     # Append .md extension if not present
     [[ "$arg" == *.md ]] || arg="$arg.md"
     # Handle both full paths and user/context style paths
     if [[ -f "$SCRIPT_DIR/$arg" ]]; then
-        cat "$SCRIPT_DIR/$arg"
+        cat "$SCRIPT_DIR/$arg" | strip_frontmatter
     else
         echo "Error: Convention file '$arg' not found in $SCRIPT_DIR" >&2
         exit 1
