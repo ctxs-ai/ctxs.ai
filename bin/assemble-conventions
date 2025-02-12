@@ -5,7 +5,7 @@
 
 # Function to display usage
 usage() {
-    echo "Usage: $0 [file1 file2 ...] > CONVENTIONS.md"
+    echo "Usage: $0 [user/convention-1 user/convention-2 ...] > CONVENTIONS.md"
     echo "If no files are specified, it lists all .md files in the conventions dir, excluding README.md."
 }
 
