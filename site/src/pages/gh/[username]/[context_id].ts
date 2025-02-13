@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import yaml from 'js-yaml';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 export const GET: APIRoute = async ({ params }) => {
@@ -16,13 +17,17 @@ export const GET: APIRoute = async ({ params }) => {
             return new Response('Context not found', { status: 404 });
         }
 
-        return new Response(entry.body, {
+        const fm = entry.rendered.metadata.frontmatter
+        const fullFile = "---\n" + yaml.dump(fm) + "---\n" + entry.body
+
+        return new Response(fullFile, {
             status: 200,
             headers: {
                 'Content-Type': 'text/markdown',
             },
         });
     } catch (error) {
+      console.log(error)
         return new Response('Error reading context', { status: 500 });
     }
 };
