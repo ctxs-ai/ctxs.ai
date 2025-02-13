@@ -2,6 +2,8 @@ import type { APIRoute } from 'astro';
 import yaml from 'js-yaml';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
+export const prerender = false;
+
 export const GET: APIRoute = async ({ params }) => {
     const { username, context_id } = params;
 
@@ -27,18 +29,7 @@ export const GET: APIRoute = async ({ params }) => {
             },
         });
     } catch (error) {
-      console.log(error)
+        console.log(error)
         return new Response('Error reading context', { status: 500 });
     }
 };
-
-export async function getStaticPaths() {
-    const contexts = await getCollection('contexts');
-
-    return contexts.map(entry => {
-        const [username, context_id] = entry.id.split('/');
-        return {
-            params: { username, context_id }
-        };
-    });
-}
