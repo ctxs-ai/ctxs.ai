@@ -1,6 +1,7 @@
 ---
 title: Promesa (ClojureScript library)
-provenance: 
+description: Collection of examples for working with promises in ClojureScript using Promesa
+provenance: hand-written
 ---
 # Promesa
 
