@@ -23,7 +23,7 @@ export const GET: APIRoute = async ({ params }) => {
         return new Response(fullFile, {
             status: 200,
             headers: {
-                'Content-Type': 'text/markdown',
+                'Content-Type': 'text/plain; charset=utf-8',
             },
         });
     } catch (error) {
