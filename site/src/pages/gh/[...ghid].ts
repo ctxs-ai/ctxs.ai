@@ -29,11 +29,6 @@ export const GET: APIRoute = async ({ params }) => {
 export async function getStaticPaths() {
     const contexts = await getCollection('contexts');
 
-    console.log(contexts.map(entry => {
-        return {
-            params: { ghid: entry.id }
-        };
-    }))
     return contexts.map(entry => {
         return {
             params: { ghid: entry.id }
