@@ -1,31 +1,23 @@
 import type { APIRoute } from 'astro';
-import yaml from 'js-yaml';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
-export const prerender = false;
-
 export const GET: APIRoute = async ({ params }) => {
-    const { username, context_id } = params;
+    const { ghid } = params;
 
     try {
         const contexts = await getCollection('contexts');
         const entry = contexts.find(entry => {
-            // This probably can lookup via entry.id directly
-            const [entryUsername, entryContextId] = entry.id.split('/');
-            return entryUsername === username && entryContextId === context_id;
+            return ghid === entry.id;
         });
 
         if (!entry) {
             return new Response('Context not found', { status: 404 });
         }
 
-        const fm = entry.rendered.metadata.frontmatter
-        const fullFile = "---\n" + yaml.dump(fm) + "---\n" + entry.body
-
-        return new Response(fullFile, {
+        return new Response(entry.body, {
             status: 200,
             headers: {
-                'Content-Type': 'text/plain; charset=utf-8',
+                'Content-Type': 'text/markdown',
             },
         });
     } catch (error) {
@@ -33,3 +25,18 @@ export const GET: APIRoute = async ({ params }) => {
         return new Response('Error reading context', { status: 500 });
     }
 };
+
+export async function getStaticPaths() {
+    const contexts = await getCollection('contexts');
+
+    console.log(contexts.map(entry => {
+        return {
+            params: { ghid: entry.id }
+        };
+    }))
+    return contexts.map(entry => {
+        return {
+            params: { ghid: entry.id }
+        };
+    });
+}
