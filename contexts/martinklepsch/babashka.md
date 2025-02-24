@@ -1,7 +1,7 @@
 ---
-title: Babashka CLI Scripting
+title: Babashka Scripting
 provenance: partially AI generated
-description: A condensed description of babashka APIs and concepts
+description: A condensed description of babashka APIs and concepts for CLI scripting
 ---
 # general tips for writing babashka code
 

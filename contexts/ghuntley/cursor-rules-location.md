@@ -1,8 +1,9 @@
 ---
-title: Cursor Rule for writing Cursor Rules
+title: Cursor Rules Location
 provenance: https://ghuntley.com/stdlib/
-description: Cursor Rules Location
+description: Rules for creating and organizing rules files for Cursor
 globs: '*.mdc'
+target: .cursor/rules/location.mdc
 ---
 # Cursor Rules Location
 

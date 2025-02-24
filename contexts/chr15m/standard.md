@@ -1,3 +1,9 @@
+---
+title: "Standard"
+description: "A standard context for general use"
+hidden: true
+---
+
 # General guidance
 
 - Please modify files as minimally as possible to accomplish the task.

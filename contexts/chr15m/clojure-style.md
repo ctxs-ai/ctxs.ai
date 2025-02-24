@@ -1,6 +1,7 @@
 ---
-title: Clojure Style Guide from guide.clojure.style
-provenance: Distilled by an LLM from the source material
+title: Clojure Style Guide
+description: Style guide for real world Clojure code
+provenance: Distilled by an LLM from the source material at guide.clojure.style
 ---
 # Clojure Style Guide
 
