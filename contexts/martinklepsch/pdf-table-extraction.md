@@ -1,5 +1,5 @@
 ---
-title: Netzbauplan PDF Extraction
+title: PDF Table Extraction
 provenance: hand written
 description: "The prompt I used to extract tabular data from a PDF. In the end model choice seemed to have the biggest impact (Claude won). https://martinklepsch.org/posts/pdf-to-csv-with-gemini-and-claude.html"
 ---
