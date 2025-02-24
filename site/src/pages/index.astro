@@ -1,11 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
-import Page from "../components/page";
+import Page from "../components/Page.astro";
 
 const contexts = await getCollection("contexts");
 ---
 
 <Layout>
-	<Page contexts={contexts} client:only />
+	<Page contexts={contexts} />
 </Layout>

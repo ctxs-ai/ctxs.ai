@@ -1,8 +1,8 @@
-import type { Context } from "@/lib/types"
 import { ContextItem } from "./context-item"
+import type { CollectionEntry } from 'astro:content';
 
 interface ContextListProps {
-  contexts: Context[]
+  contexts: CollectionEntry<"contexts">[]
 }
 
 export function ContextList({ contexts }: ContextListProps) {

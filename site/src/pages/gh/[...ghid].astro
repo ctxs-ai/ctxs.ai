@@ -1,0 +1,14 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import Page from "@/components/Page.astro";
+
+const contexts = await getCollection("contexts");
+
+const ctxId = Astro.params.ghid;
+const selectedContext = contexts.find((c) => c.id === ctxId);
+---
+
+<Layout>
+    <Page contexts={contexts} selectedContext={selectedContext} />
+</Layout>
