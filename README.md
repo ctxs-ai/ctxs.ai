@@ -42,15 +42,11 @@ To add a file use the following template
 ```md
 
 ---
-title: 
-description: 
-provenance: 
-type: "prompt" or "context"
+title: Technical Writing Guidance
+description: A collection of instructions, nudges and examples for technical writing
 ---
-the actual context prompt
+... the actual content
 ```
-
-`provenance` is meant to provide some background about how the context window was created (hand written, generated, edited, etc.)
 
 # Interface
 
