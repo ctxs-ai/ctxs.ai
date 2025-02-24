@@ -44,7 +44,7 @@ export function Sidebar({ contexts, selectedContext }: SidebarProps) {
     React.useEffect(() => {
         const scrollPos = sessionStorage.getItem("sidebarScroll");
         if (scrollPos) {
-            scrollableRef.current?.scrollTo(0, parseInt(scrollPos));
+            scrollableRef.current?.scrollTo({ left: 0, top: parseInt(scrollPos), behavior: 'instant' });
         }
     }, []);
 
@@ -63,7 +63,7 @@ export function Sidebar({ contexts, selectedContext }: SidebarProps) {
                 ref={scrollableRef}
                 onScroll={persistScrollPos}
             >
-                <ContextList contexts={contexts} />
+                <ContextList contexts={contexts} selectedId={selectedContext?.id ?? null} />
             </div>
         </div>
     )
