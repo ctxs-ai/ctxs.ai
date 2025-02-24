@@ -11,7 +11,15 @@ export default defineConfig({
   output: 'server',
   adapter: cloudflare(),
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    resolve: {
+      // Use react-dom/server.edge instead of react-dom/server.browser for React 19.
+      // Without this, MessageChannel from node:worker_threads needs to be polyfilled.
+      // https://github.com/facebook/react/issues/31827#issuecomment-2563094822
+      alias: import.meta.env.PROD ? {
+        "react-dom/server": "react-dom/server.edge",
+      } : {},
+    },
   },
 
   integrations: [react()]
