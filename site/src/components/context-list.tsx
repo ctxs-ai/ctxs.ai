@@ -7,10 +7,16 @@ interface ContextListProps {
 }
 
 export function ContextList({ contexts, selectedId }: ContextListProps) {
+  const isSelected = (id: string) => id === selectedId
+
   return (
-    <div className="divide-y divide-[#0000000d]">
+    <div className="divide-y divide-border" >
       {contexts.map((context) => (
-        <ContextItem key={context.id} context={context} isSelected={context.id === selectedId} />
+        <ContextItem
+          key={context.id}
+          context={context}
+          isSelected={isSelected(context.id)}
+        />
       ))}
     </div>
   )

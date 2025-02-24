@@ -51,11 +51,11 @@ export function Sidebar({ contexts, selectedContext }: SidebarProps) {
     return (
         <div
             className={cn(
-                "w-full md:w-[400px] flex flex-col border-r border-[#0000000d]",
+                "w-full md:w-[400px] flex flex-col",
                 selectedContext && "hidden md:flex",
             )}
         >
-            <div className="sticky top-0 z-10 bg-secondary shadow-sm">
+            <div className="sticky top-0 z-10 bg-secondary shadow-sm border-r border-border">
                 <Header />
                 <SidebarIntro />
             </div>
@@ -63,7 +63,7 @@ export function Sidebar({ contexts, selectedContext }: SidebarProps) {
                 ref={scrollableRef}
                 onScroll={persistScrollPos}
             >
-                <ContextList contexts={contexts} selectedId={selectedContext?.id ?? null} />
+                <ContextList contexts={contexts} selectedId={selectedContext?.id} />
             </div>
         </div>
     )
