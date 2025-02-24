@@ -18,6 +18,7 @@ export const GET: APIRoute = async ({ params }) => {
 
         // Construct response object matching registry-item schema
         const response = {
+            "$schema": "https://ctxs.ai/schema/registry-item.json",
             name: filename,
             type: 'registry:file',
             author: author,
