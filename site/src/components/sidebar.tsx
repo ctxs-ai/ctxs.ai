@@ -61,7 +61,7 @@ export function Sidebar({ contexts, selectedContext }: SidebarProps) {
                 selectedContext && "hidden md:flex",
             )}
         >
-            <div className="sticky top-0 z-10 bg-secondary shadow-sm border-r border-border">
+            <div className="sticky top-0 z-10 bg-sidebar border-r border-border border-b-2">
                 <Header />
                 <SidebarIntro />
             </div>

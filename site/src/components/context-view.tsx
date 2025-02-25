@@ -34,52 +34,56 @@ export function ContextView({ context }: ContextViewProps) {
 
   return (
     <TooltipProvider>
-      <div className="max-w-3xl mx-auto min-h-screen border-x border-border">
-        <div className="sticky top-0 bg-background space-y-2 border-b p-4 border-border">
-          <div className="flex justify-between items-start">
-            <h1 className="text-2xl font-medium tracking-tight">{context.data.title}</h1>
-            <div className="flex gap-2">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon" asChild>
-                    <a href={editURL} target="_blank"><PencilLine className="h-4 w-4" /></a>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Edit on Github</TooltipContent>
-              </Tooltip>
-              <Button variant="outline" size="icon" onClick={copyToClipboard}>
-                <Copy className="h-4 w-4" />
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="icon">
-                    <FileCode2 className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[300px] p-3">
-                  <div className="space-y-2">
-                    <div className="font-medium text-sm flex items-center gap-2"><FileCode2 className="h-4 w-4" /> Add to codebase</div>
-                    <div className="text-sm">Run this command in your console</div>
-                    <button className='flex items-center gap-2 w-full border border-border hover:border-primary transition-colors rounded py-2 px-3 group cursor-pointer' onClick={copyToClipboard}>
-                      <div className="text-sm font-mono truncate flex-1">{cliCommand}</div>
-                      <div className="text-muted-foreground group-hover:text-primary transition-colors"><Copy className="h-4 w-4" /></div>
-                    </button>
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
+      <div className="">
+        <div className="sticky top-0 bg-background space-y-2 border-b border-border">
+          <div className="max-w-3xl mx-auto border-x border-border px-8 py-6">
+            <div className="flex justify-between items-start">
+              <h1 className="text-2xl font-medium tracking-tight">{context.data.title}</h1>
+              <div className="flex gap-2">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="outline" size="icon" asChild>
+                      <a href={editURL} target="_blank"><PencilLine className="h-4 w-4" /></a>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Edit on Github</TooltipContent>
+                </Tooltip>
+                <Button variant="outline" size="icon" onClick={copyToClipboard}>
+                  <Copy className="h-4 w-4" />
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="icon">
+                      <FileCode2 className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[300px] p-3">
+                    <div className="space-y-2">
+                      <div className="font-medium text-sm flex items-center gap-2"><FileCode2 className="h-4 w-4" /> Add to codebase</div>
+                      <div className="text-sm">Run this command in your console</div>
+                      <button className='flex items-center gap-2 w-full border border-border hover:border-primary transition-colors rounded py-2 px-3 group cursor-pointer' onClick={copyToClipboard}>
+                        <div className="text-sm font-mono truncate flex-1">{cliCommand}</div>
+                        <div className="text-muted-foreground group-hover:text-primary transition-colors"><Copy className="h-4 w-4" /></div>
+                      </button>
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
-          </div>
 
-          <div className="inline-flex items-center gap-2">
-            <img src={`https://github.com/${author}.png`} className="w-6 h-6 rounded-sm" />
-            <p className="text-muted-foreground">@{author}</p>
+            <div className="inline-flex items-center gap-2">
+              <img src={`https://github.com/${author}.png`} className="w-6 h-6 rounded-sm" />
+              <p className="text-muted-foreground">@{author}</p>
+            </div>
+            <p className="text-muted-foreground max-w-lg">{context.data.description}</p>
           </div>
-          <p className="text-muted-foreground max-w-lg">{context.data.description}</p>
         </div>
-        <div className="p-8 bg-muted border-b border-border">
-          <pre className="whitespace-pre-wrap font-mono text-sm overflow-auto">
-            {context.body}
-          </pre>
+        <div className="bg-muted border-b border-border px-4">
+          <div className="max-w-3xl mx-auto border-border border-x p-8">
+            <pre className="whitespace-pre-wrap font-mono text-sm overflow-auto">
+              {context.body}
+            </pre>
+          </div>
         </div>
       </div>
     </TooltipProvider>
