@@ -29,7 +29,7 @@ export function ContextItem({ context, isSelected }: ContextItemProps) {
   return (
     <a ref={ref}
       data-astro-prefetch
-      href={`/gh/${context.id}`}
+      href={`/gh/${context.id}/`}
       className={cn("relative w-full block cursor-pointer text-left p-4 pr-12 hover:bg-muted/50 transition-colors border-r",
         isSelected ? "bg-muted/80" : "border-border")}>
       {isSelected && (
