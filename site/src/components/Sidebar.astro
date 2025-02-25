@@ -25,7 +25,7 @@ const { contexts, selectedContext } = Astro.props;
   </div>
 </div>
 
-<script>
+<script is:inline>
   const restoreScroll = () => {
     const pos = sessionStorage.getItem("sidebarScroll");
     const scrollable = document.querySelector("#sidebar-scrollable");
