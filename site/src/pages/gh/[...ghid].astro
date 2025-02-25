@@ -1,14 +1,22 @@
 ---
+import type { GetStaticPaths } from "astro";
 import Layout from "@/layouts/Layout.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 import Page from "@/components/Page.astro";
 
-const contexts = await getCollection("contexts");
+export const getStaticPaths = (async () => {
+  const contexts = await getCollection("contexts");
 
-const ctxId = Astro.params.ghid;
-const selectedContext = contexts.find((c) => c.id === ctxId);
+  return contexts.map((c) => ({
+    params: { ghid: c.id },
+    props: { contexts: contexts, selectedContext: c },
+  }));
+}) satisfies GetStaticPaths;
+
+const contexts = Astro.props.contexts;
+const selectedContext = Astro.props.selectedContext;
 ---
 
 <Layout>
-    <Page contexts={contexts} selectedContext={selectedContext} />
+  <Page contexts={contexts} selectedContext={selectedContext} />
 </Layout>
