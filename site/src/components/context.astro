@@ -1,0 +1,65 @@
+---
+import { ContextActions } from "@/components/context-view";
+import { render } from "astro:content";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+const context = Astro.props.context;
+const author = context.id.split("/")[0];
+const { Content, headings, remarkPluginFrontmatter } = await render(context);
+---
+
+<div class="sticky top-0">
+  <div class="max-w-3xl mx-auto px-4 space-y-2 border-b border-border">
+    <div class="bg-background md:border-x border-border py-4 md:px-8 md:py-6">
+      <div class="flex justify-between items-start">
+        <h1 class="text-2xl font-medium tracking-tight">
+          {context.data.title}
+        </h1>
+        <div class="hidden md:block">
+          <ContextActions context={context} />
+        </div>
+      </div>
+      <p class="text-muted-foreground max-w-lg">
+        {context.data.description}
+      </p>
+      <div class="flex mt-2 items-center gap-2">
+        <img
+          src={`https://github.com/${author}.png`}
+          class="size-5 rounded-sm"
+        />
+        <p class="text-muted-foreground text-sm">@{author}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div style={{ width: "100px", overflow: "hidden" }}>
+  <div style={{ width: "400px" }}></div>
+</div>
+<div class="border-b border-border px-4 max-w-3xl mx-auto">
+  <div class="border-border border-x p-4 md:p-8">
+    <div
+      class="prose max-w-3xl
+        dark:prose-invert
+        font-mono
+        text-sm
+        prose-th:text-xs
+        prose-headings:text-base
+        prose-headings:font-bold
+        prose-code:text-sm
+        prose-code:border-border
+        prose-inline-code:border
+        prose-inline-code:rounded
+        prose-inline-code:px-1
+        prose-inline-code:py-px
+        prose-inline-code:font-medium
+        prose-pre:px-0.5
+        prose-li:my-1
+        prose-li:pl-3
+        prose-ul:pl-2
+        prose-ul:marker:text-foreground
+        prose-ul:list-(--dash-list-marker)"
+    >
+      <Content />
+    </div>
+  </div>
+</div>

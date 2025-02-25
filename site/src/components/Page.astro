@@ -1,6 +1,7 @@
 ---
 import { Button } from "@/components/ui/button";
-import { ContextView, ContextActions } from "@/components/context-view";
+import { ContextActions } from "@/components/context-view";
+import ContextView from "@/components/context.astro";
 import Sidebar from "@/components/Sidebar.astro";
 import { WordmarkLong } from "@/components/wordmark";
 
@@ -28,7 +29,7 @@ const selectedContext = Astro.props.selectedContext;
       )
     }
     <div class="flex-grow overflow-y-auto">
-      <ContextView context={selectedContext} client:load />
+      {selectedContext && <ContextView context={selectedContext} />}
     </div>
   </div>
 </div>
