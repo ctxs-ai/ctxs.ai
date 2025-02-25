@@ -21,7 +21,7 @@
           :verbose {:desc "Print additional information during processing"
                     :coerce :boolean}
           :model {:desc "LLM model to use with llm CLI"
-                  :default "gpt-4o"}
+                  :default "anthropic/claude-3-7-sonnet-latest"}
           :fix {:desc "Automatically fix missing frontmatter using LLM"
                 :coerce :boolean}}})
 
