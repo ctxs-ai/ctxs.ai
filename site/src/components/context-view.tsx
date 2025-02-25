@@ -163,6 +163,7 @@ export function ContextView({ context }: ContextViewProps) {
               dark:prose-invert
               font-mono
               text-sm
+              prose-th:text-xs
               prose-headings:text-base
               prose-headings:font-bold 
               prose-code:text-sm
