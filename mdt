@@ -1,0 +1,179 @@
+#!/usr/bin/env bb
+
+;; This script helps maintaining consistent frontmatter in the context files in this repository
+;; It can be used to check for missing frontmatter keys and to generate missing values using `llm`
+
+(require '[babashka.cli :as cli]
+         '[babashka.fs :as fs]
+         '[clojure.string :as str]
+         '[clj-yaml.core :as yaml]
+         '[babashka.process :as p])
+
+(def cli-opts
+  {:spec {:files {:desc "Individual markdown files to process"
+                  :coerce []}
+          :pattern {:desc "Regex pattern to match markdown files (e.g. \"contexts/**/*.md\")"
+                    :alias :p}
+          :force {:desc "Force re-generation"
+                  :coerce :boolean}
+          :dry-run {:desc "Print what would be changed without making changes"
+                    :coerce :boolean}
+          :verbose {:desc "Print additional information during processing"
+                    :coerce :boolean}
+          :model {:desc "LLM model to use with llm CLI"
+                  :default "gpt-4o"}
+          :fix {:desc "Automatically fix missing frontmatter using LLM"
+                :coerce :boolean}}})
+
+(def required-frontmatter-keys
+  "Keys that should be present in frontmatter. Add more keys here as needed."
+  [:description])
+
+(defn extract-frontmatter
+  "Extracts YAML frontmatter from markdown content.
+   Returns [frontmatter remaining-content] or nil if no frontmatter found."
+  [content]
+  (when (str/starts-with? content "---\n")
+    (when-let [end-idx (str/index-of content "\n---\n" 4)]
+      (let [frontmatter (subs content 4 end-idx)
+            remaining (subs content (+ end-idx 5))]
+        [frontmatter remaining]))))
+
+(defn llm-prompt
+  "Execute an LLM prompt using the llm CLI tool. Returns the response as a string."
+  [{:keys [model system] :or {model "gpt-4o"}} prompt]
+  (-> (apply p/process
+             {:out :string
+              :in prompt}
+             (cond-> ["llm" "-m" model "--no-stream"]
+               system (concat ["-s" system])))
+      deref
+      :out))
+
+(def prompts
+  {:description "The following text is documentation for achieving a specific goal. 
+                 Create a 100 character description of the goal starting with a verb.
+                 Do not include a period at the end of the description.
+
+                 Examples:
+                 - Craft web animations with appropriate timing and easing functions
+                 - Build Astro sites with Shadcn, Tailwind and TypeScript
+
+                 Be specific and avoid generic language like 'seamless integration',
+                 'facilitate', 'simplify'.
+
+                 \n\n%s"})
+
+(defn generate-key-value
+  "Generate a value for a missing frontmatter key using LLM"
+  [key content model]
+  (let [prompt (format (prompts key)
+                       (str/trim content))
+        system "You are an expert at analyzing technical content and extracting summary information."
+        response (llm-prompt {:model model :system system} prompt)]
+    (str/trim response)))
+
+(defn missing-frontmatter
+  "Check if frontmatter has required keys and returns a map of missing keys"
+  [frontmatter]
+  (reduce
+   (fn [missing key]
+     (if (and (contains? frontmatter key)
+              (not (str/blank? (str (get frontmatter key)))))
+       missing
+       (conj missing key)))
+   []
+   required-frontmatter-keys))
+
+(defn update-frontmatter-with-llm
+  "Updates the frontmatter by adding missing required keys using LLM"
+  [file-path keys-to-generate {:keys [model verbose dry-run]}]
+  (let [markdown-str (slurp file-path)]
+    (if-let [[frontmatter-str content] (extract-frontmatter markdown-str)]
+      (let [frontmatter (yaml/parse-string frontmatter-str)
+            updated-data (if (seq keys-to-generate)
+                           (reduce
+                            (fn [data key]
+                              (when verbose
+                                (println "🤖 Generating" (name key) "for" file-path))
+                              (let [generated-value (if dry-run
+                                                      (str "[Would generate " (name key) " using LLM]")
+                                                      (generate-key-value key (str frontmatter-str "\n\n" content) model))]
+                                (assoc data key generated-value)))
+                            frontmatter
+                            keys-to-generate)
+                           frontmatter)]
+        (if (seq keys-to-generate)
+          (let [new-frontmatter (yaml/generate-string updated-data :dumper-options {:flow-style :block})]
+            [true (str "---\n" new-frontmatter "---\n" content)])
+          [false markdown-str]))
+      [false markdown-str])))
+
+(defn check-file
+  "Check a single markdown file for missing frontmatter"
+  [file {:keys [fix verbose dry-run force] :as opts}]
+  (let [file-path (str file)
+        content (slurp file)
+        [has-frontmatter frontmatter-data] (if-let [data (extract-frontmatter content)]
+                                             [true (yaml/parse-string (first data))]
+                                             [false {}])
+        missing-keys (cond
+                       force required-frontmatter-keys
+                       has-frontmatter (missing-frontmatter frontmatter-data)
+                       :else required-frontmatter-keys)]
+
+    (when verbose
+      (println "📝 Checking" file-path))
+
+    (cond
+      (not has-frontmatter)
+      (do
+        (spit file (str "---\n---\n" content))
+        (when fix
+          (check-file file opts)))
+
+      (seq missing-keys)
+      (do
+        (println "⚠️ Missing required frontmatter keys in" (str file-path ":"))
+        (doseq [key missing-keys]
+          (println "   -" (name key)))
+        (if fix
+          (let [[updated? updated-content] (update-frontmatter-with-llm file-path missing-keys opts)
+                updated-data (yaml/parse-string (first (extract-frontmatter updated-content)))]
+            (when updated?
+              (println "🔄 Generated values for" (str/join ", " (map name missing-keys)))
+              (doseq [key missing-keys]
+                (println "   -" (str (name key) ":") (pr-str (get updated-data key))))
+              (when-not dry-run
+                (spit file updated-content))))
+          (println "ℹ️ Use --fix to automatically generate missing values")))
+
+      :else
+      (when verbose
+        (println "✅ All required frontmatter keys present in" file-path)))))
+
+(defn process-files
+  "Process multiple markdown files based on CLI options"
+  [{:keys [files pattern] :as opts}]
+  (let [pattern-files (when pattern
+                        (->> (fs/glob "." pattern)
+                             (map fs/file)
+                             (filter #(str/ends-with? (str %) ".md"))))
+        all-files (concat (map fs/file files) pattern-files)]
+    (if (seq all-files)
+      (do
+        (when (:verbose opts)
+          (println "🔍 Found" (count all-files) "files to process"))
+        (doseq [file all-files]
+          (check-file file opts))
+        (println "✨ Processing complete!"))
+      (println "⚠️ No markdown files found to process"))))
+
+(defn -main [& args]
+  (let [opts (cli/parse-opts args cli-opts)]
+    (if (:help opts)
+      (println (cli/format-opts cli-opts))
+      (process-files opts))))
+
+(when (= *file* (System/getProperty "babashka.file"))
+  (apply -main *command-line-args*))
