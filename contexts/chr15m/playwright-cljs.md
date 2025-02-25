@@ -1,7 +1,7 @@
 ---
 title: Using Playwright from ClojureScript
 provenance: hand written
-description: Automate browser interactions using Playwright within ClojureScript for end-to-end testing.
+description: Automate browser interactions for end-to-end testing with Playwright in ClojureScript.
 ---
 
 Playwright is a library for controlling the browser and can be used in ClojureScript.

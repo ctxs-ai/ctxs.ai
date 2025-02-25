@@ -1,6 +1,6 @@
 ---
 title: Nostr Protocol Tools (nostr-tools)
-description: Develop Nostr clients using nostr-tools for generating keys, signing events, and relay interactions.
+description: Develop Nostr clients using nostr-tools for key generation, event signing, and relay operations.
 ---
 # ![](https://img.shields.io/github/actions/workflow/status/nbd-wtf/nostr-tools/test.yml) [![JSR](https://jsr.io/badges/@nostr/tools)](https://jsr.io/@nostr/tools) nostr-tools
 

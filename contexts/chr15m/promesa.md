@@ -1,6 +1,6 @@
 ---
 title: Promesa (ClojureScript library)
-description: Collection of examples for working with promises in ClojureScript using Promesa
+description: Handle asynchronous programming in ClojureScript using the Promesa library for promise management.
 provenance: hand-written
 ---
 # Promesa

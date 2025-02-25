@@ -1,6 +1,6 @@
 ---
 title: applied-science/js-interop
-description: A ClojureScript library facilitating JavaScript interop by mirroring core Clojure functions adapted for JavaScript contexts.
+description: Facilitate JavaScript interop using ClojureScript functions adapted for JavaScript contexts.
 ---
 
 # js-interop

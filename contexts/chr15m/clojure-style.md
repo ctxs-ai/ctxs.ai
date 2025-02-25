@@ -1,6 +1,6 @@
 ---
 title: Clojure Style Guide
-description: Style guide for real world Clojure code
+description: Follow Clojure style conventions for clear, consistent, and maintainable codebases.
 provenance: Distilled by an LLM from the source material at guide.clojure.style
 ---
 # Clojure Style Guide
