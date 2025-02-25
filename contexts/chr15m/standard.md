@@ -1,7 +1,7 @@
 ---
-title: "Standard"
-description: "A standard context for general use"
+title: Standard
 hidden: true
+description: Modify ClojureScript files minimally to achieve specific task goals as effectively as possible.
 ---
 
 # General guidance

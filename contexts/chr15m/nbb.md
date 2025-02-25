@@ -1,5 +1,6 @@
 ---
 title: Node.js ClojureScript runtime (nbb)
+description: Execute ad-hoc scripting in Node.js using the ClojureScript runtime `nbb`.
 ---
 
 # Node.js ClojureScript runtime (nbb)

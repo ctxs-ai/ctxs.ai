@@ -1,6 +1,6 @@
 ---
 title: Concrete CSS
-
+description: Embed a lightweight, classless CSS for automatic dark mode and semantic HTML styling.
 ---
 # Concrete CSS
 
