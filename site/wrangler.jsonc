@@ -1,5 +1,6 @@
 {
-  "name": "ctxs",
+  "name": "ctxs-ai",
+  "pages_build_output_dir": "./dist",
   "kv_namespaces": [
     {
       "binding": "CTXS_KV",
