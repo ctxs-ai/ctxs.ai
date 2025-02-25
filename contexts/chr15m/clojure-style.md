@@ -1,6 +1,6 @@
 ---
 title: Clojure Style Guide
-description: Apply Clojure style conventions to ensure clear, consistent, and maintainable codebases
+description: Apply Clojure style conventions to ensure code is clear, consistent, and maintainable
 provenance: Distilled by an LLM from the source material at guide.clojure.style
 ---
 # Clojure Style Guide

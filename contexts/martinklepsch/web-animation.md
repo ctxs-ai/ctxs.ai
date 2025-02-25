@@ -1,7 +1,7 @@
 ---
-title: Web Animation Easing & Timing Cheatsheet
-description: Core principles for easing-based animations on the web
+title: Web Animation Easing & Timing
 provenance: This is based on two chapters from https://animations.dev/
+description: Create effective web animations using appropriate duration and easing functions for different UI interactions
 ---
 # Web Animation Easing & Timing Cheatsheet
 

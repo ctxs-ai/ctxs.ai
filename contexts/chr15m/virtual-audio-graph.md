@@ -1,7 +1,7 @@
 ---
 title: virtual-audio-graph library
 provenance: distilled from the documentation
-description: Manage Web Audio API node graphs declaratively using the virtual-audio-graph library in JavaScript
+description: Manage Web Audio API nodes declaratively with JavaScript using the virtual-audio-graph library
 ---
 # Virtual Audio Graph
 

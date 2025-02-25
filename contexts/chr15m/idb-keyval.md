@@ -1,7 +1,7 @@
 ---
 title: IDB Keyval API
 provenance: created using aider conventions
-description: Implement a promise-based key-value store using IndexedDB with IDB Keyval API functions
+description: Implement a promise-based key-value store with IndexedDB using IDB Keyval API functions
 ---
 # IDB Keyval documentation
 
