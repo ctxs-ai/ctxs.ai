@@ -4,8 +4,24 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import Page from "../components/Page.astro";
 
 const contexts = await getCollection("contexts");
+
+const params = {
+	id: "e196lx95sb92jep",
+	title:
+		"An open-source, community-curated registry of contexts for use with LLMs",
+};
+
+const queryString = new URLSearchParams(params).toString();
+const ogImage = `https://dynogee.com/gen?${queryString}`;
+
+const meta = {
+	title: "ctxs.ai context registry",
+	description:
+		"An open-source, community-curated registry of contexts for use with LLMs",
+	ogImage: ogImage,
+};
 ---
 
-<Layout>
+<Layout meta={meta}>
 	<Page contexts={contexts} />
 </Layout>

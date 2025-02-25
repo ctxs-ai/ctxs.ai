@@ -15,8 +15,24 @@ export const getStaticPaths = (async () => {
 
 const contexts = Astro.props.contexts;
 const selectedContext = Astro.props.selectedContext;
+
+const params = {
+  id: "pi69gih529e43x5",
+  title: selectedContext.data.title,
+  desc: selectedContext.data.description,
+  avatar: "https://github.com/cloudflare.png",
+  handle: "@cloudflare",
+};
+
+const queryString = new URLSearchParams(params).toString();
+const ogImage = `https://dynogee.com/gen?${queryString}`;
+const meta = {
+  title: `${selectedContext.data.title} - ctxs.ai`,
+  description: selectedContext.data.description,
+  ogImage: ogImage,
+};
 ---
 
-<Layout>
+<Layout meta={meta}>
   <Page contexts={contexts} selectedContext={selectedContext} />
 </Layout>
