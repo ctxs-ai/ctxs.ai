@@ -2,8 +2,6 @@
 title: Nostr Protocol Tools (nostr-tools)
 description: Develop Nostr clients using nostr-tools for cryptographic operations and relay interactions
 ---
-# ![](https://img.shields.io/github/actions/workflow/status/nbd-wtf/nostr-tools/test.yml) [![JSR](https://jsr.io/badges/@nostr/tools)](https://jsr.io/@nostr/tools) nostr-tools
-
 Tools for developing [Nostr](https://github.com/fiatjaf/nostr) clients.
 
 Only depends on _@scure_ and _@noble_ packages.
