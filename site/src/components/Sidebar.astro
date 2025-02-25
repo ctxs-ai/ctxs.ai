@@ -1,0 +1,52 @@
+---
+import { cn } from "@/lib/utils";
+import { ContextList } from "./context-list";
+import { SidebarIntro, Header } from "@/components/sidebar-utils";
+
+const { contexts, selectedContext } = Astro.props;
+---
+
+<div
+  class={cn(
+    "w-full md:w-[400px] flex flex-col",
+    selectedContext && "hidden md:flex",
+  )}
+>
+  <div class="sticky top-0 z-10 bg-sidebar border-r border-border border-b-2">
+    <Header />
+    <SidebarIntro />
+  </div>
+  <div class="flex-grow overflow-y-hidden" id="sidebar-scrollable">
+    <ContextList
+      contexts={contexts}
+      selectedId={selectedContext?.id}
+      client:load
+    />
+  </div>
+</div>
+
+<script>
+  const restoreScroll = () => {
+    const pos = sessionStorage.getItem("sidebarScroll");
+    const scrollable = document.querySelector("#sidebar-scrollable");
+    if (scrollable) {
+      if (pos) {
+        scrollable.scrollTop = parseInt(pos);
+      }
+      scrollable.classList.remove("overflow-y-hidden");
+      scrollable.classList.add("overflow-y-auto");
+
+      scrollable.addEventListener("scroll", () => {
+        sessionStorage.setItem(
+          "sidebarScroll",
+          scrollable.scrollTop.toString(),
+        );
+      });
+    }
+  };
+
+  (function () {
+    restoreScroll();
+    document.addEventListener("astro:after-swap", restoreScroll);
+  })();
+</script>

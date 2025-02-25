@@ -1,7 +1,7 @@
 ---
 import { Button } from "@/components/ui/button";
 import { ContextView, ContextActions } from "@/components/context-view";
-import { Sidebar, ContributeButton } from "@/components/sidebar";
+import Sidebar from "@/components/Sidebar.astro";
 import { WordmarkLong } from "@/components/wordmark";
 
 const contexts = Astro.props.contexts;
@@ -9,7 +9,7 @@ const selectedContext = Astro.props.selectedContext;
 ---
 
 <div class="h-screen flex flex-col md:flex-row">
-  <Sidebar contexts={contexts} selectedContext={selectedContext} client:load />
+  <Sidebar contexts={contexts} selectedContext={selectedContext} />
 
   <div class="flex-1 flex flex-col">
     {
