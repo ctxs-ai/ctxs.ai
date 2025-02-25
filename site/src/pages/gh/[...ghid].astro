@@ -15,13 +15,14 @@ export const getStaticPaths = (async () => {
 
 const contexts = Astro.props.contexts;
 const selectedContext = Astro.props.selectedContext;
+const author = selectedContext.id.split("/")[0];
 
 const params = {
   id: "pi69gih529e43x5",
-  title: selectedContext.data.title,
-  desc: selectedContext.data.description,
-  avatar: "https://github.com/cloudflare.png",
-  handle: "@cloudflare",
+  title: selectedContext.data.title || "",
+  desc: selectedContext.data.description || "",
+  avatar: `https://github.com/${author}.png`,
+  handle: `@${author}`,
 };
 
 const queryString = new URLSearchParams(params).toString();
