@@ -1,0 +1,9 @@
+{
+  "name": "ctxs",
+  "kv_namespaces": [
+    {
+      "binding": "CTXS_KV",
+      "id": "ef4b59d30f304a018d507d73e58a9805"
+    }
+  ]
+}
