@@ -10,7 +10,7 @@ export function ContextList({ contexts, selectedId }: ContextListProps) {
   const isSelected = (id: string) => id === selectedId;
 
   return (
-    <div className="divide-y divide-border">
+    <div className="divide-y divide-border bg-sidebar">
       {contexts.map((context) => (
         <ContextItem
           key={context.id}

@@ -6,6 +6,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --dash-list-marker: '-';
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -125,3 +126,41 @@
     @apply bg-background text-foreground;
   }
 }
+
+@utility prose {
+  h1::before {
+    content: "# ";
+  }
+
+  h2::before {
+    content: "## ";
+  }
+
+  h3::before {
+    content: "### ";
+  }
+
+  h4::before {
+    content: "#### ";
+  }
+
+  h5::before {
+    content: "##### ";
+  }
+
+  h6::before {
+    content: "###### ";
+  }
+}
+
+@utility prose {
+  code {
+
+    &::before,
+    &::after {
+      content: none;
+    }
+  }
+}
+
+@custom-variant prose-inline-code (&.prose :where(:not(pre)>code):not(:where([class~="not-prose"] *)));

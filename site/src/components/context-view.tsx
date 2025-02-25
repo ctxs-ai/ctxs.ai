@@ -107,6 +107,7 @@ export const ContextActions = ({ context }: { context: CollectionEntry<"contexts
                   )}
                 </div>
               </button>
+              <div className="text-xs text-muted-foreground">Note that this (for now) requires having your project setup with shadcn.</div>
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -130,35 +131,54 @@ export function ContextView({ context }: ContextViewProps) {
 
   return (
     <>
-      <div className="sticky top-0 bg-background space-y-2 border-b border-border">
-        <div className="max-w-3xl mx-auto md:border-x border-border p-4 md:px-8 md:py-6">
-          <div className="flex justify-between items-start">
-            <h1 className="text-2xl font-medium tracking-tight">
-              {context.data.title}
-            </h1>
-            <div className="hidden md:block">
-              <ContextActions context={context} />
+      <div className="sticky top-0">
+        <div className="max-w-3xl mx-auto px-4 space-y-2 border-b border-border">
+          <div className=" bg-background md:border-x border-border py-4 md:px-8 md:py-6">
+            <div className="flex justify-between items-start">
+              <h1 className="text-2xl font-medium tracking-tight">
+                {context.data.title}
+              </h1>
+              <div className="hidden md:block">
+                <ContextActions context={context} />
+              </div>
             </div>
-          </div>
-          <p className="text-muted-foreground max-w-lg">
-            {context.data.description}
-          </p>
-          <div className="flex mt-2 items-center gap-2">
-            <Avatar>
-              <AvatarImage src={`https://github.com/${author}.png`} />
-              <AvatarFallback>
-                {author.slice(0, 2)}
-              </AvatarFallback>
-            </Avatar>
-            <p className="text-muted-foreground">@{author}</p>
+            <p className="text-muted-foreground max-w-lg">
+              {context.data.description}
+            </p>
+            <div className="flex mt-2 items-center gap-2">
+              <Avatar>
+                <AvatarImage src={`https://github.com/${author}.png`} />
+                <AvatarFallback>
+                  {author.slice(0, 2)}
+                </AvatarFallback>
+              </Avatar>
+              <p className="text-muted-foreground">@{author}</p>
+            </div>
           </div>
         </div>
       </div>
-      <div className="bg-muted border-b border-border px-4">
-        <div className="max-w-3xl mx-auto border-border border-x p-4 md:p-8">
-          <pre className="whitespace-pre-wrap font-mono text-sm overflow-auto">
-            {context.body}
-          </pre>
+      <div className="border-b border-border px-4 max-w-3xl mx-auto">
+        <div className="border-border border-x p-4 md:p-8">
+          <div className="prose max-w-3xl
+              dark:prose-invert
+              font-mono
+              text-sm
+              prose-headings:text-base
+              prose-headings:font-bold 
+              prose-code:text-sm
+              prose-code:border-border
+              prose-inline-code:border
+              prose-inline-code:rounded
+              prose-inline-code:px-1
+              prose-inline-code:py-px
+              prose-inline-code:font-medium
+              prose-pre:px-0.5
+              prose-li:my-1 
+              prose-li:pl-3
+              prose-ul:pl-2
+              prose-ul:marker:text-foreground
+              prose-ul:list-(--dash-list-marker)"
+            dangerouslySetInnerHTML={{ __html: context.rendered?.html || "" }} />
         </div>
       </div>
     </>
