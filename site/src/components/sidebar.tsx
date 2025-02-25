@@ -4,22 +4,31 @@ import type { CollectionEntry } from "astro:content";
 import React from "react";
 import { Button } from "@/components/ui/button"
 import { Github, Sparkles } from "lucide-react"
+import { WordmarkLong } from "@/components/wordmark";
 
 type SidebarProps = {
     contexts: CollectionEntry<"contexts">[];
     selectedContext: CollectionEntry<"contexts"> | null;
 };
 
+export const ContributeButton = () => {
+    return (
+        <a href="https://github.com/ctxs-ai/ctxs.ai" target="_blank" rel="noopener noreferrer">
+            <Button size="sm" variant="outline" className="h-7 text-xs">
+                <Github className="h-3 w-3 mr-1" />
+                Contribute
+            </Button>
+        </a>
+    )
+}
+
 export const Header = () => {
     return (
-        <div className="p-4 flex justify-between items-center">
-            <span className="font-bold">ctxs.ai Context Registry</span>
-            <a href="https://github.com/ctxs-ai/ctxs.ai" target="_blank" rel="noopener noreferrer">
-                <Button size="sm" variant="outline" className="h-7 text-xs">
-                    <Github className="h-3 w-3 mr-1" />
-                    Contribute
-                </Button>
+        <div className="px-4 pt-3 pb-4 flex justify-between items-center">
+            <a href="/">
+                <WordmarkLong />
             </a>
+            <ContributeButton />
         </div>
     )
 }
@@ -42,15 +51,17 @@ export const SidebarIntro = () => {
 
 export function Sidebar({ contexts, selectedContext }: SidebarProps) {
     const scrollableRef = React.useRef<HTMLDivElement>(null);
+    const [scrollRestored, setScrollRestored] = React.useState(false);
 
     const persistScrollPos = (e: React.UIEvent<HTMLDivElement>) => {
         sessionStorage.setItem("sidebarScroll", e.currentTarget.scrollTop.toString());
     };
 
     React.useEffect(() => {
-        const scrollPos = sessionStorage.getItem("sidebarScroll");
-        if (scrollPos) {
-            scrollableRef.current?.scrollTo({ left: 0, top: parseInt(scrollPos), behavior: 'instant' });
+        const scrollable = document.querySelector('#sidebar-scrollable');
+        if (scrollable) {
+            scrollable.classList.remove('overflow-y-hidden');
+            scrollable.classList.add('overflow-y-auto');
         }
     }, []);
 
@@ -65,12 +76,25 @@ export function Sidebar({ contexts, selectedContext }: SidebarProps) {
                 <Header />
                 <SidebarIntro />
             </div>
-            <div className="flex-grow overflow-y-auto"
+            <div className="flex-grow overflow-y-hidden"
+                id="sidebar-scrollable"
                 ref={scrollableRef}
                 onScroll={persistScrollPos}
             >
                 <ContextList contexts={contexts} selectedId={selectedContext?.id} />
             </div>
-        </div>
+            <script dangerouslySetInnerHTML={{
+                __html: `  
+        (function() {  
+          const pos = sessionStorage.getItem('sidebarScroll');  
+          if(pos) {  
+            requestAnimationFrame(() => {  
+              document.querySelector('#sidebar-scrollable').scrollTop = parseInt(pos);  
+            });  
+          }  
+        })()  
+      `
+            }} />
+        </div >
     )
 }

@@ -7,12 +7,22 @@ interface ContextItemProps {
   isSelected: boolean
 }
 
+function scrollIntoViewIfNotVisible(target: HTMLElement) {
+  if (target.getBoundingClientRect().bottom > window.innerHeight) {
+    target.scrollIntoView(false);
+  }
+
+  if (target.getBoundingClientRect().top < 0) {
+    target.scrollIntoView();
+  }
+}
+
 export function ContextItem({ context, isSelected }: ContextItemProps) {
   const ref = React.useRef<HTMLAnchorElement>(null);
 
   React.useEffect(() => {
-    if (isSelected) {
-      ref.current?.scrollIntoView({ behavior: 'instant' });
+    if (isSelected && ref.current) {
+      scrollIntoViewIfNotVisible(ref.current);
     }
   }, [isSelected]);
 

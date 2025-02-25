@@ -1,11 +1,8 @@
 ---
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { ContextList } from "@/components/context-list";
-import { ContextView } from "@/components/context-view";
-import { Header, SidebarIntro } from "@/components/header";
-import { Sidebar } from "@/components/sidebar";
-import type { CollectionEntry } from "astro:content";
+import { ContextView, ContextActions } from "@/components/context-view";
+import { Sidebar, ContributeButton } from "@/components/sidebar";
+import { WordmarkLong } from "@/components/wordmark";
 
 const contexts = Astro.props.contexts;
 const selectedContext = Astro.props.selectedContext;
@@ -15,16 +12,21 @@ const selectedContext = Astro.props.selectedContext;
   <Sidebar contexts={contexts} selectedContext={selectedContext} client:load />
 
   <div class="flex-1 flex flex-col">
-    <div class="sticky top-0 z-10 bg-background md:hidden">
-      <div
-        class="p-3 flex justify-between items-center border-b border-[#0000000d]"
-      >
-        <a href="/" class="font-bold">
-          <Button asChild variant="ghost" size="sm"> Menu </Button>
-        </a>
-        <span class="font-bold">ctxs.ai</span>
-      </div>
-    </div>
+    {
+      selectedContext && (
+        <div class="sticky top-0 z-10 bg-background md:hidden">
+          <div class="px-4 py-2 flex justify-between items-center border-b border-border">
+            <a href="/" class="font-bold">
+              <Button asChild variant="ghost" size="sm">
+                <WordmarkLong />
+              </Button>
+            </a>
+            <ContextActions context={selectedContext} client:load />
+            {/* <ContributeButton /> */}
+          </div>
+        </div>
+      )
+    }
     <div class="flex-grow overflow-y-auto">
       <ContextView context={selectedContext} client:load />
     </div>
