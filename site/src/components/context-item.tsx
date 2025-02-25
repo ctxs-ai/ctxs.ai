@@ -35,7 +35,7 @@ export function ContextItem({ context, isSelected }: ContextItemProps) {
         <div className="absolute -right-px -top-px -bottom-px border-primary border-r-3" />
       )}
       <h3 className="font-medium">{context.data.title}</h3>
-      <p className="text-sm text-muted-foreground line-clamp-2">{context.data.description}</p>
+      <p className="text-sm text-muted-foreground line-clamp-2 hyphens-auto" lang='en'>{context.data.description}</p>
     </a>
   )
 }
