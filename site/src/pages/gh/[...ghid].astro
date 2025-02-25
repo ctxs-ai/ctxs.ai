@@ -32,6 +32,8 @@ const meta = {
   description: selectedContext.data.description,
   ogImage: ogImage,
 };
+
+Astro.response.headers.set("Cache-Control", "public, max-age=3600");
 ---
 
 <Layout meta={meta}>
