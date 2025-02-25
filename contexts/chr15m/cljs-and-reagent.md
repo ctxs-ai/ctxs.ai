@@ -1,7 +1,7 @@
 ---
 title: ClojureScript and Reagent
 provenance: hand-written
-description: Enhance ClojureScript applications with Reagent for improved data handling and interface rendering.
+description: Enhance ClojureScript apps with Reagent for advanced data handling and optimized interface rendering
 ---
 
 # ClojureScript and Reagent

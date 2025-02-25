@@ -1,6 +1,6 @@
 ---
 title: Sitefox ClojureScript Framework
-description: Develop web apps using Sitefox ClojureScript framework for efficient Node.js configuration.
+description: Develop web applications using the Sitefox ClojureScript framework for effective Node.js setup
 ---
 # Sitefox
 

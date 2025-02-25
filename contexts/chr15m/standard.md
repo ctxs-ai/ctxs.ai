@@ -1,7 +1,7 @@
 ---
 title: Standard
 hidden: true
-description: Modify ClojureScript files minimally to achieve specific task goals effectively without superfluous changes.
+description: Modify ClojureScript files minimally to accomplish specific programming task goals efficiently
 ---
 
 # General guidance

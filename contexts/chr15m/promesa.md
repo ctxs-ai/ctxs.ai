@@ -1,6 +1,6 @@
 ---
 title: Promesa (ClojureScript library)
-description: Handle asynchronous programming in ClojureScript using the Promesa library for promise management.
+description: Manage asynchronous programming in ClojureScript using the Promesa library for promise handling
 provenance: hand-written
 ---
 # Promesa

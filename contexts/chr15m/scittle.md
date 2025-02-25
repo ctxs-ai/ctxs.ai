@@ -1,6 +1,6 @@
 ---
 title: Scittle ClojureScript
-description: Develop a simple web app using Scittle, leveraging JavaScript functions for browser interaction.
+description: Develop a simple web app using Scittle, integrating JavaScript for browser interactions
 ---
 # Scittle ClojureScript
 

@@ -1,6 +1,6 @@
 ---
 title: Node.js ClojureScript runtime (nbb)
-description: Execute Node.js ad-hoc scripts using ClojureScript runtime with nbb for seamless integration.
+description: Execute Node.js ad-hoc scripts using the ClojureScript runtime nbb for enhanced efficiency
 ---
 
 # Node.js ClojureScript runtime (nbb)
