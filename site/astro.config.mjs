@@ -10,6 +10,11 @@ export default defineConfig({
   site: 'https://ctxs.ai',
   output: 'static',
   adapter: cloudflare(),
+  markdown: {
+    shikiConfig: {
+      themes: { light: 'github-light-default', dark: 'github-dark-default' },
+    },
+  },
   vite: {
     plugins: [tailwindcss()],
     resolve: {
