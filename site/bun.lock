@@ -29,6 +29,7 @@
       "devDependencies": {
         "@types/node": "^22.12.0",
         "@types/react": "^19.0.10",
+        "tailwindcss-view-transitions": "^0.1.1",
         "wrangler": "^3.109.3",
       },
     },
@@ -965,6 +966,8 @@
     "tailwindcss": ["tailwindcss@4.0.3", "", {}, "sha512-ImmZF0Lon5RrQpsEAKGxRvHwCvMgSC4XVlFRqmbzTEDb/3wvin9zfEZrMwgsa3yqBbPqahYcVI6lulM2S7IZAA=="],
 
     "tailwindcss-animate": ["tailwindcss-animate@1.0.7", "", { "peerDependencies": { "tailwindcss": ">=3.0.0 || insiders" } }, "sha512-bl6mpH3T7I3UFxuvDEXLxy/VuFxBk5bbzplh7tXI68mwMokNYd1t9qPBHlnyTwfa4JGC4zP516I1hYYtQ/vspA=="],
+
+    "tailwindcss-view-transitions": ["tailwindcss-view-transitions@0.1.1", "", { "peerDependencies": { "tailwindcss": ">=3.0.0" } }, "sha512-YIiZAoYDSwcUC6kt/TD7knkOkiDyyQArUN3fgYAvrRIF7zzta7/olQM44z9zeuGRBMSWpkbP1slYH67gEMMIKA=="],
 
     "tapable": ["tapable@2.2.1", "", {}, "sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ=="],
 

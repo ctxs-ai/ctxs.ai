@@ -33,7 +33,7 @@ export function ContextItem({ context, isSelected }: ContextItemProps) {
       className={cn("relative w-full block cursor-pointer text-left p-4 pr-12 hover:bg-muted/50 transition-colors border-r",
         isSelected ? "bg-muted/80" : "border-border")}>
       {isSelected && (
-        <div className="absolute -right-px -top-px -bottom-px border-primary border-r-3" />
+        <div className="vt-name-[active-marker] absolute -right-px -top-px -bottom-px border-primary border-r-3" />
       )}
       <h3 className="font-medium">{context.data.title}</h3>
       <p className="text-sm text-muted-foreground line-clamp-2 hyphens-auto" lang='en'>{context.data.description}</p>
