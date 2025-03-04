@@ -1,0 +1,33 @@
+---
+description: Agent implementation using Mastra for intelligent document organization
+globs: agent/**/*.ts, agent/**/*.js
+---
+
+This is an agent implementation that will serve as an intelligent librarian, organizing and managing information in markdown files. The implementation uses Mastra as its foundation.
+
+Key Architectural Points:
+1. The agent is implemented as a TypeScript application using Bun as the runtime
+2. Core functionality is centered around markdown file processing and LLM interactions
+3. Uses Commander.js for CLI interface design
+4. Implements frontmatter validation and generation capabilities
+
+Development Guidelines:
+1. Keep the agent's core responsibilities separate from the file processing logic
+2. Use TypeScript types rigorously, especially for frontmatter and configuration interfaces
+3. Maintain clear separation between:
+   - Agent core logic
+   - File system operations
+   - LLM interactions
+   - CLI interface
+
+When implementing new features:
+1. Consider the agent's primary role as a librarian/organizer
+2. Ensure proper error handling for file operations and LLM interactions
+3. Add appropriate logging for debugging and monitoring
+4. Keep the CLI interface intuitive and consistent
+
+Code Style:
+1. Use async/await for asynchronous operations
+2. Implement proper TypeScript types for all functions and data structures
+3. Document complex logic with clear comments
+4. Use meaningful variable names that reflect the librarian/organizer domain 
