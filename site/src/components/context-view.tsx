@@ -1,6 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 import { Button } from "@/components/ui/button";
-import { Check, Copy, Edit, FileCode2, PencilLine, Plus } from "lucide-react";
+import { Check, Copy, Edit, FileCode2, Link } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,9 +24,21 @@ interface ContextViewProps {
 export const ContextActions = ({ context }: { context: CollectionEntry<"contexts"> }) => {
   const [contextCopied, setContextCopied] = useState(false);
   const [commandCopied, setCommandCopied] = useState(false);
+  const [plaintextURLCopied, setPlaintextURLCopied] = useState(false);
 
   const cliCommand = `npx shadcn add "https://ctxs.ai/r/gh/${context.id}.json"`;
   const editURL = `https://github.com/ctxs-ai/ctxs.ai/edit/main/contexts/${context.id}.md`;
+  const plaintextURL = `https://ctxs.ai/r/gh/${context.id}`;
+
+  const copyPlaintextURLToClipboard = () => {
+    if (plaintextURL) {
+      copy(plaintextURL);
+      setPlaintextURLCopied(true);
+      setTimeout(() => {
+        setPlaintextURLCopied(false);
+      }, 1000);
+    }
+  };
 
   const copyContextToClipboard = () => {
     if (context.body) {
@@ -53,13 +65,15 @@ export const ContextActions = ({ context }: { context: CollectionEntry<"contexts
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="outline" size="icon" asChild>
-              <a href={editURL} target="_blank">
-                <PencilLine className="h-4 w-4" />
-              </a>
+            <Button variant="outline" size="icon" onClick={copyPlaintextURLToClipboard}>
+              {plaintextURLCopied ? (
+                <Check className="h-4 w-4" />
+              ) : (
+                <Link className="h-4 w-4" />
+              )}
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Edit on Github</TooltipContent>
+          <TooltipContent>Copy plaintext URL</TooltipContent>
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -73,7 +87,7 @@ export const ContextActions = ({ context }: { context: CollectionEntry<"contexts
           </TooltipTrigger>
           <TooltipContent>Copy as Markdown</TooltipContent>
         </Tooltip>
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
           <Tooltip>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
