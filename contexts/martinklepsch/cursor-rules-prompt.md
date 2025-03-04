@@ -37,8 +37,6 @@ Example use cases:
 - Special handling for auto-generated files (e.g., `.proto` files)
 - Custom UI development patterns
 - Code style and architecture preferences for specific folders
-
-Clipped on [[2025-03-04]]
 </cursor-rules-documentation>
 
 <examples>
