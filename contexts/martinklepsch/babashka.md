@@ -2,6 +2,7 @@
 title: Babashka Scripting
 provenance: partially AI generated
 description: Create babashka scripts to automate command-line tasks, file operations, and HTTP requests
+bump: 8
 ---
 # general tips for writing babashka code
 

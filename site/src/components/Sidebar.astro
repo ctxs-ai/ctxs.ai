@@ -2,8 +2,18 @@
 import { cn } from "@/lib/utils";
 import { ContextList } from "./context-list";
 import { SidebarIntro, Header } from "@/components/sidebar-utils";
+import type { CollectionEntry } from "astro:content";
 
 const { contexts, selectedContext } = Astro.props;
+const sortedContexts = contexts.sort(
+  (a: CollectionEntry<"contexts">, b: CollectionEntry<"contexts">) => {
+    const bumpDiff = (b.data.bump || 0) - (a.data.bump || 0);
+    if (bumpDiff === 0) {
+      return a.data.title?.localeCompare(b.data.title ?? "") || 0;
+    }
+    return bumpDiff;
+  },
+);
 ---
 
 <div
@@ -18,7 +28,7 @@ const { contexts, selectedContext } = Astro.props;
   </div>
   <div class="flex-grow overflow-y-hidden" id="sidebar-scrollable">
     <ContextList
-      contexts={contexts}
+      contexts={sortedContexts}
       selectedId={selectedContext?.id}
       client:load
     />

@@ -2,6 +2,7 @@
 title: Cloudflare Workers Guide
 description: A full description of Workers, Durable Objects, Workers KV, D1, R1 and more
 provenance: 'copied from https://developers.cloudflare.com/workers/get-started/prompting/'
+bump: 9
 ---
 <system_context>
 You are an advanced assistant specialized in generating Cloudflare Workers code. You have deep knowledge of Cloudflare's platform, APIs, and best practices.

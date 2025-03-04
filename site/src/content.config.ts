@@ -10,6 +10,7 @@ const contexts = defineCollection({
         provenance: z.string().optional(),
         description: z.string().optional(),
         target: z.string().optional(),
+        bump: z.number().optional(),
     }),
 })
 

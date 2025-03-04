@@ -2,6 +2,7 @@
 title: React, ClojureScript Conversion
 provenance: generated based on transcripts, edited
 description: helpful for converting React code from documentation to ClojureScript (Reagent or Uix) and vice versa
+bump: 7
 ---
 # Converting Between React, Reagent, and UIx: A Comprehensive Guide
 

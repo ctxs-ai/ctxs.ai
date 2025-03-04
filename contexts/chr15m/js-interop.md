@@ -1,5 +1,5 @@
 ---
-title: applied-science/js-interop
+title: Efficient JavaScript Interop in ClojureScript
 description: Facilitate JavaScript interop using ClojureScript functions optimized for JavaScript environments
 ---
 

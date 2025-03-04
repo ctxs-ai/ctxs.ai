@@ -1,7 +1,9 @@
 ---
 title: PDF Table Extraction
-provenance: hand written
-description: "The prompt [I used to extract tabular data from a PDF](https://martinklepsch.org/posts/pdf-to-csv-with-gemini-and-claude.html). In the end model choice seemed to have the biggest impact (Claude won)."
+provenance: |
+  hand written
+  https://martinklepsch.org/posts/pdf-to-csv-with-gemini-and-claude.html
+description: "The prompt I used to extract tabular data from a PDF. In the end model choice seemed to have the biggest impact (Claude won)."
 ---
 Extract the tabular data on this page as csv. Respond with only the content of the csv file without any additional text.
 
