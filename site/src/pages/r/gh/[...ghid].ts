@@ -17,7 +17,7 @@ export const GET: APIRoute = async ({ params }) => {
         return new Response(entry.body, {
             status: 200,
             headers: {
-                'Content-Type': 'text/markdown',
+                'Content-Type': 'text/plain',
             },
         });
     } catch (error) {
