@@ -11,6 +11,7 @@ const contexts = defineCollection({
         description: z.string().optional(),
         target: z.string().optional(),
         bump: z.number().optional(),
+        tags: z.array(z.string()).optional(),
     }),
 })
 

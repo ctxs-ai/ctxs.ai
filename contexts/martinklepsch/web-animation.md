@@ -3,6 +3,7 @@ title: Web Animation Easing & Timing
 provenance: This is based on two chapters from https://animations.dev/
 description: Create effective web animations using appropriate duration and easing functions for different UI interactions
 bump: 6
+tags: [lib:react]
 ---
 # Web Animation Easing & Timing Cheatsheet
 
