@@ -6,9 +6,5 @@
       "binding": "CTXS_KV",
       "id": "ef4b59d30f304a018d507d73e58a9805"
     }
-  ],
-  "observability": {
-    "enabled": true,
-    "head_sampling_rate": 1
-  }
+  ]
 }
