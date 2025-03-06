@@ -1,0 +1,22 @@
+{
+  "name": "@ctxs/bot",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/js-yaml": "^4.0.9"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^1.1.11",
+    "@ai-sdk/openai": "^1.1.15",
+    "@commander-js/extra-typings": "^13.1.0",
+    "@mastra/core": "^0.4.2",
+    "ai": "^4.1.46",
+    "glob": "^10.3.10",
+    "gray-matter": "^4.0.3",
+    "mastra": "^0.2.6"
+  }
+}
