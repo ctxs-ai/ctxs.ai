@@ -8,7 +8,11 @@ export const getStaticPaths = (async () => {
   const contexts = await getCollection("contexts");
 
   return contexts.map((c) => ({
-    params: { ghid: c.id },
+    params: {
+      namespace: "gh",
+      group: c.id.split("/")[0],
+      author: c.id.split("/")[1],
+    },
     props: { contexts: contexts, selectedContext: c },
   }));
 }) satisfies GetStaticPaths;

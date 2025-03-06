@@ -2,12 +2,12 @@ import type { APIRoute } from 'astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 export const GET: APIRoute = async ({ params }) => {
-    const { ghid } = params;
+    const { namespace, group, author } = params;
 
     try {
         const contexts = await getCollection('contexts');
         const entry = contexts.find(entry => {
-            return ghid === entry.id;
+            return group + "/" + author === entry.id;
         });
 
         if (!entry) {
@@ -31,7 +31,11 @@ export async function getStaticPaths() {
 
     return contexts.map(entry => {
         return {
-            params: { ghid: entry.id }
+            params: {
+                namespace: "gh",
+                group: entry.id.split("/")[0],
+                author: entry.id.split("/")[1],
+            }
         };
     });
 }
