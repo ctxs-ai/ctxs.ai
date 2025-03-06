@@ -1,12 +1,10 @@
 ---
-import { Button } from "@/components/ui/button";
-import { ContextActions } from "@/components/context-view";
 import ContextView from "@/components/context.astro";
 import Sidebar from "@/components/Sidebar.astro";
-import { WordmarkLong } from "@/components/wordmark";
+import MobileNav from "@/components/MobileNav.astro";
+import type { CollectionEntry } from "astro:content";
 
-const contexts = Astro.props.contexts;
-const selectedContext = Astro.props.selectedContext;
+const { contexts, selectedContext } = Astro.props;
 ---
 
 <div class="h-screen flex flex-col md:flex-row">
@@ -14,22 +12,55 @@ const selectedContext = Astro.props.selectedContext;
 
   <div class="flex-1 flex flex-col">
     {
-      selectedContext && (
-        <div class="sticky top-0 z-10 bg-background md:hidden">
-          <div class="px-4 py-2 flex justify-between items-center border-b border-border">
-            <a href="/" class="font-bold">
-              <Button asChild variant="ghost" size="sm">
-                <WordmarkLong />
-              </Button>
-            </a>
-            <ContextActions context={selectedContext} client:load />
-            {/* <ContributeButton /> */}
+      selectedContext ? (
+        <>
+          <MobileNav selectedContext={selectedContext} />
+          <div class="flex-grow overflow-y-auto">
+            <ContextView context={selectedContext} />
+          </div>
+        </>
+      ) : (
+        <div class=" border-border px-4 max-w-3xl w-full h-full mx-auto">
+          <div class="h-full border-x p-4 md:p-8 lg:pt-48">
+            <div
+              class="prose max-w-3xl
+        dark:prose-invert
+        font-mono
+        text-sm
+        prose-th:text-xs
+        prose-headings:text-base
+        prose-headings:font-bold
+        prose-code:text-sm
+        prose-code:border-border
+        prose-inline-code:border
+        prose-inline-code:rounded
+        prose-inline-code:px-1
+        prose-inline-code:py-px
+        prose-inline-code:font-medium
+        prose-pre:px-0.5
+        prose-li:my-1
+        prose-li:pl-3
+        prose-ul:pl-2
+        prose-ul:marker:text-foreground
+        prose-ul:list-(--dash-list-marker)"
+            >
+              <h1>work in progress</h1>
+              <p>
+                ctxs.ai is a registry platform for context windows and prompts.
+              </p>
+              <p>
+                <br />
+                Currently you can:
+              </p>
+              <ul>
+                <li>Browse available content on the left</li>
+                <li>Import context to your project via the shadcn cli</li>
+                <li>Access a plaintext permalink endpoint for each context</li>
+              </ul>
+            </div>
           </div>
         </div>
       )
     }
-    <div class="flex-grow overflow-y-auto">
-      {selectedContext && <ContextView context={selectedContext} />}
-    </div>
   </div>
 </div>

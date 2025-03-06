@@ -1,0 +1,29 @@
+---
+import { Button } from "@/components/ui/button";
+import { ContextActions } from "@/components/context-view";
+import { WordmarkLong } from "@/components/wordmark";
+import type { Context } from "@/types";
+
+interface Props {
+  selectedContext?: Context;
+}
+
+const { selectedContext } = Astro.props;
+---
+
+<div class="sticky top-0 z-10 bg-background md:hidden">
+  <div
+    class="px-4 py-2 flex justify-between items-center border-b border-border"
+  >
+    <a href="/" class="font-bold">
+      <Button asChild variant="ghost" size="sm">
+        <WordmarkLong />
+      </Button>
+    </a>
+    {
+      selectedContext && (
+        <ContextActions context={selectedContext} client:load />
+      )
+    }
+  </div>
+</div>
