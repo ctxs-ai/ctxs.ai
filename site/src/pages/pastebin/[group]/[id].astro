@@ -40,9 +40,13 @@ const contextEntry: CollectionEntry<"contexts"> = {
     remarkPluginFrontmatter: {},
   }),
 } as CollectionEntry<"contexts">;
+
+const metadata = {
+  title: `Paste ${paste.id} - ctxs.ai`,
+};
 ---
 
-<Layout title={`Pasted text ${paste.title} - ctxs.ai`}>
+<Layout title={`Pasted text ${paste.title} - ctxs.ai`} meta={metadata}>
   <div class="sticky top-0">
     <div class="max-w-3xl mx-auto px-4 space-y-2 border-b border-border">
       <div class="bg-background md:border-x border-border py-4 md:px-8 md:py-6">

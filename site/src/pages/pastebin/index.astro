@@ -1,9 +1,24 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { Button } from "@/components/ui/button";
+
+const params = {
+  id: "e196lx95sb92jep",
+  title: "Share prompts, context windows with permalinks and analytics",
+};
+
+const queryString = new URLSearchParams(params).toString();
+const ogImage = `https://dynogee.com/gen?${queryString}`;
+
+const metadata = {
+  title: "Pastebin for LLM context windows - ctxs.ai",
+  description:
+    "Share prompts, context windows with a permanent URL, view and download tracking - ctxs.ai",
+  ogImage: ogImage,
+};
 ---
 
-<Layout title="Pastebin - ctxs.ai">
+<Layout title="Pastebin - ctxs.ai" meta={metadata}>
   <main class="flex min-h-[calc(100vh-4rem)] items-center justify-center">
     <div class="w-full max-w-2xl px-4 py-8">
       <div class="mb-8 text-center">
