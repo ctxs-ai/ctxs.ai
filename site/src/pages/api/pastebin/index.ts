@@ -17,15 +17,16 @@ export const POST: APIRoute = async ({ request, locals, redirect }: APIContext) 
 
   const { CTXS_KV } = locals.runtime.env;
   const pasteId = nanoid(8);
+  const contextId = `anon/${pasteId}`;
+  const contextIdKV = `paste:anon:${pasteId}`;
   const data = {
     createdAt: Date.now(),
     content: content.toString(),
-    id: pasteId,
+    id: contextId,
     title: `Paste ${pasteId}`,
     description: content.toString().slice(0, 100) + (content.toString().length > 100 ? '...' : '')
   }
 
-  await CTXS_KV.put(`paste:${pasteId}`, JSON.stringify(data));
-
-  return redirect(`/pastebin/${pasteId}`);
+  await CTXS_KV.put(contextIdKV, JSON.stringify(data));
+  return redirect(`/pastebin/${contextId}`);
 }

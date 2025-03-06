@@ -1,12 +1,12 @@
 ---
 export const prerender = false;
 
-import Layout from "../../layouts/Layout.astro";
+import Layout from "@/layouts/Layout.astro";
 import { ContextActions } from "@/components/context-view";
 import type { CollectionEntry } from "astro:content";
 import { ContextTags } from "@/components/context-tags";
 
-const { id } = Astro.params;
+const { id, group } = Astro.params;
 const { CTXS_KV } = Astro.locals.runtime.env;
 
 interface Paste {
@@ -17,7 +17,9 @@ interface Paste {
   description: string;
 }
 
-const paste: Paste | null = await CTXS_KV.get(`paste:${id}`, { type: "json" });
+const paste: Paste | null = await CTXS_KV.get(`paste:${group}:${id}`, {
+  type: "json",
+});
 
 if (!paste?.content) {
   return Astro.redirect("/404");
@@ -40,7 +42,7 @@ const contextEntry: CollectionEntry<"contexts"> = {
 } as CollectionEntry<"contexts">;
 ---
 
-<Layout title={`${paste.title} - ctxs.ai`}>
+<Layout title={`Pasted text ${paste.title} - ctxs.ai`}>
   <div class="sticky top-0">
     <div class="max-w-3xl mx-auto px-4 space-y-2 border-b border-border">
       <div class="bg-background md:border-x border-border py-4 md:px-8 md:py-6">
