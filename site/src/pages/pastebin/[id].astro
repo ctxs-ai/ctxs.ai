@@ -1,0 +1,79 @@
+---
+export const prerender = false;
+
+import Layout from "../../layouts/Layout.astro";
+import { ContextActions } from "@/components/context-view";
+import type { CollectionEntry } from "astro:content";
+import { ContextTags } from "@/components/context-tags";
+
+const { id } = Astro.params;
+const { CTXS_KV } = Astro.locals.runtime.env;
+
+interface Paste {
+  createdAt: number;
+  content: string;
+  id: string;
+  title: string;
+  description: string;
+}
+
+const paste: Paste | null = await CTXS_KV.get(`paste:${id}`, { type: "json" });
+
+if (!paste?.content) {
+  return Astro.redirect("/404");
+}
+
+// Convert paste to a format compatible with CollectionEntry<"contexts">
+const contextEntry: CollectionEntry<"contexts"> = {
+  id: paste.id,
+  collection: "contexts",
+  data: {
+    title: paste.title,
+    description: paste.description,
+    tags: ["paste"],
+  },
+  body: paste.content,
+  render: async () => ({
+    code: paste.content,
+    remarkPluginFrontmatter: {},
+  }),
+} as CollectionEntry<"contexts">;
+---
+
+<Layout title={`${paste.title} - ctxs.ai`}>
+  <div class="sticky top-0">
+    <div class="max-w-3xl mx-auto px-4 space-y-2 border-b border-border">
+      <div class="bg-background md:border-x border-border py-4 md:px-8 md:py-6">
+        <div class="flex justify-between items-start">
+          <h1 class="text-2xl font-medium tracking-tight">
+            {paste.title}
+          </h1>
+          <div class="hidden md:block">
+            <ContextActions context={contextEntry} client:load />
+          </div>
+        </div>
+        <p class="text-muted-foreground max-w-md mb-2">
+          {paste.description}
+        </p>
+        <div class="flex items-center justify-between">
+          <div class="flex mt-2 items-center gap-2">
+            <p class="text-muted-foreground text-sm">
+              Created {new Date(paste.createdAt).toLocaleString()}
+            </p>
+          </div>
+          <ContextTags tags={contextEntry.data.tags} />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style={{ width: "100px", overflow: "hidden" }}>
+    <div style={{ width: "400px" }}></div>
+  </div>
+  <div class="border-b border-border px-4 max-w-3xl mx-auto">
+    <div class="border-border border-x p-4 md:p-8">
+      <div class="prose max-w-3xl dark:prose-invert font-mono text-sm">
+        <pre class="whitespace-pre-wrap break-words">{paste.content}</pre>
+      </div>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,31 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { Button } from "@/components/ui/button";
+---
+
+<Layout title="Pastebin - ctxs.ai">
+  <main class="flex min-h-[calc(100vh-4rem)] items-center justify-center">
+    <div class="w-full max-w-2xl px-4 py-8">
+      <div class="mb-8 text-center">
+        <h1 class="text-4xl font-bold tracking-tight">Create a new paste</h1>
+        <p class="mt-2 text-muted-foreground">
+          Share code snippets, logs, or any text content
+        </p>
+      </div>
+
+      <form method="POST" action="/api/pastebin" class="space-y-4">
+        <div class="space-y-2">
+          <textarea
+            name="content"
+            id="content"
+            rows="12"
+            required
+            class="w-full rounded-lg border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            placeholder="Paste your text here..."></textarea>
+        </div>
+
+        <Button type="submit" className="w-full"> Create Paste </Button>
+      </form>
+    </div>
+  </main>
+</Layout>
