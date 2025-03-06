@@ -3,7 +3,7 @@ title: Cursor Rules Location
 provenance: https://ghuntley.com/stdlib/
 description: Rules for creating and organizing rules files for Cursor
 globs: '*.mdc'
-target: .cursor/rules/location.mdc
+target: .cursor/rules/tailwind-css-v4.mdc
 tags: [tool:cursor]
 ---
 # Cursor Rules Location

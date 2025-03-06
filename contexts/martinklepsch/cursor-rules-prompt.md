@@ -1,8 +1,8 @@
 ---
 title: Cursor Rules Prompt
 description: A prompt to draft rules files for your project using Cursors codebase understanding
-tags:
-  - tool:cursor
+tags: [tool:cursor]
+bump: 10
 ---
 Your goal is to support the user creating a Project Rules file for the Cursor IDE.
 

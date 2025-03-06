@@ -2,6 +2,8 @@
 title: Tailwind v4 Cursor Rules
 description: Cursor rules file for Tailwind CSS v4.0
 target: .cursor/rules/tailwind-css-v4.mdc
+bump: 11
+tags: [tool:cursor, lib:tailwindcss]
 ---
 # Tailwind CSS v4.0
 

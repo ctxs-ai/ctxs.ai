@@ -24,6 +24,9 @@ const tagConfigs: Record<string, TagConfig> = {
   "lib:react": {
     displayName: "React",
   },
+  "lib:tailwindcss": {
+    displayName: "Tailwind CSS",
+  },
   "lib:astro": {
     displayName: "Astro",
   },
@@ -48,7 +51,7 @@ export function ContextTags({ tags }: ContextTagsProps) {
         return (
           <span
             key={tag}
-            className="inline-flex items-center gap-1 text-xs text-muted-foreground border-border border-1 px-2 py-1 rounded-md"
+            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground border-border border-1 px-2 py-1 rounded-md"
           >
             {!config.icon ? (
               <ContextTagLogo tag={tag} className="h-3 w-3" />
