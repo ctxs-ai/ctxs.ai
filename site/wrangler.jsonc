@@ -1,5 +1,6 @@
 {
   "name": "ctxs-ai",
+  "compatibility_date": "2025-03-06",
   "pages_build_output_dir": "./dist",
   "kv_namespaces": [
     {
