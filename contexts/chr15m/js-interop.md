@@ -1,6 +1,7 @@
 ---
 title: Efficient JavaScript Interop in ClojureScript
 description: Facilitate JavaScript interop using ClojureScript functions optimized for JavaScript environments
+tags: [lang:clojure]
 ---
 
 # js-interop

@@ -2,6 +2,7 @@
 title: ClojureScript and Reagent
 provenance: hand-written
 description: Enhance ClojureScript applications using Reagent for improved data management and UI rendering efficiency
+tags: [lang:clojure, lib:react]
 ---
 
 # ClojureScript and Reagent

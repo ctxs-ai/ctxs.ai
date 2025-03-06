@@ -2,6 +2,7 @@
 title: Standard
 hidden: true
 description: Modify ClojureScript files minimally to efficiently achieve specific programming task goals
+tags: [lang:clojure]
 ---
 
 # General guidance

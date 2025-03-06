@@ -1,6 +1,7 @@
 ---
 title: Scittle ClojureScript
 description: Develop a simple web app using Scittle ClojureScript with JavaScript to handle browser interactions
+tags: [lang:clojure]
 ---
 # Scittle ClojureScript
 
