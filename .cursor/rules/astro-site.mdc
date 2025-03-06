@@ -32,6 +32,10 @@ The site follows Astro's file-based routing system with these key directories:
 - Use React components (`.tsx`) for interactive elements that require client-side JavaScript
 - Follow the component structure in `site/src/components/ui/` for consistent styling
 
+### API endpoints
+
+- Add `export const prerender = false` to the beginning of API endpoints so that they are deployed as server functions
+
 ### Styling Approach
 
 - Use Tailwind utility classes for styling
