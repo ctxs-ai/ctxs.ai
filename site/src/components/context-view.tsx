@@ -26,9 +26,11 @@ export const ContextActions = ({ context }: { context: CollectionEntry<"contexts
   const [commandCopied, setCommandCopied] = useState(false);
   const [plaintextURLCopied, setPlaintextURLCopied] = useState(false);
 
-  const cliCommand = `npx shadcn add "https://ctxs.ai/r/gh/${context.id}.json"`;
+  const origin = 'https://ctxs.ai';
+
+  const cliCommand = `npx ctxs add "${origin}/r/gh/${context.id}.json"`;
   const editURL = `https://github.com/ctxs-ai/ctxs.ai/edit/main/contexts/${context.id}.md`;
-  const plaintextURL = `https://ctxs.ai/r/gh/${context.id}.txt`;
+  const plaintextURL = `${origin}/r/gh/${context.id}.txt`;
 
   const copyPlaintextURLToClipboard = () => {
     if (plaintextURL) {
