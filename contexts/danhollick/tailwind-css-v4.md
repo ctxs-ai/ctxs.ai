@@ -4,8 +4,10 @@ description: Cursor rules file for Tailwind CSS v4.0
 target: .cursor/rules/tailwind-css-v4.mdc
 bump: 11
 tags: [tool:cursor, lib:tailwindcss]
+globs: ["**/*.{js,ts,jsx,tsx,mdx,css}"]
 ---
-# Tailwind CSS v4.0
+
+# Tailwind CSS v4
 
 ## Core Changes
 
@@ -22,7 +24,11 @@ tags: [tool:cursor, lib:tailwindcss]
       --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
     }
     ```
-
+- Legacy `tailwind.config.js` files can still be imported using the `@config` directive:
+  ```css
+  @import "tailwindcss";
+  @config "../../tailwind.config.js";
+  ```
 - **CSS import syntax**: Use `@import "tailwindcss"` instead of `@tailwind` directives
   - Old: `@tailwind base; @tailwind components; @tailwind utilities;`
   - New: `@import "tailwindcss";`
