@@ -31,11 +31,8 @@ export const GET: APIRoute = async ({ params }) => {
                 "path": `/gh/${entry.id}`,
                 "content": entry.body,
                 "type": "registry:file",
-                "target": entry.data.target || `../ctxs/${filename}.md`
+                "target": entry.data.target || `ctxs/${filename}.md`
             }]
-            // meta: bodyContent.meta,
-            // docs: bodyContent.docs,
-            // categories: bodyContent.categories
         };
 
         return new Response(JSON.stringify(response), {
