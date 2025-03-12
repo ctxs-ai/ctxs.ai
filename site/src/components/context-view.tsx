@@ -30,7 +30,7 @@ export const ContextActions = ({ context }: { context: CollectionEntry<"contexts
 
   const cliCommand = `npx ctxs add "${origin}/r/gh/${context.id}.json"`;
   const editURL = `https://github.com/ctxs-ai/ctxs.ai/edit/main/contexts/${context.id}.md`;
-  const plaintextURL = `${origin}/r/gh/${context.id}.txt`;
+  const plaintextURL = `${origin}/gh/${context.id}.txt`;
 
   const copyPlaintextURLToClipboard = () => {
     if (plaintextURL) {
@@ -123,7 +123,6 @@ export const ContextActions = ({ context }: { context: CollectionEntry<"contexts
                   )}
                 </div>
               </button>
-              <div className="text-xs text-muted-foreground">Note that this (for now) requires having your project setup with shadcn.</div>
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
