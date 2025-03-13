@@ -16,6 +16,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import copy from "copy-to-clipboard";
 import { useState } from "react";
+import { UpvoteButton } from "@/components/upvote-button";
 
 interface ContextViewProps {
   context: CollectionEntry<"contexts"> | null;
@@ -64,6 +65,7 @@ export const ContextActions = ({ context }: { context: CollectionEntry<"contexts
 
   return (
     <div className="flex gap-2">
+      <UpvoteButton contextId={context.id} />
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>

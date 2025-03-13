@@ -23,6 +23,7 @@ declare module 'astro:content' {
 type KVNamespace = import("@cloudflare/workers-types").KVNamespace;
 type ENV = {
     CTXS_KV: KVNamespace;
+    ANALYTICS: AnalyticsEngineDataset
 };
 
 // use a default runtime configuration (advanced mode).
