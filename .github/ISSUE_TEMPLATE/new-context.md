@@ -2,7 +2,7 @@
 name: New context
 about: An issue template to make it easy to contribute context windows and prompt
 title: 'New context: {enter title here}'
-labels: ''
+labels: 'new-context'
 assignees: martinklepsch
 
 ---
