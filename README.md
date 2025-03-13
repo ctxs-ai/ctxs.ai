@@ -1,6 +1,8 @@
 # What is ctxs.ai
-
-ctxs.ai is an open-source, community-curated registry of contexts for use with LLMs.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./.github/ctxs-github-dark.svg">
+  <img alt="Text changing depending on mode. Light: 'So light!' Dark: 'So dark!'" src="./.github/ctxs-github-light.svg">
+</picture>
 
 Users can contribute context data as markdown files via GitHub pull requests.
 
