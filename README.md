@@ -1,8 +1,10 @@
 # What is ctxs.ai
 
-ctxs.ai is an open-source, community-curated directory of contexts for use with LLMs.
+ctxs.ai is an open-source, community-curated registry of contexts for use with LLMs.
 
 Users can contribute context data as markdown files via GitHub pull requests.
+
+[Rationale](#rationale) | [Use Cases](#use-cases) | [Contributing](CONTRIBUTING.md) | [Interface](#interface)
 
 # Rationale
 
@@ -21,44 +23,41 @@ Specifically for coding use cases:
 - Define coding style, conventions and formatting
 - Provide library documentation in a format suited for LLMs
 
-# The Repository
-
-The repo contains a namespaces tree of markdown files which can be contributed via PR. Each markdown file comes with certain frontmatter (last updated, description, whether it is ai generated, a link to how it was generated)
-
-**Currently you are invited to contribute under your personal namespace** (GitHub username). I would love to see contributions to teach LLMs how to work with specific frameworks, translate code between languages or libraries,
-
-**If you're unsure how to contribute feel free to open an issue with your contribution**.
-
 # How to contribute
 
-ctxs.ai is meant as an open registry for context windows, for now you can add contexts under
-
-```
-./contexts/{your github username}/{context-slug}.md
-```
-
-To add a file use the following template
-
-```md
-
----
-title: Technical Writing Guidance
-description: A collection of instructions, nudges and examples for technical writing
----
-... the actual content
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 # Interface
 
-For now [`ctxs.ai`](https://ctxs.ai) redirects to this repo. Eventually it will serve as a CDN. Think of `unpkg` for prompts and context windows.
+[`ctxs.ai`](https://ctxs.ai) serves as a public endpoint for the content of this repo.
 
-Some ideas:
+The URL structure is as follows:
 
-- A command line script to search and download contexts
-- A Model Context Protocol server
-- A web UI to browse and download
+- `/gh/{username}/{context}` for HTML representations
+- `/gh/{username}/{context}.txt` for plaintext
+- `/r/gh/{username}/{context}.json` for shadcn-style registry
+- `/r/index.json` contains all available contexts
 
-For now the README will contain a list of all entries.
+
+## `ctxs` command line
+
+`npx ctxs add` will allow you to add a selection of context windows to your project. 
+
+On the website you will also be able to copy `ctxs` commands that add files to your project. By default files will be written to `ctxs/` in your current directory. Some files will be written to a designated path (e.g. Cursor rules, [example](https://github.com/ctxs-ai/ctxs.ai/blob/main/contexts/danhollick/tailwind-css-v4.md?plain=1)).
+
+```sh
+npx ctxs add "https://ctxs.ai/r/gh/danhollick/tailwind-css-v4.json"
+```
+
+## HTTP endpoints
+
+For any context on the site you can append `.txt` to the URL to get a plaintext version of the context. This URL can be used with LLMs as a token-efficient way of providing context.
+
+```sh
+curl https://ctxs.ai/gh/martinklepsch/babashka.txt
+```
+
+Note that currently there is no versioning and context may change. For regular, unsupervised use it is recommended to download contexts in order to preempt prompt injection.
 
 # Inspirations
 
@@ -74,10 +73,4 @@ For now the README will contain a list of all entries.
 
 # Available Contexts
 
-Browse via GitHub for now (type <kbd>t</kbd> now). Will fix soon :-)
-
-All contexts can also be retrieved via `curl`, e.g.
-
-```
-curl https://ctxs.ai/gh/martinklepsch/babashka
-```
+Browse via [ctxs.ai](https://ctxs.ai)
