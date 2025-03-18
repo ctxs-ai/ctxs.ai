@@ -1,24 +1,52 @@
 import { Button } from "@/components/ui/button"
-import { signIn } from "@/lib/auth-client"
-import { Github, Sparkles } from "lucide-react"
+import { signIn, signOut } from "@/lib/auth-client"
+import { Github, LogOut, Sparkles } from "lucide-react"
 import { WordmarkLong } from "@/components/wordmark";
+import { useSession } from "@/lib/auth-client";
+import type { User } from "better-auth/types";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuTrigger,
+    DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
-export const ContributeButton = () => {
+export const UserAvatar = ({ user }: { user: User }) => {
+    return (
+        <DropdownMenu >
+            <DropdownMenuTrigger className="cursor-pointer flex items-center gap-2">
+                <Avatar className="size-5">
+                    <AvatarImage src={user.image ?? undefined} />
+                </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={signOut} className="flex justify-between items-center">
+                    Sign Out
+                    <LogOut className="size-3" />
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    )
+
+}
+export const SignInButton = () => {
     return (
         <Button onClick={signIn} size="sm" variant="outline" className="h-7 text-xs">
-            <Github className="h-3 w-3 mr-1" />
-            Contribute
+            <Github className="size-4 mr-1" />
+            Sign in
         </Button>
     )
 }
 
 export const Header = () => {
+    const { data: session } = useSession();
     return (
         <div className="px-4 pt-3 pb-4 flex justify-between items-center">
             <a href="/">
                 <WordmarkLong />
             </a>
-            <ContributeButton />
+            {session ? <UserAvatar user={session.user} /> : <SignInButton />}
         </div>
     )
 }
