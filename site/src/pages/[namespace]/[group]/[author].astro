@@ -4,6 +4,8 @@ import Layout from "@/layouts/Layout.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 import Page from "@/components/Page.astro";
 
+export const prerender = true;
+
 export const getStaticPaths = (async () => {
   const contexts = await getCollection("contexts");
 
