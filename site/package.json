@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.2.1",
+    "@astrojs/db": "^0.14.8",
     "@astrojs/react": "^4.2.0",
     "@fontsource/geist-mono": "^5.1.1",
     "@radix-ui/react-avatar": "^1.1.3",
