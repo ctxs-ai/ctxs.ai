@@ -1,15 +1,14 @@
 import { Button } from "@/components/ui/button"
+import { signIn } from "@/lib/auth-client"
 import { Github, Sparkles } from "lucide-react"
 import { WordmarkLong } from "@/components/wordmark";
 
 export const ContributeButton = () => {
     return (
-        <a href="https://github.com/ctxs-ai/ctxs.ai" target="_blank" rel="noopener noreferrer">
-            <Button size="sm" variant="outline" className="h-7 text-xs">
-                <Github className="h-3 w-3 mr-1" />
-                Contribute
-            </Button>
-        </a>
+        <Button onClick={signIn} size="sm" variant="outline" className="h-7 text-xs">
+            <Github className="h-3 w-3 mr-1" />
+            Contribute
+        </Button>
     )
 }
 
