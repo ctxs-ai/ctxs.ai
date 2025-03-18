@@ -1,6 +1,5 @@
 import { defineDb, defineTable, column } from 'astro:db';
 
-// https://astro.build/db/config
 const User = defineTable({
   columns: {
     id: column.text({ primaryKey: true }),
@@ -55,7 +54,7 @@ const Session = defineTable({
   }
 });
 
-const Posts = defineTable({
+const Post = defineTable({
   columns: {
     id: column.number({ primaryKey: true }),
     title: column.text(),
@@ -65,5 +64,11 @@ const Posts = defineTable({
 });
 
 export default defineDb({
-  tables: { User, Account, Session, Verification, Posts }
+  tables: {
+    user: User,
+    account: Account,
+    session: Session,
+    verification: Verification,
+    post: Post
+  }
 });

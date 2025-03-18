@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { db, Posts } from 'astro:db';
+import { db, post as Post } from 'astro:db';
 
 export const prerender = false;
 
@@ -15,7 +15,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Insert the new post
-    const [post] = await db.insert(Posts).values({
+    const [post] = await db.insert(Post).values({
       title: body.title,
       content: body.content,
       createdAt: new Date()
