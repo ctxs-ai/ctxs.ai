@@ -3,7 +3,7 @@ import { defineCollection, z } from 'astro:content';
 
 const contexts = defineCollection({
     // type: 'content',
-    loader: glob({ pattern: ["**/*.(md|mdx)", "!**/README.md"], base: "../contexts" }),
+    loader: glob({ pattern: ["**/*.(md|mdx)", "!**/README.md"], base: "contexts" }),
     schema: z.object({
         // We can add more frontmatter schema validation here if needed
         title: z.string().optional(),
