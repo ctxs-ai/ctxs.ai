@@ -1,5 +1,5 @@
-import { sqliteTable, AnySQLiteColumn, integer, text, blob, foreignKey } from "drizzle-orm/sqlite-core"
-  import { sql } from "drizzle-orm"
+import { sqliteTable, integer, text, blob, foreignKey } from "drizzle-orm/sqlite-core"
+import { sql } from "drizzle-orm"
 
 export const astroDbSnapshot = sqliteTable("_astro_db_snapshot", {
 	id: integer().primaryKey({ autoIncrement: true }),

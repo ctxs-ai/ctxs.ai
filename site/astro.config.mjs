@@ -1,17 +1,25 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import tailwindcss from "@tailwindcss/vite";
 // import cloudflare from '@astrojs/cloudflare';
 import node from '@astrojs/node';
 
 import react from '@astrojs/react';
 
-import db from '@astrojs/db';
-
 // https://astro.build/config
 export default defineConfig({
   site: 'https://ctxs.ai',
   output: 'server',
+  env: {
+    schema: {
+      TURSO_CONNECTION_URL: envField.string({ context: "server", access: "secret" }),
+      TURSO_AUTH_TOKEN: envField.string({ context: "server", access: "secret" }),
+      GITHUB_CLIENT_ID: envField.string({ context: "server", access: "secret" }),
+      GITHUB_CLIENT_SECRET: envField.string({ context: "server", access: "secret" }),
+      BETTER_AUTH_URL: envField.string({ context: "server", access: "secret", optional: true }),
+      BETTER_AUTH_SECRET: envField.string({ context: "server", access: "secret" }),
+    }
+  },
   adapter: node({
     mode: 'standalone',
   }),
@@ -36,5 +44,5 @@ export default defineConfig({
     },
   },
 
-  integrations: [react(), db()]
+  integrations: [react()]
 });
