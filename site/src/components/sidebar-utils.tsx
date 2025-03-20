@@ -39,6 +39,15 @@ export const SignInButton = () => {
     )
 }
 
+export const SubmitOrSignInButton = () => {
+    const { data: session } = useSession();
+    if (session) {
+        return (<Button asChild><a href="/weekly/submit">Submit a Post</a></Button>)
+    } else {
+        return (<SignInButton />)
+    }
+}
+
 export const Header = () => {
     const { data: session } = useSession();
     return (

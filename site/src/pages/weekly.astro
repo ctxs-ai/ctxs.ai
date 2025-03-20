@@ -10,7 +10,7 @@ import { ThumbsUp } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Wordmark } from "@/components/wordmark";
 import { authClient } from "@/lib/auth-client";
-
+import { SubmitOrSignInButton } from "@/components/sidebar-utils";
 // Get posts with their vote counts and author info
 const posts = await db
   .select({
@@ -46,6 +46,8 @@ const meta = {
     "An open-source, community-curated registry of contexts for use with LLMs",
   ogImage: ogImage,
 };
+
+const isLoggedIn = Astro.locals.user;
 ---
 
 <Layout meta={meta}>
@@ -59,7 +61,7 @@ const meta = {
         Vote on the best prompts and context windows
       </p>
       <div class="flex justify-center gap-4">
-        <Button id="submit-button" className="px-8">Submit a Post</Button>
+        <SubmitOrSignInButton client:visible />
       </div>
     </div>
 

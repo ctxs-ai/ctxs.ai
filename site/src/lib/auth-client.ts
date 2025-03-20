@@ -6,7 +6,8 @@ export const useSession = authClient.useSession;
 
 export const signIn = async () => {
   const data = await authClient.signIn.social({
-    provider: "github"
+    provider: "github",
+    callbackURL: '/weekly/submit'
   })
 }
 
