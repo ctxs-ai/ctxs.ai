@@ -65,12 +65,12 @@ export const Vote = sqliteTable("vote", {
 	unique().on(t.userId, t.postId),
 ]);
 
-export const Comment = sqliteTable("comment", {
-	id: integer().primaryKey(),
-	createdAt: text().notNull(),
-	userId: text().notNull().references(() => User.id),
-	postId: text().notNull().references(() => Post.id),
-}, (t) => [
-	unique().on(t.userId, t.postId),
-]);
+// export const Comment = sqliteTable("comment", {
+// 	id: integer().primaryKey(),
+// 	createdAt: text().notNull(),
+// 	userId: text().notNull().references(() => User.id),
+// 	postId: text().notNull().references(() => Post.id),
+// }, (t) => [
+// 	unique().on(t.userId, t.postId),
+// ]);
 

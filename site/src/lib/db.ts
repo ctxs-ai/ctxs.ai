@@ -7,4 +7,13 @@ const turso = createClient({
   authToken: TURSO_AUTH_TOKEN!,
 });
 
-export const db = drizzle(turso);
+// export const db = drizzle(turso);
+
+export let db;
+if (process.env.NODE_ENV === "development") {
+  console.log("[DEV] initializing db")
+  db = drizzle(createClient({ url: "file:dev.db", authToken: "" }));
+} else {
+  console.log("[PROD] initializing db")
+  db = drizzle(turso);
+}

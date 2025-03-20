@@ -1,13 +1,27 @@
 require("dotenv").config();
 
-import type { Config } from "drizzle-kit";
+import { defineConfig } from "drizzle-kit";
 
-export default {
+const isDevelopment = process.env.NODE_ENV === "development";
+
+export default defineConfig({
   schema: "./src/db/schema.ts",
   out: "./migrations",
-  dialect: "turso",
-  dbCredentials: {
-    url: process.env.TURSO_CONNECTION_URL!,
-    authToken: process.env.TURSO_AUTH_TOKEN,
-  },
-} satisfies Config;
+  dialect: isDevelopment ? "sqlite" : "turso",
+  dbCredentials: isDevelopment
+    ? {
+      url: "file:./dev.db",
+    }
+    : {
+      url: process.env.TURSO_CONNECTION_URL!,
+      authToken: process.env.TURSO_AUTH_TOKEN,
+    },
+});
+// export default defineConfig({
+//   schema: "./src/db/schema.ts",
+//   out: "./migrations",
+//   dialect: "sqlite",
+//   dbCredentials: {
+//     url: "file:sqlite.db",
+//   },
+// });
