@@ -1,76 +1,77 @@
-import { sqliteTable, integer, text, blob, foreignKey, unique } from "drizzle-orm/sqlite-core"
+import { pgTable, serial, text, varchar, integer, boolean, timestamp, primaryKey, unique } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
-export const User = sqliteTable("user", {
-	id: text().primaryKey(),
-	name: text().notNull(),
-	email: text().notNull(),
-	emailVerified: integer().notNull(),
-	image: text(),
-	createdAt: text().notNull(),
-	updatedAt: text().notNull(),
+// Better-auth schema
+export const User = pgTable("user", {
+	id: text("id").primaryKey(),
+	name: text("name").notNull(),
+	email: text("email").notNull(),
+	emailVerified: boolean("email_verified").notNull(),
+	image: text("image"),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const Account = sqliteTable("account", {
-	id: text().primaryKey(),
-	userId: text().notNull().references(() => User.id),
-	accountId: text().notNull(),
-	providerId: text().notNull(),
-	accessToken: text(),
-	refreshToken: text(),
-	accessTokenExpiresAt: text(),
-	refreshTokenExpiresAt: text(),
-	scope: text(),
-	idToken: text(),
-	password: text(),
-	createdAt: text().notNull(),
-	updatedAt: text().notNull(),
+export const Account = pgTable("account", {
+	id: text("id").primaryKey(),
+	userId: text("user_id").notNull().references(() => User.id),
+	accountId: text("account_id").notNull(),
+	providerId: text("provider_id").notNull(),
+	accessToken: text("access_token"),
+	refreshToken: text("refresh_token"),
+	accessTokenExpiresAt: timestamp("access_token_expires_at"),
+	refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+	scope: text("scope"),
+	idToken: text("id_token"),
+	password: text("password"),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const Session = sqliteTable("session", {
-	id: text().primaryKey(),
-	userId: text().notNull().references(() => User.id),
-	token: text().notNull(),
-	expiresAt: text().notNull(),
-	ipAddress: text(),
-	userAgent: text(),
-	createdAt: text().notNull(),
-	updatedAt: text().notNull(),
+export const Session = pgTable("session", {
+	id: text("id").primaryKey(),
+	userId: text("user_id").notNull().references(() => User.id),
+	token: text("token").notNull(),
+	expiresAt: timestamp("expires_at").notNull(),
+	ipAddress: text("ip_address"),
+	userAgent: text("user_agent"),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const Verification = sqliteTable("verification", {
-	id: text().primaryKey(),
-	identifier: text().notNull(),
-	value: text().notNull(),
-	expiresAt: text().notNull(),
-	createdAt: text().notNull(),
-	updatedAt: text().notNull(),
+export const Verification = pgTable("verification", {
+	id: text("id").primaryKey(),
+	identifier: text("identifier").notNull(),
+	value: text("value").notNull(),
+	expiresAt: timestamp("expires_at").notNull(),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const Post = sqliteTable("post", {
-	id: integer().primaryKey(),
-	title: text(),
-	description: text(),
-	content: text().notNull(),
-	createdAt: text().notNull(),
-	authorId: text().notNull().references(() => User.id),
+// ctxs.ai schema
+export const Post = pgTable("post", {
+	id: serial("id").primaryKey(),
+	title: text("title"),
+	description: text("description"),
+	content: text("content").notNull(),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+	authorId: text("author_id").notNull().references(() => User.id),
 });
 
-export const Vote = sqliteTable("vote", {
-	id: integer().primaryKey(),
-	createdAt: text().notNull(),
-	userId: text().notNull().references(() => User.id),
-	postId: text().notNull().references(() => Post.id),
+export const Vote = pgTable("vote", {
+	id: serial("id").primaryKey(),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+	userId: text("user_id").notNull().references(() => User.id),
+	postId: integer("post_id").notNull().references(() => Post.id),
 }, (t) => [
 	unique().on(t.userId, t.postId),
 ]);
 
-// export const Comment = sqliteTable("comment", {
-// 	id: integer().primaryKey(),
-// 	createdAt: text().notNull(),
-// 	userId: text().notNull().references(() => User.id),
-// 	postId: text().notNull().references(() => Post.id),
+// export const Comment = pgTable("comment", {
+// 	id: serial("id").primaryKey(),
+// 	createdAt: timestamp("created_at").notNull().defaultNow(),
+// 	userId: text("user_id").notNull().references(() => User.id),
+// 	postId: integer("post_id").notNull().references(() => Post.id),
 // }, (t) => [
 // 	unique().on(t.userId, t.postId),
 // ]);
-

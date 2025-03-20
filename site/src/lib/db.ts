@@ -1,19 +1,23 @@
-import { drizzle } from "drizzle-orm/libsql";
-import { createClient } from "@libsql/client";
-import { TURSO_CONNECTION_URL, TURSO_AUTH_TOKEN } from "astro:env/server";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import * as schema from "../db/schema";
 
-const turso = createClient({
-  url: TURSO_CONNECTION_URL!,
-  authToken: TURSO_AUTH_TOKEN!,
-});
-
-// export const db = drizzle(turso);
-
+// Create a PostgreSQL client
 export let db;
+
 if (process.env.NODE_ENV === "development") {
-  console.log("[DEV] initializing db")
-  db = drizzle(createClient({ url: "file:dev.db", authToken: "" }));
+  // Local development connection
+  const connectionString = process.env.DATABASE_URL!;
+  console.log("[DEV] initializing PostgreSQL db", connectionString);
+  const client = postgres(connectionString);
+  db = drizzle(client, { schema });
 } else {
-  console.log("[PROD] initializing db")
-  db = drizzle(turso);
+  console.log("[PROD] initializing PostgreSQL db");
+  // Production connection
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) {
+    throw new Error("DATABASE_URL is not defined in production environment");
+  }
+  const client = postgres(connectionString);
+  db = drizzle(client, { schema });
 }

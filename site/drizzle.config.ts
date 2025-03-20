@@ -6,22 +6,17 @@ const isDevelopment = process.env.NODE_ENV === "development";
 
 export default defineConfig({
   schema: "./src/db/schema.ts",
-  out: "./migrations",
-  dialect: isDevelopment ? "sqlite" : "turso",
-  dbCredentials: isDevelopment
-    ? {
-      url: "file:./dev.db",
-    }
-    : {
-      url: process.env.TURSO_CONNECTION_URL!,
-      authToken: process.env.TURSO_AUTH_TOKEN,
-    },
+  out: "./migrations-pg",
+  dialect: "postgresql",
+  dbCredentials: {
+    url: process.env.DATABASE_URL || "postgres://postgres:postgres@localhost:5432/ctxs_dev",
+  },
+  // Optionally, you can configure separate connections for dev/prod
+  // dbCredentials: isDevelopment
+  //   ? {
+  //     connectionString: process.env.DATABASE_URL || "postgres://postgres:postgres@localhost:5432/ctxs",
+  //   }
+  //   : {
+  //     connectionString: process.env.DATABASE_URL!,
+  //   }
 });
-// export default defineConfig({
-//   schema: "./src/db/schema.ts",
-//   out: "./migrations",
-//   dialect: "sqlite",
-//   dbCredentials: {
-//     url: "file:sqlite.db",
-//   },
-// });

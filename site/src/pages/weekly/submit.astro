@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Wordmark } from "@/components/wordmark";
-
+import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
 const meta = {
   title: "Submit a Post - ctxs.ai",
   description: "Submit a new post to the weekly discussion",
@@ -12,11 +12,9 @@ const meta = {
 ---
 
 <Layout meta={meta}>
+  <WeeklyHeader />
   <div class="max-w-3xl mx-auto px-4 py-8">
     <div class="mb-8 text-center">
-      <div class="mb-4">
-        <Wordmark />
-      </div>
       <h1 class="text-4xl font-bold tracking-tight mb-4">Submit a Post</h1>
       <p class="text-muted-foreground">
         Share your thoughts with the community

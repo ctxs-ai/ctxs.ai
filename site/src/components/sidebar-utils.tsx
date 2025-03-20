@@ -4,21 +4,25 @@ import { Github, LogOut, Sparkles } from "lucide-react"
 import { WordmarkLong } from "@/components/wordmark";
 import { useSession } from "@/lib/auth-client";
 import type { User } from "better-auth/types";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuTrigger,
     DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
-export const UserAvatar = ({ user }: { user: User }) => {
+export const Avatar = ({ src, className }: { src?: string, className?: string }) => {
+    return (
+        <img className={cn("size-full aspect-square", className)} src={src} />
+    )
+}
+
+export const AccountMenu = ({ children }: { children: React.ReactNode }) => {
     return (
         <DropdownMenu >
             <DropdownMenuTrigger className="cursor-pointer flex items-center gap-2">
-                <Avatar className="size-5">
-                    <AvatarImage src={user.image ?? undefined} />
-                </Avatar>
+                {children}
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={signOut} className="flex justify-between items-center">
@@ -28,11 +32,11 @@ export const UserAvatar = ({ user }: { user: User }) => {
             </DropdownMenuContent>
         </DropdownMenu>
     )
-
 }
+
 export const SignInButton = () => {
     return (
-        <Button onClick={signIn} size="sm" variant="outline" className="h-7 text-xs">
+        <Button onClick={signIn} size="sm" variant="outline" className="text-sm">
             <Github className="size-4 mr-1" />
             Sign in
         </Button>
@@ -55,7 +59,7 @@ export const Header = () => {
             <a href="/">
                 <WordmarkLong />
             </a>
-            {session ? <UserAvatar user={session.user} /> : <SignInButton />}
+            {session ? <AccountMenu user={session.user} /> : <SignInButton />}
         </div>
     )
 }

@@ -1,0 +1,30 @@
+---
+import {
+  Wordmark,
+  Logo,
+  LogoWordmark,
+  WeeklyLogo,
+} from "@/components/wordmark";
+import { AccountMenu, Avatar, SignInButton } from "@/components/sidebar-utils";
+const { user, session } = Astro.locals;
+---
+
+<div class="max-w-3xl mx-auto px-4 py-8">
+  <div class="mb-4 flex justify-between items-center">
+    <a href="/weekly">
+      <WeeklyLogo className="h-6 w-auto block" />
+    </a>
+    {
+      session ? (
+        <AccountMenu client:load>
+          <Avatar
+            src={user?.image ?? undefined}
+            className="size-6 rounded-sm"
+          />
+        </AccountMenu>
+      ) : (
+        <SignInButton />
+      )
+    }
+  </div>
+</div>
