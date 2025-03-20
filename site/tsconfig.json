@@ -2,7 +2,8 @@
   "extends": "astro/tsconfigs/strict",
   "include": [
     ".astro/types.d.ts",
-    "**/*"
+    "**/*",
+    "drizzle.config.ts"
   ],
   "exclude": [
     "dist"
