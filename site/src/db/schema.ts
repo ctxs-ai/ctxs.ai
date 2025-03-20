@@ -1,13 +1,7 @@
-import { sqliteTable, integer, text, blob, foreignKey } from "drizzle-orm/sqlite-core"
+import { sqliteTable, integer, text, blob, foreignKey, unique } from "drizzle-orm/sqlite-core"
 import { sql } from "drizzle-orm"
 
-export const astroDbSnapshot = sqliteTable("_astro_db_snapshot", {
-	id: integer().primaryKey({ autoIncrement: true }),
-	version: text(),
-	snapshot: blob(),
-});
-
-export const user = sqliteTable("user", {
+export const User = sqliteTable("user", {
 	id: text().primaryKey(),
 	name: text().notNull(),
 	email: text().notNull(),
@@ -17,9 +11,9 @@ export const user = sqliteTable("user", {
 	updatedAt: text().notNull(),
 });
 
-export const account = sqliteTable("account", {
+export const Account = sqliteTable("account", {
 	id: text().primaryKey(),
-	userId: text().notNull().references(() => user.id),
+	userId: text().notNull().references(() => User.id),
 	accountId: text().notNull(),
 	providerId: text().notNull(),
 	accessToken: text(),
@@ -33,9 +27,9 @@ export const account = sqliteTable("account", {
 	updatedAt: text().notNull(),
 });
 
-export const session = sqliteTable("session", {
+export const Session = sqliteTable("session", {
 	id: text().primaryKey(),
-	userId: text().notNull().references(() => user.id),
+	userId: text().notNull().references(() => User.id),
 	token: text().notNull(),
 	expiresAt: text().notNull(),
 	ipAddress: text(),
@@ -44,7 +38,7 @@ export const session = sqliteTable("session", {
 	updatedAt: text().notNull(),
 });
 
-export const verification = sqliteTable("verification", {
+export const Verification = sqliteTable("verification", {
 	id: text().primaryKey(),
 	identifier: text().notNull(),
 	value: text().notNull(),
@@ -53,10 +47,30 @@ export const verification = sqliteTable("verification", {
 	updatedAt: text().notNull(),
 });
 
-export const post = sqliteTable("post", {
+export const Post = sqliteTable("post", {
 	id: integer().primaryKey(),
-	title: text().notNull(),
+	title: text(),
+	description: text(),
 	content: text().notNull(),
-	createdAt: text().default("2025-03-18T21:03:05.200Z").notNull(),
+	createdAt: text().notNull(),
+	authorId: text().notNull().references(() => User.id),
 });
+
+export const Vote = sqliteTable("vote", {
+	id: integer().primaryKey(),
+	createdAt: text().notNull(),
+	userId: text().notNull().references(() => User.id),
+	postId: text().notNull().references(() => Post.id),
+}, (t) => [
+	unique().on(t.userId, t.postId),
+]);
+
+export const Comment = sqliteTable("comment", {
+	id: integer().primaryKey(),
+	createdAt: text().notNull(),
+	userId: text().notNull().references(() => User.id),
+	postId: text().notNull().references(() => Post.id),
+}, (t) => [
+	unique().on(t.userId, t.postId),
+]);
 

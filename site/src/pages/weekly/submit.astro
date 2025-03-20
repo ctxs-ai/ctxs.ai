@@ -1,0 +1,78 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Wordmark } from "@/components/wordmark";
+
+const meta = {
+  title: "Submit a Post - ctxs.ai",
+  description: "Submit a new post to the weekly discussion",
+};
+---
+
+<Layout meta={meta}>
+  <div class="max-w-3xl mx-auto px-4 py-8">
+    <div class="mb-8 text-center">
+      <div class="mb-4">
+        <Wordmark />
+      </div>
+      <h1 class="text-4xl font-bold tracking-tight mb-4">Submit a Post</h1>
+      <p class="text-muted-foreground">
+        Share your thoughts with the community
+      </p>
+    </div>
+
+    <form id="post-form" class="space-y-4">
+      <Input
+        type="text"
+        name="title"
+        placeholder="Post title"
+        required
+        className="w-full"
+      />
+      <Textarea
+        name="content"
+        placeholder="Post content"
+        required
+        className="w-full"
+      />
+      <div class="flex gap-4">
+        <Button type="submit" className="flex-1">Create Post</Button>
+        <Button
+          type="button"
+          variant="outline"
+          className="flex-1"
+          onClick={() => (window.location.href = "/weekly")}
+        >
+          Cancel
+        </Button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    import { actions } from "astro:actions";
+
+    // Handle post creation
+    const postForm = document.getElementById("post-form");
+    postForm?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target as HTMLFormElement);
+      const title = formData.get("title") as string;
+      const content = formData.get("content") as string;
+
+      const { data, error } = await actions.createPost({
+        title,
+        content,
+      });
+
+      if (error) {
+        alert(error.message);
+      } else {
+        // Redirect back to weekly page
+        window.location.href = "/weekly";
+      }
+    });
+  </script>
+</Layout>
