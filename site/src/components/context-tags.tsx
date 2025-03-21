@@ -8,6 +8,9 @@ interface TagConfig {
 }
 
 const tagConfigs: Record<string, TagConfig> = {
+  "type:prompt": {
+    displayName: "Prompt",
+  },
   "tool:cursor": {
     displayName: "Cursor",
   },
