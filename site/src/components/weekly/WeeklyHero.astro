@@ -7,7 +7,10 @@ const { session } = Astro.locals;
 
 <div class="mb-12 text-center max-w-md mx-auto">
   <h1 class="text-5xl font-bold tracking-tight mb-4">
-    Freshly baked context windows
+    Freshly baked
+    <span id="post-types" class="inline-block min-w-[200px]"
+      >context windows</span
+    >
   </h1>
   <p class="text-muted-foreground text-xl mb-6 text-balance">
     Find, share and discuss.
@@ -27,3 +30,33 @@ const { session } = Astro.locals;
     <a class={buttonVariants({ variant: "outline" })} href="/"> Learn more </a>
   </div>
 </div>
+
+<script>
+  const contentTypes = [
+    "cursor rules",
+    "prompts",
+    "cline rules",
+    "context windows",
+    "aider conventions",
+    "markdown files",
+  ];
+
+  const postTypesElement = document.getElementById("post-types");
+  let currentIndex = 0;
+
+  function updateText() {
+    if (!postTypesElement) return;
+
+    postTypesElement.style.opacity = "0";
+    setTimeout(() => {
+      currentIndex = (currentIndex + 1) % contentTypes.length;
+      postTypesElement.textContent = contentTypes[currentIndex];
+      postTypesElement.style.opacity = "1";
+    }, 500);
+  }
+
+  if (postTypesElement) {
+    postTypesElement.style.transition = "opacity 0.3s ease-in-out";
+    setInterval(updateText, 3000);
+  }
+</script>
