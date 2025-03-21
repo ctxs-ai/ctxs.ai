@@ -3,10 +3,13 @@ import { ContextActions } from "@/components/context-view";
 import { render } from "astro:content";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ContextTags } from "@/components/context-tags";
+import { marked } from "marked";
+import { authorImage, authorName } from "@/db/postHelpers";
 
 const context = Astro.props.context;
-const author = context.id.split("/")[0];
 const { Content, headings, remarkPluginFrontmatter } = await render(context);
+
+const html = marked(context.body);
 ---
 
 <div class="sticky top-0">
@@ -20,16 +23,13 @@ const { Content, headings, remarkPluginFrontmatter } = await render(context);
           <ContextActions context={context} client:load />
         </div>
       </div>
-      <p class="text-muted-foreground max-w-md mb-2">
+      <p class="text-muted-foreground max-w-md my-2">
         {context.data.description}
       </p>
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <img
-            src={`https://github.com/${author}.png?size=32`}
-            class="size-5 rounded-sm"
-          />
-          <p class="text-muted-foreground text-sm">@{author}</p>
+          <img src={authorImage(context)} class="size-5 rounded-sm" />
+          <p class="text-muted-foreground text-sm">{authorName(context)}</p>
         </div>
         <ContextTags tags={context.data.tags} />
       </div>
@@ -56,14 +56,17 @@ const { Content, headings, remarkPluginFrontmatter } = await render(context);
         prose-inline-code:px-1
         prose-inline-code:py-px
         prose-inline-code:font-medium
-        prose-pre:px-0.5
+        prose-pre:bg-background
+        prose-pre:text-foreground
+        prose-pre:border
+        prose-pre:border-border
         prose-li:my-1
         prose-li:pl-3
         prose-ul:pl-2
         prose-ul:marker:text-foreground
         prose-ul:list-(--dash-list-marker)"
     >
-      <Content />
+      <div set:html={html} />
     </div>
   </div>
 </div>

@@ -21,18 +21,11 @@ const meta = {
     </div>
 
     <form id="post-form" class="space-y-4">
-      <Input
-        type="text"
-        name="title"
-        placeholder="Post title"
-        required
-        className="w-full"
-      />
       <Textarea
         name="content"
         placeholder="Post content"
         required
-        className="w-full"
+        className="w-full max-h-96"
       />
       <div class="flex gap-4">
         <Button type="submit" className="flex-1">Create Post</Button>
@@ -50,17 +43,15 @@ const meta = {
 
   <script>
     import { actions } from "astro:actions";
+    import { navigate } from "astro:transitions/client";
 
     // Handle post creation
     const postForm = document.getElementById("post-form");
     postForm?.addEventListener("submit", async (e) => {
       e.preventDefault();
       const formData = new FormData(e.target as HTMLFormElement);
-      const title = formData.get("title") as string;
       const content = formData.get("content") as string;
-
       const { data, error } = await actions.createPost({
-        title,
         content,
       });
 
@@ -68,7 +59,7 @@ const meta = {
         alert(error.message);
       } else {
         // Redirect back to weekly page
-        window.location.href = "/weekly";
+        navigate(`/weekly/${data.slug}`);
       }
     });
   </script>

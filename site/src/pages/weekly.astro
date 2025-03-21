@@ -2,24 +2,27 @@
 import Layout from "../layouts/Layout.astro";
 import { Post, Vote, User } from "@/db/schema";
 import { db } from "@/lib/db";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, isNotNull, arrayContains } from "drizzle-orm";
+import { authorImage, authorName } from "@/db/postHelpers";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { ThumbsUp } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
-import { authClient } from "@/lib/auth-client";
 import WeeklyHero from "@/components/weekly/WeeklyHero.astro";
+import TagSelector from "@/components/weekly/TagSelector.astro";
+const selectedTag = Astro.url.searchParams.get("tag");
 // Get posts with their vote counts and author info
 const posts = await db
   .select({
     id: Post.id,
     title: Post.title,
+    slug: Post.slug,
+    description: Post.description,
     content: Post.content,
     createdAt: Post.createdAt,
     authorId: Post.authorId,
+    attributedGitHubUser: Post.attributedGitHubUser,
     voteCount: sql<number>`count(${Vote.id})`.as("vote_count"),
+    tags: Post.tags,
     author: {
       id: User.id,
       name: User.name,
@@ -27,10 +30,12 @@ const posts = await db
     },
   })
   .from(Post)
+  .where(isNotNull(Post.slug))
+  .where(selectedTag ? arrayContains(Post.tags, [selectedTag]) : null)
   .leftJoin(Vote, eq(Post.id, Vote.postId))
   .leftJoin(User, eq(Post.authorId, User.id))
   .groupBy(Post.id, User.id)
-  .orderBy(sql`vote_count desc`);
+  .orderBy(sql`vote_count desc, created_at desc`);
 
 const params = {
   id: "e196lx95sb92jep",
@@ -47,18 +52,23 @@ const meta = {
   ogImage: ogImage,
 };
 
+const allTags = posts.flatMap((post) => post.tags) as string[];
+const uniqueTags = [...new Set(allTags)];
+console.log({ uniqueTags });
+
 const isLoggedIn = Astro.locals.user;
 ---
 
 <Layout meta={meta}>
   <WeeklyHeader />
-  <div class="max-w-3xl mx-auto px-4 py-8">
+  <div class="max-w-2xl mx-auto px-4 py-8">
     <WeeklyHero />
+    <TagSelector />
 
     <div class="space-y-4">
       {
         posts.map((post) => (
-          <div class="flex items-start gap-4 p-4 rounded-lg border bg-card">
+          <div class="flex items-start gap-4 p-4 rounded-lg border bg-card hover:border-primary/40 transition-colors">
             <div class="flex flex-col items-center gap-2">
               <Button
                 variant="outline"
@@ -71,21 +81,28 @@ const isLoggedIn = Astro.locals.user;
               <span class="text-sm font-medium">{post.voteCount}</span>
             </div>
             <div class="flex-1">
-              <h2 class="text-xl font-semibold mb-2">{post.title}</h2>
-              <p class="text-muted-foreground">{post.content}</p>
+              <a href={`/weekly/${post.slug}`}>
+                <h2 class="text-2xl font-medium tracking-tight">
+                  {post.title}
+                </h2>
+                <p class="text-muted-foreground mb-2 max-w-md">
+                  {post.description}
+                </p>
+              </a>
               <div class="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
                 {post.author && (
                   <>
-                    <img
-                      class="size-5 rounded-xs"
-                      src={post.author?.image || undefined}
-                    />
-                    <span>{post.author?.name || "Anonymous"}</span>
+                    <img class="size-5 rounded-xs" src={authorImage(post)} />
+                    <span>{authorName(post)}</span>
                     <span>•</span>
                   </>
                 )}
                 <span>
-                  Posted {new Date(post.createdAt).toLocaleDateString()}
+                  {new Date(post.createdAt).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    month: "long",
+                    day: "numeric",
+                  })}
                 </span>
               </div>
             </div>

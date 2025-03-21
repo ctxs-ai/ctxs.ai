@@ -1,0 +1,83 @@
+---
+import type { GetStaticPaths } from "astro";
+import Layout from "@/layouts/Layout.astro";
+import Page from "@/components/Page.astro";
+import ContextView from "@/components/context.astro";
+import { Post, Vote, User } from "@/db/schema";
+import { db } from "@/lib/db";
+import { eq, sql } from "drizzle-orm";
+import type { CollectionEntry } from "astro:content";
+
+type PostWithAuthor = {
+  id: number;
+  title: string | null;
+  content: string;
+  createdAt: Date;
+  authorId: string;
+  author: {
+    id: string;
+    name: string;
+    image: string | null;
+  } | null;
+};
+
+const [post] = await db
+  .select({
+    id: Post.id,
+    title: Post.title,
+    description: Post.description,
+    content: Post.content,
+    createdAt: Post.createdAt,
+    authorId: Post.authorId,
+    attributedGitHubUser: Post.attributedGitHubUser,
+    tags: Post.tags,
+    author: {
+      id: User.id,
+      name: User.name,
+      image: User.image,
+    },
+  })
+  .from(Post)
+  .where(eq(Post.slug, Astro.params.slug))
+  .leftJoin(User, eq(Post.authorId, User.id));
+
+if (post === undefined) {
+  return Astro.redirect("/weekly");
+}
+
+const selectedContext = {
+  id: `weekly/${post.author?.name || "anonymous"}/${post.slug}`,
+  attributedGitHubUser: post.attributedGitHubUser,
+  title: post.title || "",
+  description: post.description || "",
+  tags: post.tags || [],
+  data: {
+    title: post.title || "",
+    description: post.description || "",
+    tags: post.tags || [],
+  },
+  body: post.content,
+};
+
+const params = {
+  id: "kqa7b3a5ol15455",
+  title: post.title || "",
+  desc: post.description || "",
+  avatar: post.author?.image || "",
+  handle: `@${post.author?.name || "anonymous"}`,
+};
+
+const queryString = new URLSearchParams(params).toString();
+const ogImage = `https://dynogee.com/gen?${queryString}`;
+const meta = {
+  title: `${post.title} - ctxs.ai`,
+  description: post.description,
+  ogImage: ogImage,
+};
+
+Astro.response.headers.set("Cache-Control", "public, max-age=3600");
+---
+
+<Layout meta={meta}>
+  <ContextView context={selectedContext} />
+</Layout>

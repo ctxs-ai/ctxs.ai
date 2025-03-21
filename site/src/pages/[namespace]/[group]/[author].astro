@@ -4,20 +4,7 @@ import Layout from "@/layouts/Layout.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 import Page from "@/components/Page.astro";
 
-export const prerender = true;
-
-export const getStaticPaths = (async () => {
-  const contexts = await getCollection("contexts");
-
-  return contexts.map((c) => ({
-    params: {
-      namespace: "gh",
-      group: c.id.split("/")[0],
-      author: c.id.split("/")[1],
-    },
-    props: { contexts: contexts, selectedContext: c },
-  }));
-}) satisfies GetStaticPaths;
+export const prerender = false;
 
 const contexts = Astro.props.contexts;
 const selectedContext = Astro.props.selectedContext;

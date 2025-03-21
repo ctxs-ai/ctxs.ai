@@ -1,4 +1,4 @@
-import { pgTable, serial, text, varchar, integer, boolean, timestamp, primaryKey, unique } from "drizzle-orm/pg-core"
+import { pgTable, serial, text, varchar, integer, boolean, timestamp, primaryKey, unique, jsonb } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 // Better-auth schema
@@ -51,11 +51,19 @@ export const Verification = pgTable("verification", {
 // ctxs.ai schema
 export const Post = pgTable("post", {
 	id: serial("id").primaryKey(),
+	slug: text("slug"),
+	displayId: text("display_id").notNull().unique(),
 	title: text("title"),
 	description: text("description"),
 	content: text("content").notNull(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	authorId: text("author_id").notNull().references(() => User.id),
+	provenance: text("provenance"),
+	targetFile: text("target_file"),
+	tags: text("tags").array(),
+	frontmatter: jsonb("frontmatter"),
+	attributedGitHubUser: text("attributed_github_user"),
+	attributedXUser: text("attributed_x_user"),
 });
 
 export const Vote = pgTable("vote", {

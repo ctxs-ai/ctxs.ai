@@ -1,0 +1,27 @@
+---
+import { ContextTag } from "@/components/context-tags";
+import { db } from "@/lib/db";
+import { Post } from "@/db/schema";
+
+const tags = await db
+  .selectDistinct({
+    tag: Post.tags,
+  })
+  .from(Post);
+
+const allTags = tags.flatMap(({ tag }) => tag);
+const uniqueTags = [...new Set(allTags)];
+const selectedTag = Astro.url.searchParams.get("tag");
+---
+
+<div class="flex flex-wrap gap-2 justify-center mb-8 max-w-lg mx-auto">
+  {
+    uniqueTags.map((tag) => (
+      <ContextTag
+        tag={tag}
+        href={`/weekly?tag=${tag}`}
+        isActive={tag === selectedTag}
+      />
+    ))
+  }
+</div>

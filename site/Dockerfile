@@ -22,10 +22,10 @@ RUN apt-get update -qq && \
 
 # Install node modules
 COPY bun.lock package-lock.json package.json ./
-# RUN bun install
+RUN bun install
 
 # Copy application code
-# COPY . .
+COPY . .
 
 # # Build application
 # RUN --mount=type=secret,id=TURSO_CONNECTION_URL \
@@ -33,7 +33,7 @@ COPY bun.lock package-lock.json package.json ./
 #     TURSO_CONNECTION_URL="$(cat /run/secrets/TURSO_CONNECTION_URL)" \
 #     TURSO_AUTH_TOKEN="$(cat /run/secrets/TURSO_AUTH_TOKEN)" \
 #     bun --bun run build
-# # RUN bun --bun run build
+RUN bun --bun run build
 
 # Remove development dependencies
 RUN rm -rf node_modules && \
@@ -45,11 +45,12 @@ FROM base
 
 # Copy built application
 COPY --from=build /app/node_modules /app/node_modules
-COPY dist /app/dist
+COPY --from=build /app/dist /app/dist
+#COPY dist /app/dist
 
 ENV PORT=4321
 ENV HOST=0.0.0.0
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 4321
-CMD [ "node", "./dist/server/entry.mjs" ]
+CMD [ "node", "/app/dist/server/entry.mjs" ]

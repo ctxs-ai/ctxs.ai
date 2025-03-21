@@ -1,7 +1,7 @@
 // @ts-check
 import { defineConfig, envField } from 'astro/config';
 import tailwindcss from "@tailwindcss/vite";
-// import cloudflare from '@astrojs/cloudflare';
+import cloudflare from '@astrojs/cloudflare';
 import node from '@astrojs/node';
 
 import react from '@astrojs/react';
@@ -14,15 +14,15 @@ export default defineConfig({
     schema: {
       TURSO_CONNECTION_URL: envField.string({ context: "server", access: "secret" }),
       TURSO_AUTH_TOKEN: envField.string({ context: "server", access: "secret" }),
+      OPENAI_API_KEY: envField.string({ context: "server", access: "secret" }),
       GITHUB_CLIENT_ID: envField.string({ context: "server", access: "secret" }),
       GITHUB_CLIENT_SECRET: envField.string({ context: "server", access: "secret" }),
       BETTER_AUTH_URL: envField.string({ context: "server", access: "secret", optional: true }),
       BETTER_AUTH_SECRET: envField.string({ context: "server", access: "secret" }),
     }
   },
-  adapter: node({
-    mode: 'standalone',
-  }),
+  // adapter: cloudflare(),
+  adapter: node({ mode: 'standalone' }),
   prefetch: {
     defaultStrategy: 'hover',
     prefetchAll: true

@@ -1,15 +1,16 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { Account, Session, User, Verification } from "@/db/schema";
+import { BETTER_AUTH_URL, BETTER_AUTH_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "astro:env/server";
 import { db } from "@/lib/db";
 
 export const auth = betterAuth({
-  baseURL: import.meta.env.BETTER_AUTH_URL || process.env.BETTER_AUTH_URL as string,
-  secret: import.meta.env.BETTER_AUTH_SECRET || process.env.BETTER_AUTH_SECRET as string,
+  baseURL: BETTER_AUTH_URL,
+  secret: BETTER_AUTH_SECRET,
   socialProviders: {
     github: {
-      clientId: import.meta.env.GITHUB_CLIENT_ID || process.env.GITHUB_CLIENT_ID as string,
-      clientSecret: import.meta.env.GITHUB_CLIENT_SECRET || process.env.GITHUB_CLIENT_SECRET as string,
+      clientId: GITHUB_CLIENT_ID,
+      clientSecret: GITHUB_CLIENT_SECRET,
     },
   },
   database: drizzleAdapter(db, {
