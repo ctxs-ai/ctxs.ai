@@ -66,7 +66,7 @@ export const server = {
         const [post] = await db.insert(Post).values({
           title: metadata.title,
           description: metadata.description,
-          displayId: displayId
+          displayId: displayId,
           slug: slugify(metadata.title) + '-' + displayId,
           content,
           frontmatter,
