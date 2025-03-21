@@ -1,0 +1,14 @@
+---
+description: guidance on how to write .astro files
+globs: src/**/*.astro
+---
+
+.astro files contain two parts, a JS implementation and a DOM description, these are separated by frontmatter fences. an example
+
+```
+---
+import { Button } from "@/src/components/ui/button"
+---
+<Button>test</Button>
+```
+Make sure you do not omit the triple dash!

@@ -1,0 +1,70 @@
+---
+import { Button } from "@/components/ui/button";
+import { ThumbsUp } from "lucide-react";
+import { authorImage, authorName } from "@/db/postHelpers";
+
+interface Props {
+  post: {
+    id: string;
+    title: string;
+    slug: string;
+    description: string;
+    createdAt: Date;
+    voteCount: number;
+    author?: {
+      id: string;
+      name: string | null;
+      image: string | null;
+    };
+  };
+}
+
+const { post } = Astro.props;
+---
+
+<div
+  class="flex items-start gap-4 p-4 rounded-lg border bg-card hover:border-primary/40 transition-colors"
+>
+  <div class="flex flex-col items-center gap-2">
+    <Button
+      variant="outline"
+      size="icon"
+      className="vote-button"
+      data-post-id={post.id}
+    >
+      <ThumbsUp className="h-4 w-4" />
+    </Button>
+    <span class="text-sm font-medium">{post.voteCount}</span>
+  </div>
+  <div class="flex-1">
+    <a href={`/weekly/${post.slug}`}>
+      <h2 class="text-2xl font-medium tracking-tight">
+        {post.title}
+      </h2>
+      <p class="text-muted-foreground mb-2 max-w-md">
+        {post.description}
+      </p>
+    </a>
+    <div class="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+      {
+        post.author && (
+          <>
+            <img class="size-5 rounded-xs" src={authorImage(post)} />
+            <span>{authorName(post)}</span>
+            <span>•</span>
+          </>
+        )
+      }
+      <span>
+        {
+          new Date(post.createdAt).toLocaleDateString("en-US", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+          })
+        }
+      </span>
+    </div>
+  </div>
+</div>
+

@@ -3,15 +3,33 @@ import Layout from "../layouts/Layout.astro";
 import { Post, Vote, User } from "@/db/schema";
 import { db } from "@/lib/db";
 import { eq, sql, isNotNull, arrayContains } from "drizzle-orm";
-import { authorImage, authorName } from "@/db/postHelpers";
-import { Button } from "@/components/ui/button";
-import { ThumbsUp } from "lucide-react";
 import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
 import WeeklyHero from "@/components/weekly/WeeklyHero.astro";
 import TagSelector from "@/components/weekly/TagSelector.astro";
+import PostComponent from "@/components/weekly/Post.astro";
+
 const selectedTag = Astro.url.searchParams.get("tag");
+
+type PostWithVotes = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  content: string | null;
+  createdAt: Date;
+  authorId: string | null;
+  attributedGitHubUser: string | null;
+  voteCount: number;
+  tags: string[];
+  author: {
+    id: string;
+    name: string | null;
+    image: string | null;
+  } | null;
+};
+
 // Get posts with their vote counts and author info
-const posts = await db
+const posts = (await db
   .select({
     id: Post.id,
     title: Post.title,
@@ -35,7 +53,31 @@ const posts = await db
   .leftJoin(Vote, eq(Post.id, Vote.postId))
   .leftJoin(User, eq(Post.authorId, User.id))
   .groupBy(Post.id, User.id)
-  .orderBy(sql`vote_count desc, created_at desc`);
+  .orderBy(sql`vote_count desc, created_at desc`)) as PostWithVotes[];
+
+// Group posts by week
+const postsByWeek = posts.reduce(
+  (acc: Record<string, PostWithVotes[]>, post: PostWithVotes) => {
+    const date = new Date(post.createdAt);
+    // Get Monday of the week (subtracting days since Monday)
+    const monday = new Date(date);
+    monday.setDate(date.getDate() - date.getDay() + 1);
+    monday.setHours(0, 0, 0, 0);
+
+    const weekKey = monday.toISOString();
+    if (!acc[weekKey]) {
+      acc[weekKey] = [];
+    }
+    acc[weekKey].push(post);
+    return acc;
+  },
+  {},
+);
+
+// Sort weeks in descending order
+const sortedWeeks = Object.entries(postsByWeek).sort(
+  (a, b) => new Date(b[0]).getTime() - new Date(a[0]).getTime(),
+);
 
 const params = {
   id: "e196lx95sb92jep",
@@ -52,7 +94,7 @@ const meta = {
   ogImage: ogImage,
 };
 
-const allTags = posts.flatMap((post) => post.tags) as string[];
+const allTags = posts.flatMap((post: PostWithVotes) => post.tags) as string[];
 const uniqueTags = [...new Set(allTags)];
 console.log({ uniqueTags });
 
@@ -65,46 +107,22 @@ const isLoggedIn = Astro.locals.user;
     <WeeklyHero />
     <TagSelector />
 
-    <div class="space-y-4">
+    <div class="space-y-8">
       {
-        posts.map((post) => (
-          <div class="flex items-start gap-4 p-4 rounded-lg border bg-card hover:border-primary/40 transition-colors">
-            <div class="flex flex-col items-center gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                className="vote-button"
-                data-post-id={post.id}
-              >
-                <ThumbsUp className="h-4 w-4" />
-              </Button>
-              <span class="text-sm font-medium">{post.voteCount}</span>
-            </div>
-            <div class="flex-1">
-              <a href={`/weekly/${post.slug}`}>
-                <h2 class="text-2xl font-medium tracking-tight">
-                  {post.title}
-                </h2>
-                <p class="text-muted-foreground mb-2 max-w-md">
-                  {post.description}
-                </p>
-              </a>
-              <div class="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-                {post.author && (
-                  <>
-                    <img class="size-5 rounded-xs" src={authorImage(post)} />
-                    <span>{authorName(post)}</span>
-                    <span>•</span>
-                  </>
-                )}
-                <span>
-                  {new Date(post.createdAt).toLocaleDateString("en-US", {
-                    weekday: "long",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </span>
-              </div>
+        sortedWeeks.map(([weekStart, weekPosts]: [string, PostWithVotes[]]) => (
+          <div>
+            <h3 class="text-lg font-semibold mb-4">
+              Week of{" "}
+              {new Date(weekStart).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </h3>
+            <div class="space-y-4">
+              {weekPosts.map((post: PostWithVotes) => (
+                <PostComponent post={post} />
+              ))}
             </div>
           </div>
         ))

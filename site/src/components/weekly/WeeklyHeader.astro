@@ -23,7 +23,7 @@ const { user, session } = Astro.locals;
           />
         </AccountMenu>
       ) : (
-        <SignInButton />
+        <SignInButton client:load />
       )
     }
   </div>

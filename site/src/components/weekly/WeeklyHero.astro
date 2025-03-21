@@ -10,16 +10,18 @@ const { session } = Astro.locals;
     Freshly baked context windows
   </h1>
   <p class="text-muted-foreground text-xl mb-6 text-balance">
-    {weeklyTagline}
+    Find, share and discuss.
+    <br />
+    Fresh every week.
   </p>
   <div class="flex justify-center gap-4">
     {
       session ? (
         <a class={buttonVariants({ variant: "default" })} href="/weekly/submit">
-          Submit a Post
+          Submit something
         </a>
       ) : (
-        <Button>Browse submissions</Button>
+        <Button>Submit something</Button>
       )
     }
     <a class={buttonVariants({ variant: "outline" })} href="/"> Learn more </a>

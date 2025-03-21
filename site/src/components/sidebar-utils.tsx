@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { signIn, signOut } from "@/lib/auth-client"
-import { Github, LogOut, Sparkles } from "lucide-react"
+import { Github, Loader2, LogOut, Sparkles } from "lucide-react"
 import { WordmarkLong } from "@/components/wordmark";
 import { useSession } from "@/lib/auth-client";
 import type { User } from "better-auth/types";
@@ -11,6 +11,7 @@ import {
     DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 export const Avatar = ({ src, className }: { src?: string, className?: string }) => {
     return (
@@ -35,9 +36,14 @@ export const AccountMenu = ({ children }: { children: React.ReactNode }) => {
 }
 
 export const SignInButton = () => {
+    const [clicked, setClicked] = useState(false)
+    const handleClick = () => {
+        setClicked(true)
+        signIn()
+    }
     return (
-        <Button onClick={signIn} size="sm" variant="outline" className="text-sm">
-            <Github className="size-4 mr-1" />
+        <Button onClick={handleClick} size="sm" variant="outline" className="text-sm">
+            {clicked ? <Loader2 className="size-4 mr-1 animate-spin" /> : <Github className="size-4 mr-1" />}
             Sign in
         </Button>
     )

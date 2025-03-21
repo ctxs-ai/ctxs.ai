@@ -9,7 +9,7 @@ const tags = await db
   })
   .from(Post);
 
-const allTags = tags.flatMap(({ tag }) => tag);
+const allTags = tags.flatMap(({ tag }) => tag).filter((tag) => tag !== null);
 const uniqueTags = [...new Set(allTags)];
 const selectedTag = Astro.url.searchParams.get("tag");
 ---

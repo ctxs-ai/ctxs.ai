@@ -9,4 +9,5 @@ export const availableTags = [
   "lib:nextjs"
 ] as const
 
-export const weeklyTagline = "Find, share and discuss prompts, context windows and rules files "
+export const weeklyTagline =
+  "Find, share and discuss. Fresh every week."
