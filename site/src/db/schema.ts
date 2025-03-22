@@ -65,6 +65,7 @@ export const Post = pgTable("post", {
 	frontmatter: jsonb("frontmatter"),
 	attributedGitHubUser: text("attributed_github_user"),
 	attributedXUser: text("attributed_x_user"),
+	urn: text("urn").notNull().unique(),
 });
 
 export const Vote = pgTable("vote", {
