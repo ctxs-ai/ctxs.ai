@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ContextTags } from "@/components/context-tags";
 import { marked } from "marked";
 import { authorImage, authorName } from "@/db/postHelpers";
-
+import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
 const context = Astro.props.context;
 const { Content, headings, remarkPluginFrontmatter } = await render(context);
 
@@ -36,13 +36,11 @@ const html = marked(context.body);
     </div>
   </div>
 </div>
-<div style={{ width: "100px", overflow: "hidden" }}>
-  <div style={{ width: "400px" }}></div>
-</div>
 <div class="border-b border-border px-4 max-w-3xl mx-auto">
   <div class="border-border border-x p-4 md:p-8">
     <div
       class="prose max-w-3xl
+      prose-markdown
         dark:prose-invert
         font-mono
         text-sm

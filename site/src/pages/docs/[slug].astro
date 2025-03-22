@@ -1,0 +1,42 @@
+---
+import { LogoWordmark } from "@/components/wordmark";
+import Layout from "@/layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const docs = await getCollection("docs");
+  return docs.map((doc) => ({
+    params: { slug: doc.slug },
+    props: { doc },
+  }));
+}
+
+const { slug } = Astro.params;
+
+const posts = Object.values(
+  import.meta.glob(`src/content/docs/*.md`, {
+    eager: true,
+  }),
+);
+
+const { Content, frontmatter } = posts.filter((post) => {
+  console.log(post);
+  return post!.file.endsWith(`${slug}.md`);
+})[0];
+
+const meta = {
+  title: `${frontmatter.title} - ctxs.ai Documentation`,
+  description: frontmatter.description || "Documentation for ctxs.ai",
+};
+---
+
+<Layout meta={meta}>
+  <div class="max-w-2xl mx-auto py-12">
+    <a href="/" class="block mb-8">
+      <LogoWordmark />
+    </a>
+    <div class="prose prose-slate max-w-none">
+      <Content />
+    </div>
+  </div>
+</Layout>

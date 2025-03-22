@@ -1,0 +1,50 @@
+---
+import { Logo, LogoWordmark, Wordmark } from "@/components/wordmark";
+---
+
+<footer class="border-t mt-24">
+  <div class="max-w-2xl mx-auto py-16 px-4">
+    <div class="flex flex-col md:flex-row justify-between gap-6">
+      <a href="/">
+        <LogoWordmark />
+      </a>
+
+      <nav class="flex gap-8">
+        <div class="flex flex-col gap-2">
+          <h3 class="font-semibold text-sm">Docs</h3>
+          <ul class="space-y-2 text-sm text-muted-foreground">
+            <li>
+              <a
+                href="/docs/permalinks"
+                class="hover:text-foreground transition-colors">Permalinks</a
+              >
+            </li>
+            <li>
+              <a
+                href="/docs/cursor"
+                class="hover:text-foreground transition-colors">Cursor</a
+              >
+            </li>
+            <li>
+              <a
+                href="/docs/cli"
+                class="hover:text-foreground transition-colors">CLI</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <h3 class="font-semibold text-sm">About</h3>
+          <ul class="space-y-2 text-sm text-muted-foreground">
+            <li>
+              <a href="/" class="hover:text-foreground transition-colors"
+                >Home</a
+              >
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+</footer>

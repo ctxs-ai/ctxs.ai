@@ -70,42 +70,32 @@ const { post } = Astro.props;
 
 <script>
   import { actions } from "astro:actions";
-  import { authClient } from "@/lib/auth-client";
-
-  // Handle submit button click
-  const submitButton = document.getElementById("submit-button");
-  submitButton?.addEventListener("click", async () => {
-    const session = await authClient.getSession();
-    if (session) {
-      window.location.href = "/weekly/submit";
-    } else {
-      await authClient.signIn.social({ provider: "github" });
-    }
-  });
 
   // Handle upvoting
-  const voteButtons = document.querySelectorAll(".vote-button");
-  voteButtons.forEach((button) => {
-    button.addEventListener("click", async () => {
-      const postId = button.getAttribute("data-post-id");
-      if (!postId) return;
+  document.addEventListener("astro:page-load", () => {
+    const voteButtons = document.querySelectorAll(".vote-button");
+    voteButtons.forEach((button) => {
+      button.addEventListener("click", async () => {
+        const postId = button.getAttribute("data-post-id");
+        if (!postId) return;
 
-      const { data, error } = await actions.upvotePost({
-        postId,
-      });
+        const { data, error } = await actions.upvotePost({
+          postId: parseInt(postId),
+        });
 
-      if (error) {
-        alert(error.message);
-      } else {
-        // Update the vote count in the UI
-        const voteCount = button.nextElementSibling;
-        if (voteCount) {
-          const currentCount = parseInt(voteCount.textContent || "0");
-          voteCount.textContent = (currentCount + 1).toString();
+        if (error) {
+          alert(error.message);
+        } else {
+          // Update the vote count in the UI
+          const voteCount = button.nextElementSibling;
+          if (voteCount) {
+            const currentCount = parseInt(voteCount.textContent || "0");
+            voteCount.textContent = (currentCount + 1).toString();
+          }
+          button.setAttribute("disabled", "true");
+          button.classList.add("text-primary", "border-primary");
         }
-        button.setAttribute("disabled", "true");
-        button.classList.add("text-primary", "border-primary");
-      }
+      });
     });
   });
 </script>

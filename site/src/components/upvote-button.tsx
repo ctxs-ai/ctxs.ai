@@ -4,10 +4,10 @@ import { useState } from "react";
 import { actions } from "astro:actions";
 
 interface UpvoteButtonProps {
-  contextId: string;
+  postId: string;
 }
 
-export const UpvoteButton = ({ contextId }: UpvoteButtonProps) => {
+export const UpvoteButton = ({ postId }: UpvoteButtonProps) => {
   const [isUpvoted, setIsUpvoted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -16,8 +16,8 @@ export const UpvoteButton = ({ contextId }: UpvoteButtonProps) => {
 
     setIsLoading(true);
     try {
-      const result = await actions.upvoteContext({
-        contextId,
+      const result = await actions.upvotePost({
+        postId: postId,
         // We could add userId here if we implement user authentication
       });
 

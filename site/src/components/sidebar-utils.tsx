@@ -19,6 +19,11 @@ export const Avatar = ({ src, className }: { src?: string, className?: string })
     )
 }
 
+const handleSignOut = async () => {
+    await signOut()
+    window.location.reload()
+}
+
 export const AccountMenu = ({ children }: { children: React.ReactNode }) => {
     return (
         <DropdownMenu >
@@ -26,7 +31,7 @@ export const AccountMenu = ({ children }: { children: React.ReactNode }) => {
                 {children}
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={signOut} className="flex justify-between items-center">
+                <DropdownMenuItem onClick={handleSignOut} className="flex justify-between items-center">
                     Sign Out
                     <LogOut className="size-3" />
                 </DropdownMenuItem>
@@ -35,16 +40,16 @@ export const AccountMenu = ({ children }: { children: React.ReactNode }) => {
     )
 }
 
-export const SignInButton = () => {
+export const SignInButton = ({ size = "sm", variant = "outline", label = "Sign in", icon = <Github className="size-4 mr-1" /> }: { size?: "sm" | "default", variant?: "outline" | "default", label?: string, icon?: React.ReactNode }) => {
     const [clicked, setClicked] = useState(false)
     const handleClick = () => {
         setClicked(true)
         signIn()
     }
     return (
-        <Button onClick={handleClick} size="sm" variant="outline" className="text-sm">
-            {clicked ? <Loader2 className="size-4 mr-1 animate-spin" /> : <Github className="size-4 mr-1" />}
-            Sign in
+        <Button onClick={handleClick} size={size} variant={variant} className="text-sm">
+            {clicked ? <Loader2 className="size-4 mr-1 animate-spin" /> : icon}
+            {label}
         </Button>
     )
 }

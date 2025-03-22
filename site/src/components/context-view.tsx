@@ -65,7 +65,7 @@ export const ContextActions = ({ context }: { context: CollectionEntry<"contexts
 
   return (
     <div className="flex gap-2">
-      <UpvoteButton contextId={context.id} />
+      <UpvoteButton postId={context.id} />
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>

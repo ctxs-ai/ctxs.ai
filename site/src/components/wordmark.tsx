@@ -40,7 +40,7 @@ export const WeeklyLogo = (props) => {
 
 export const LogoWordmark = () => {
   return (
-    <div className="flex items-center gap-2">
+    <div className="h-5 flex items-center gap-2">
       <Logo />
       <Wordmark />
     </div>

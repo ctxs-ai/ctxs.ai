@@ -5,9 +5,11 @@ import Page from "@/components/Page.astro";
 import ContextView from "@/components/context.astro";
 import { Post, Vote, User } from "@/db/schema";
 import { db } from "@/lib/db";
+import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
 import { eq, sql } from "drizzle-orm";
 import type { CollectionEntry } from "astro:content";
-
+import { WeeklyLogo } from "@/components/wordmark";
+import { PERSIST_SYMBOL } from "node_modules/astro/dist/core/session";
 type PostWithAuthor = {
   id: number;
   title: string | null;
@@ -46,7 +48,8 @@ if (post === undefined) {
 }
 
 const selectedContext = {
-  id: `weekly/${post.author?.name || "anonymous"}/${post.slug}`,
+  id: post.id,
+  slug: post.slug,
   attributedGitHubUser: post.attributedGitHubUser,
   title: post.title || "",
   description: post.description || "",
@@ -79,5 +82,15 @@ Astro.response.headers.set("Cache-Control", "public, max-age=3600");
 ---
 
 <Layout meta={meta}>
+  <div class="max-w-3xl mx-auto px-4">
+    <div class="md:border-x md:px-8 pt-6">
+      <a href="/weekly">
+        <WeeklyLogo className="h-6 w-auto block" />
+      </a>
+    </div>
+    <!-- <div class="border-x">
+      <WeeklyHeader variant="small" />
+    </div> -->
+  </div>
   <ContextView context={selectedContext} />
 </Layout>

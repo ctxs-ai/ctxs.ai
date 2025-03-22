@@ -90,7 +90,7 @@ export const server = {
 
   upvotePost: defineAction({
     input: z.object({
-      postId: z.string(),
+      postId: z.number(),
     }),
     handler: async (input, context) => {
       if (!context.locals.user?.id) {

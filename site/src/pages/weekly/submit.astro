@@ -4,14 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
+import { AccountMenu, Avatar, SignInButton } from "@/components/sidebar-utils";
+import WhySubmit from "@/components/weekly/WhySubmit.astro";
 const meta = {
   title: "Submit a Post - ctxs.ai",
   description: "Submit a new post to the weekly discussion",
 };
+
+const isAuthenticated = !!Astro.locals.user;
 ---
 
 <Layout meta={meta}>
-  <WeeklyHeader />
+  <WeeklyHeader showSignInButton={false} />
   <div class="max-w-3xl mx-auto px-4 py-8">
     <div class="mb-8 text-center">
       <h1 class="text-4xl font-bold tracking-tight mb-4">Submit a Post</h1>
@@ -20,47 +24,59 @@ const meta = {
       </p>
     </div>
 
-    <form id="post-form" class="space-y-4">
-      <Textarea
-        name="content"
-        placeholder="Post content"
-        required
-        className="w-full max-h-96"
-      />
-      <div class="flex gap-4">
-        <Button type="submit" className="flex-1">Create Post</Button>
-        <Button
-          type="button"
-          variant="outline"
-          className="flex-1"
-          onClick={() => (window.location.href = "/weekly")}
-        >
-          Cancel
-        </Button>
-      </div>
-    </form>
-  </div>
+    {
+      !isAuthenticated ? (
+        <div class="mb-8">
+          <div class="text-center">
+            <SignInButton
+              client:load
+              size="lg"
+              label="Sign in with GitHub"
+              variant="default"
+            />
+          </div>
+        </div>
+      ) : (
+        <form id="post-form" class="space-y-4 max-w-xl mx-auto">
+          <Textarea
+            name="content"
+            placeholder="Post content"
+            required
+            className="w-full max-h-96 min-h-48"
+          />
+          <div class="text-center mt-8">
+            <Button type="submit" size="lg" className="w-64">
+              Create post
+            </Button>
+          </div>
+        </form>
+      )
+    }
+    <div class="mt-32 border-t border-border">
+      <WhySubmit />
+    </div>
 
-  <script>
-    import { actions } from "astro:actions";
-    import { navigate } from "astro:transitions/client";
+    <script>
+      import { actions } from "astro:actions";
+      import { navigate } from "astro:transitions/client";
 
-    // Handle post creation
-    const postForm = document.getElementById("post-form");
-    postForm?.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const formData = new FormData(e.target as HTMLFormElement);
-      const content = formData.get("content") as string;
-      const { data, error } = await actions.createPost({
-        content,
+      // Handle post creation
+      const postForm = document.getElementById("post-form");
+      postForm?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target as HTMLFormElement);
+        const content = formData.get("content") as string;
+        const { data, error } = await actions.createPost({
+          content,
+        });
+
+        if (error) {
+          alert(error.message);
+        } else {
+          // Redirect back to weekly page
+          navigate(`/weekly/${data.slug}`);
+        }
       });
-
-      if (error) {
-        alert(error.message);
-      } else {
-        // Redirect back to weekly page
-        navigate(`/weekly/${data.slug}`);
-      }
-    });
-  </script>
+    </script>
+  </div>
 </Layout>

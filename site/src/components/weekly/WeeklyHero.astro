@@ -5,7 +5,7 @@ import { weeklyTagline } from "@/lib/constants";
 const { session } = Astro.locals;
 ---
 
-<div class="mb-12 text-center max-w-md mx-auto">
+<div class="mb-4 text-center max-w-md mx-auto">
   <h1 class="text-5xl font-bold tracking-tight mb-4">
     Freshly baked
     <span id="post-types" class="inline-block min-w-[200px]"
@@ -18,15 +18,9 @@ const { session } = Astro.locals;
     Fresh every week.
   </p>
   <div class="flex justify-center gap-4">
-    {
-      session ? (
-        <a class={buttonVariants({ variant: "default" })} href="/weekly/submit">
-          Submit something
-        </a>
-      ) : (
-        <Button>Submit something</Button>
-      )
-    }
+    <a class={buttonVariants({ variant: "default" })} href="/weekly/submit">
+      Submit something
+    </a>
     <a class={buttonVariants({ variant: "outline" })} href="/"> Learn more </a>
   </div>
 </div>

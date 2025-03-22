@@ -34,6 +34,9 @@ const tagConfigs: Record<string, TagConfig> = {
   "lib:astro": {
     displayName: "Astro",
   },
+  "lib:rails": {
+    displayName: "Rails",
+  },
   "lib:nextjs": {
     displayName: "Next.js",
   },
@@ -44,10 +47,14 @@ interface ContextTagsProps {
 }
 export function ContextTag({ tag, href, isActive }: { tag: string, href?: string, isActive?: boolean }) {
   const config = tagConfigs[tag] || { displayName: tag, icon: Tag };
+  const hrefx = href || `/weekly?tag=${tag}#search`;
   const Icon = config.icon;
 
   return (
-    <a href={href} className={buttonVariants({ variant: isActive ? "default" : "outline", size: "xs" })}>
+    <a href={hrefx} className={buttonVariants({ variant: isActive ? "default" : "outline", size: "xs" })}
+      style={{
+        boxShadow: isActive ? "0 0 0 1px #ccc" : "none",
+      }}>
       {!config.icon ? (
         <ContextTagLogo tag={tag} className={`size-3 ${isActive ? "text-white" : "text-foreground"}`} />
       ) : Icon ? (

@@ -128,7 +128,7 @@
   }
 }
 
-@utility prose {
+@utility prose-markdown {
   h1::before {
     content: "# ";
   }

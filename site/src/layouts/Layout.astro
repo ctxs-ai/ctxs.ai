@@ -3,6 +3,7 @@ import "../styles/global.css";
 import "@fontsource/geist-mono";
 import { ClientRouter } from "astro:transitions";
 import Metadata from "@/components/Metadata.astro";
+import Footer from "@/components/footer.astro";
 
 const meta = Astro.props.meta;
 ---
@@ -22,6 +23,36 @@ const meta = Astro.props.meta;
 	</head>
 	<body>
 		<slot />
+		<Footer />
+		<script>
+			// Save scroll position with throttling (every 100ms)
+			const saveScrollPosition = () => {
+				const key = `scrollPos_${window.location.pathname}`;
+				sessionStorage.setItem(key, window.scrollY.toString());
+			};
+
+			// Add scroll listener
+			window.addEventListener("scroll", saveScrollPosition);
+
+			// On page load
+			document.addEventListener("astro:after-swap", () => {
+				const currentPath = window.location.pathname;
+				const scrollPosKey = `scrollPos_${currentPath}`;
+
+				// Restore scroll position if exists
+				const savedPosition = sessionStorage.getItem(scrollPosKey);
+				console.log({ savedPosition });
+				if (savedPosition !== null) {
+					window.scrollTo(0, parseInt(savedPosition, 10));
+				}
+				// Clean up old scroll positions
+				Object.keys(sessionStorage).forEach((key) => {
+					if (key.startsWith("scrollPos_") && key !== scrollPosKey) {
+						sessionStorage.removeItem(key);
+					}
+				});
+			});
+		</script>
 	</body>
 </html>
 
@@ -30,6 +61,5 @@ const meta = Astro.props.meta;
 	body {
 		margin: 0;
 		width: 100%;
-		height: 100%;
 	}
 </style>
