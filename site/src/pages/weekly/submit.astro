@@ -61,21 +61,23 @@ const isAuthenticated = !!Astro.locals.user;
       import { navigate } from "astro:transitions/client";
 
       // Handle post creation
-      const postForm = document.getElementById("post-form");
-      postForm?.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target as HTMLFormElement);
-        const content = formData.get("content") as string;
-        const { data, error } = await actions.createPost({
-          content,
-        });
+      document.addEventListener("astro:page-load", () => {
+        const postForm = document.getElementById("post-form");
+        postForm?.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target as HTMLFormElement);
+          const content = formData.get("content") as string;
+          const { data, error } = await actions.createPost({
+            content,
+          });
 
-        if (error) {
-          alert(error.message);
-        } else {
-          // Redirect back to weekly page
-          navigate(`/weekly/${data.slug}`);
-        }
+          if (error) {
+            alert(error.message);
+          } else {
+            // Redirect back to weekly page
+            navigate(`/weekly/${data.slug}`);
+          }
+        });
       });
     </script>
   </div>
