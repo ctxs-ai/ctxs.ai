@@ -10,6 +10,7 @@ export const User = pgTable("user", {
 	image: text("image"),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
+	githubUserName: text("github_user_name"),
 });
 
 export const Account = pgTable("account", {
