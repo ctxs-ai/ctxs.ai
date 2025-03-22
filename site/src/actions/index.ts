@@ -6,9 +6,10 @@ import { db } from '@/lib/db';
 import { customAlphabet } from 'nanoid';
 import slugify from '@sindresorhus/slugify';
 import { availableTags } from '@/lib/constants';
-import { Post, Vote } from '@/db/schema';
+import { Post, User, Vote } from '@/db/schema';
 import { generateObject } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
+import { eq } from 'drizzle-orm';
 
 const generateDisplayId = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz', 6);
 
@@ -58,6 +59,8 @@ export const server = {
     handler: async (input, context) => {
       if (context.locals.user?.id) {
         const { frontmatter, content } = splitFrontmatter(input.content);
+        const user = await db.select({ githubUserName: User.githubUserName }).from(User).where(eq(User.id, context.locals.user.id))
+        const userSegment = user[0].githubUserName || context.locals.user.id
 
         // Generate title, description and tags using OpenAI
         const metadata = await generatePostMetadata(content);
@@ -73,6 +76,7 @@ export const server = {
           tags: metadata.tags,
           createdAt: new Date(),
           authorId: context.locals.user.id,
+          urn: `urn:ctxs:gh:${userSegment}:${displayId}`,
         }).returning();
 
         console.log('createPost', input)

@@ -37,6 +37,7 @@ const [post] = await db
       id: User.id,
       name: User.name,
       image: User.image,
+      githubUserName: User.githubUserName,
     },
   })
   .from(Post)
@@ -54,6 +55,7 @@ const selectedContext = {
   title: post.title || "",
   description: post.description || "",
   tags: post.tags || [],
+  author: post.author,
   data: {
     title: post.title || "",
     description: post.description || "",
