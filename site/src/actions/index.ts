@@ -10,6 +10,7 @@ import { Post, User, Vote } from '@/db/schema';
 import { generateObject } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 import { eq } from 'drizzle-orm';
+import { inferGitHubUsername, inferXUsername } from '@/lib/utils';
 
 const generateDisplayId = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz', 6);
 
@@ -35,6 +36,18 @@ type PostMetadata = {
 };
 
 const openai = createOpenAI({ apiKey: OPENAI_API_KEY })
+
+type InferredAttributedUsers = {
+  attributedGithubUser: string | null;
+  attributedXUser: string | null;
+};
+
+const inferAttributedUsers = (content: string): InferredAttributedUsers => {
+  return {
+    attributedGithubUser: inferGitHubUsername(content),
+    attributedXUser: inferXUsername(content),
+  }
+};
 
 const generatePostMetadata = async (content: string): Promise<PostMetadata> => {
   const result = await generateObject<PostMetadata>({
@@ -67,6 +80,7 @@ export const server = {
 
         // Generate title, description and tags using OpenAI
         const metadata = await generatePostMetadata(content);
+        const attributedUsers = inferAttributedUsers(input.credit || '');
         const displayId = generateDisplayId()
 
         const [post] = await db.insert(Post).values({
@@ -81,6 +95,8 @@ export const server = {
           createdAt: new Date(),
           authorId: context.locals.user.id,
           urn: `urn:ctxs:gh:${userSegment}:${displayId}`,
+          attributedGitHubUser: attributedUsers.attributedGithubUser,
+          attributedXUser: attributedUsers.attributedXUser,
         }).returning();
 
         console.log('createPost', input)

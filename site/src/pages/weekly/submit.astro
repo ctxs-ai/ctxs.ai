@@ -101,8 +101,10 @@ const isAuthenticated = !!Astro.locals.user;
           e.preventDefault();
           const formData = new FormData(e.target as HTMLFormElement);
           const content = formData.get("content") as string;
+          const credit = formData.get("credit") as string;
           const { data, error } = await actions.createPost({
             content,
+            credit,
           });
 
           if (error) {
