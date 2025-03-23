@@ -19,11 +19,14 @@ type PostWithVotes = {
   createdAt: Date;
   voteCount: string;
   isUpvoted: boolean;
+  attributedGitHubUser: string | null;
+  attributedXUser: string | null;
   tags: string[];
   author?: {
     id: string;
     name: string | null;
     image: string | null;
+    githubUserName: string | null;
   };
 };
 
@@ -35,6 +38,8 @@ const posts = (await db
     slug: Post.slug,
     description: Post.description,
     createdAt: Post.createdAt,
+    attributedGitHubUser: Post.attributedGitHubUser,
+    attributedXUser: Post.attributedXUser,
     voteCount: sql<string>`cast(count(${Vote.id}) as text)`.as("vote_count"),
     isUpvoted: sql<boolean>`EXISTS (
       SELECT 1 FROM ${Vote} v
@@ -45,6 +50,7 @@ const posts = (await db
       id: User.id,
       name: User.name,
       image: User.image,
+      githubUserName: User.githubUserName,
     },
     tags: Post.tags,
   })
