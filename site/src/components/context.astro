@@ -3,6 +3,7 @@ import { ContextActions } from "@/components/context-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ContextTags } from "@/components/context-tags";
 import { marked } from "marked";
+import { authorImage, authorName } from "@/db/postHelpers";
 import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
 
 interface Props {
@@ -32,11 +33,16 @@ const html = marked(post.content);
 <div class="sticky top-0">
   <div class="max-w-3xl mx-auto px-4 space-y-2 border-b border-border">
     <div class="bg-background md:border-x border-border py-4 md:px-8 md:py-6">
-      <div class="flex justify-between items-start">
-        <h1 class="text-2xl font-medium tracking-tight">
-          {post.title}
-        </h1>
-        <div class="hidden md:block">
+      <div class="flex justify-between">
+        <div>
+          <h1 class="text-xl lg:text-2xl font-medium tracking-tight mt-1">
+            {post.title}
+          </h1>
+          <p class="text-muted-foreground max-w-md mb-2.5 mt-2">
+            {post.description}
+          </p>
+        </div>
+        <div class="md:block">
           <ContextActions
             context={{
               id: post.id,
@@ -58,14 +64,11 @@ const html = marked(post.content);
           />
         </div>
       </div>
-      <p class="text-muted-foreground max-w-md my-2">
-        {post.description}
-      </p>
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <img src={post.author?.image} class="size-5 rounded-sm" />
+          <img src={authorImage(post)} class="size-5 rounded-sm" />
           <p class="text-muted-foreground text-sm">
-            {post.author?.name || "Anonymous"}
+            {authorName(post) || "Anonymous"}
           </p>
         </div>
         <ContextTags tags={post.tags || []} />
