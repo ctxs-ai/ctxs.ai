@@ -53,7 +53,7 @@ const [post] = await db
   .leftJoin(Vote, eq(Post.id, Vote.postId))
   .groupBy(Post.id, User.id);
 
-const [upvote] =
+const upvotes =
   userId &&
   (await db
     .select({ id: Vote.id })
@@ -61,7 +61,7 @@ const [upvote] =
     .where(and(eq(Vote.postId, post.id), eq(Vote.userId, userId)))
     .limit(1));
 
-const isUpvoted = upvote?.id !== undefined;
+const isUpvoted = upvotes && upvotes.length > 0;
 
 if (post === undefined) {
   return Astro.redirect("/weekly");
