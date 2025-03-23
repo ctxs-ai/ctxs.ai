@@ -11,7 +11,6 @@ export const authorImage = (post: any) => {
 
 
 export const AuthorName = ({ post, showInfo = true }: { post: any, showInfo?: boolean }) => {
-  console.log({ post: post })
   const displayName = post.attributedGitHubUser
     ? `@${post.attributedGitHubUser}`
     : `@${post.author?.githubUserName}`;

@@ -50,7 +50,6 @@ export const UpvoteButton = ({ variant, postId, isUpvotedInitial, initialVoteCou
   );
 
   if (variant === "icon") {
-    console.log({ count })
     return (
       <button
         className={classes}
