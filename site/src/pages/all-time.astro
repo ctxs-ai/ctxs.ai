@@ -23,6 +23,8 @@ type PostType = {
     image: string | null;
   };
   tags?: string[];
+  attributedGitHubUser?: string | null;
+  attributedXUser?: string | null;
 };
 
 // Get top posts with their vote counts and author info
@@ -33,6 +35,8 @@ const posts = (await db
     slug: Post.slug,
     description: Post.description,
     createdAt: Post.createdAt,
+    attributedGitHubUser: Post.attributedGitHubUser,
+    attributedXUser: Post.attributedXUser,
     voteCount: sql<number>`count(${Vote.id})`.as("vote_count"),
     author: {
       id: User.id,
