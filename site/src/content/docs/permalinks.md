@@ -31,7 +31,7 @@ https://ctxs.ai/cli/registry-item/urn:ctxs:gh:martinklepsch:qdg6m0.json
 ```
 
 ## Benefits
-- Share context rules easily with teammates
+- Share context rules easily with the community
 - Reference rules consistently in documentation
 - Integrate with tools and workflows using stable URLs
 - Access your rules from anywhere, anytime
