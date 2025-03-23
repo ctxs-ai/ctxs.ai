@@ -1,0 +1,99 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { Post, Vote, User } from "@/db/schema";
+import { db } from "@/lib/db";
+import { eq, sql, isNotNull } from "drizzle-orm";
+import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
+import WeeklyHero from "@/components/weekly/WeeklyHero.astro";
+import TagSelector from "@/components/weekly/TagSelector.astro";
+import PostComponent from "@/components/weekly/Post.astro";
+
+const selectedTag = Astro.url.searchParams.get("tag");
+
+type PostType = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  createdAt: Date;
+  voteCount: number;
+  author?: {
+    id: string;
+    name: string | null;
+    image: string | null;
+  };
+  tags?: string[];
+};
+
+// Get top posts with their vote counts and author info
+const posts = (await db
+  .select({
+    id: Post.id,
+    title: Post.title,
+    slug: Post.slug,
+    description: Post.description,
+    createdAt: Post.createdAt,
+    voteCount: sql<number>`count(${Vote.id})`.as("vote_count"),
+    author: {
+      id: User.id,
+      name: User.name,
+      image: User.image,
+    },
+    tags: Post.tags,
+  })
+  .from(Post)
+  .where(isNotNull(Post.slug))
+  .where(
+    selectedTag
+      ? sql`${Post.tags} @> ARRAY[${selectedTag}]::text[]`
+      : undefined,
+  )
+  .leftJoin(Vote, eq(Post.id, Vote.postId))
+  .leftJoin(User, eq(Post.authorId, User.id))
+  .groupBy(Post.id, User.id)
+  .orderBy(sql`vote_count desc`)
+  .limit(50)) as unknown as PostType[];
+
+const params = {
+  id: "top-posts",
+  title: "The most celebrated prompts and context windows",
+};
+
+const queryString = new URLSearchParams(params).toString();
+const ogImage = `https://dynogee.com/gen?${queryString}`;
+
+const meta = {
+  title: "Top Posts - ctxs.ai context registry",
+  description:
+    "The most celebrated prompts and context windows from our community",
+  ogImage: ogImage,
+};
+
+const allTags = posts.flatMap((post: PostType) => post.tags || []) as string[];
+const uniqueTags = [...new Set(allTags)];
+---
+
+<Layout meta={meta}>
+  <WeeklyHeader />
+  <div class="max-w-2xl mx-auto px-4 py-8">
+    <WeeklyHero
+      title="Hall of Fame"
+      description="The most celebrated contexts of all time.\nVoted by the community."
+      contentTypes={[
+        "prompts",
+        "context windows",
+        "cursor rules",
+        "conventions",
+      ]}
+    />
+    <div id="search" class="pt-8">
+      <TagSelector />
+    </div>
+
+    <div class="space-y-8" transition:animate="fade">
+      <div class="space-y-4">
+        {posts.map((post: PostType) => <PostComponent post={post} />)}
+      </div>
+    </div>
+  </div>
+</Layout>

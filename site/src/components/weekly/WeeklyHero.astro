@@ -2,20 +2,46 @@
 import { SignInButton, SubmitOrSignInButton } from "@/components/sidebar-utils";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { weeklyTagline } from "@/lib/constants";
+import { Fragment } from "react";
+
+interface Props {
+  title?: string;
+  description?: string;
+  contentTypes?: string[];
+}
+
+const {
+  title = "Freshly baked",
+  description = "Find, share and discuss.\nFresh every week.",
+  contentTypes = [
+    "cursor rules",
+    "prompts",
+    "cline rules",
+    "context windows",
+    "aider conventions",
+    "markdown files",
+  ],
+} = Astro.props;
+
 const { session } = Astro.locals;
 ---
 
 <div class="mb-4 text-center max-w-md mx-auto">
   <h1 class="text-5xl font-bold tracking-tight mb-4">
-    Freshly baked
+    {title}
     <span id="post-types" class="inline-block min-w-[200px]"
       >context windows</span
     >
   </h1>
   <p class="text-muted-foreground text-xl mb-6 text-balance">
-    Find, share and discuss.
-    <br />
-    Fresh every week.
+    {
+      description.split("\n").map((line) => (
+        <Fragment>
+          {line}
+          <br />
+        </Fragment>
+      ))
+    }
   </p>
   <div class="flex justify-center gap-4">
     <a class={buttonVariants({ variant: "default" })} href="/weekly/submit">
@@ -25,16 +51,7 @@ const { session } = Astro.locals;
   </div>
 </div>
 
-<script>
-  const contentTypes = [
-    "cursor rules",
-    "prompts",
-    "cline rules",
-    "context windows",
-    "aider conventions",
-    "markdown files",
-  ];
-
+<script define:vars={{ contentTypes }}>
   const postTypesElement = document.getElementById("post-types");
   let currentIndex = 0;
 

@@ -12,6 +12,9 @@ const tags = await db
 const allTags = tags.flatMap(({ tag }) => tag).filter((tag) => tag !== null);
 const uniqueTags = [...new Set(allTags)];
 const selectedTag = Astro.url.searchParams.get("tag");
+
+const useExistingPath = Astro.url.pathname.startsWith("/top");
+const path = useExistingPath ? Astro.url.pathname : "/weekly";
 ---
 
 <div class="flex flex-wrap gap-2 justify-center mb-8 max-w-lg mx-auto">
@@ -19,7 +22,7 @@ const selectedTag = Astro.url.searchParams.get("tag");
     uniqueTags.map((tag) => (
       <ContextTag
         tag={tag}
-        href={`/weekly?tag=${tag}`}
+        href={`${path}?tag=${tag}`}
         isActive={tag === selectedTag}
       />
     ))
