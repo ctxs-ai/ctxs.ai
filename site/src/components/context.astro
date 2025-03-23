@@ -1,15 +1,32 @@
 ---
 import { ContextActions } from "@/components/context-actions";
-import { render } from "astro:content";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ContextTags } from "@/components/context-tags";
 import { marked } from "marked";
-import { authorImage, authorName } from "@/db/postHelpers";
 import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
-const context = Astro.props.context;
-const { Content, headings, remarkPluginFrontmatter } = await render(context);
 
-const html = marked(context.body);
+interface Props {
+  post: {
+    id: number;
+    title: string | null;
+    description: string | null;
+    content: string;
+    authorId: string;
+    attributedGitHubUser: string | null;
+    urn: string | null;
+    slug: string;
+    tags: string[] | null;
+    author: {
+      id: string;
+      name: string;
+      image: string | null;
+      githubUserName: string | null;
+    } | null;
+  };
+}
+
+const { post } = Astro.props;
+const html = marked(post.content);
 ---
 
 <div class="sticky top-0">
@@ -17,21 +34,41 @@ const html = marked(context.body);
     <div class="bg-background md:border-x border-border py-4 md:px-8 md:py-6">
       <div class="flex justify-between items-start">
         <h1 class="text-2xl font-medium tracking-tight">
-          {context.data.title}
+          {post.title}
         </h1>
         <div class="hidden md:block">
-          <ContextActions context={context} client:load />
+          <ContextActions
+            context={{
+              id: post.id,
+              slug: post.slug,
+              attributedGitHubUser: post.attributedGitHubUser,
+              title: post.title || "",
+              description: post.description || "",
+              tags: post.tags || [],
+              author: post.author,
+              urn: post.urn,
+              data: {
+                title: post.title || "",
+                description: post.description || "",
+                tags: post.tags || [],
+              },
+              body: post.content,
+            }}
+            client:load
+          />
         </div>
       </div>
       <p class="text-muted-foreground max-w-md my-2">
-        {context.data.description}
+        {post.description}
       </p>
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <img src={authorImage(context)} class="size-5 rounded-sm" />
-          <p class="text-muted-foreground text-sm">{authorName(context)}</p>
+          <img src={post.author?.image} class="size-5 rounded-sm" />
+          <p class="text-muted-foreground text-sm">
+            {post.author?.name || "Anonymous"}
+          </p>
         </div>
-        <ContextTags tags={context.data.tags} />
+        <ContextTags tags={post.tags || []} />
       </div>
     </div>
   </div>
