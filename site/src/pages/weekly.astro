@@ -2,30 +2,29 @@
 import Layout from "../layouts/Layout.astro";
 import { Post, Vote, User } from "@/db/schema";
 import { db } from "@/lib/db";
-import { eq, sql, isNotNull, arrayContains } from "drizzle-orm";
+import { eq, sql, isNotNull, arrayContains, and } from "drizzle-orm";
 import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
 import WeeklyHero from "@/components/weekly/WeeklyHero.astro";
 import TagSelector from "@/components/weekly/TagSelector.astro";
 import PostComponent from "@/components/weekly/Post.astro";
 
 const selectedTag = Astro.url.searchParams.get("tag");
+const userId = Astro.locals.user?.id;
 
 type PostWithVotes = {
   id: string;
   title: string;
   slug: string;
   description: string;
-  content: string | null;
   createdAt: Date;
-  authorId: string | null;
-  attributedGitHubUser: string | null;
-  voteCount: number;
+  voteCount: string;
+  isUpvoted: boolean;
   tags: string[];
-  author: {
+  author?: {
     id: string;
     name: string | null;
     image: string | null;
-  } | null;
+  };
 };
 
 // Get posts with their vote counts and author info
@@ -35,17 +34,19 @@ const posts = (await db
     title: Post.title,
     slug: Post.slug,
     description: Post.description,
-    content: Post.content,
     createdAt: Post.createdAt,
-    authorId: Post.authorId,
-    attributedGitHubUser: Post.attributedGitHubUser,
-    voteCount: sql<number>`count(${Vote.id})`.as("vote_count"),
-    tags: Post.tags,
+    voteCount: sql<string>`cast(count(${Vote.id}) as text)`.as("vote_count"),
+    isUpvoted: sql<boolean>`EXISTS (
+      SELECT 1 FROM ${Vote} v
+      WHERE v.post_id = ${Post.id}
+      AND v.user_id = ${userId || null}
+    )`,
     author: {
       id: User.id,
       name: User.name,
       image: User.image,
     },
+    tags: Post.tags,
   })
   .from(Post)
   .where(isNotNull(Post.slug))

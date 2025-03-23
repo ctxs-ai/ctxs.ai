@@ -1,7 +1,6 @@
 ---
-import { Button } from "@/components/ui/button";
-import { ThumbsUp } from "lucide-react";
-import { authorImage, authorName } from "@/db/postHelpers";
+import { UpvoteButton } from "@/components/upvote-button";
+import { authorImage, AuthorName } from "@/db/postHelpers";
 
 interface Props {
   post: {
@@ -10,7 +9,8 @@ interface Props {
     slug: string;
     description: string;
     createdAt: Date;
-    voteCount: number;
+    voteCount: string;
+    isUpvoted: boolean;
     author?: {
       id: string;
       name: string | null;
@@ -26,15 +26,13 @@ const { post } = Astro.props;
   class="flex items-start gap-4 p-4 rounded-lg border bg-card hover:border-primary/40 transition-colors"
 >
   <div class="flex flex-col items-center gap-2">
-    <Button
-      variant="outline"
-      size="icon"
-      className="vote-button"
-      data-post-id={post.id}
-    >
-      <ThumbsUp className="h-4 w-4" />
-    </Button>
-    <span class="text-sm font-medium">{post.voteCount}</span>
+    <UpvoteButton
+      client:load
+      variant="icon"
+      postId={post.id}
+      isUpvotedInitial={post.isUpvoted}
+      initialVoteCount={parseInt(post.voteCount)}
+    />
   </div>
   <div class="flex-1">
     <a href={`/weekly/${post.slug}`}>
@@ -50,7 +48,7 @@ const { post } = Astro.props;
         post.author && (
           <>
             <img class="size-5 rounded-xs" src={authorImage(post)} />
-            <span>{authorName(post)}</span>
+            <AuthorName post={post} showInfo={false} />
             <span>•</span>
           </>
         )

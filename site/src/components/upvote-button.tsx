@@ -39,22 +39,32 @@ export const UpvoteButton = ({ variant, postId, isUpvotedInitial, initialVoteCou
     }
   };
 
-  if (variant === "icon") {
-    return (
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={handleUpvote}
-        disabled={isUpvoted || isLoading}
-        className={isUpvoted ? "text-primary border-primary" : ""}
-      >
-        <ThumbsUp className="h-4 w-4" />
-      </Button>
-    );
-  }
+  const iconClasses = cn(
+    isUpvoted ? "border-black/50 disabled:opacity-100" : "",
+    "flex-col divide-y divide-border px-0 pt-3 h-auto"
+  );
 
   const classes = cn(buttonVariants({ variant: "outline" }),
-    "flex cursor-pointer divide-x divide-border border border-black/50 px-3",);
+    "flex cursor-pointer divide-border border",
+    variant === "icon" ? iconClasses : "divide-x border-black/50 px-3"
+  );
+
+  if (variant === "icon") {
+    console.log({ count })
+    return (
+      <button
+        className={classes}
+        onClick={handleUpvote}
+        disabled={isUpvoted || isLoading}
+      >
+        <div className="p-4 pt-0">
+          <ThumbsUp className="h-4 w-4" />
+        </div>
+
+        <NumberFlow className="px-4" value={count} trend={0} format={{ notation: "compact" }} />
+      </button>
+    );
+  }
 
   const Upvote = ({ visible }: { visible: boolean }) => {
     return (
