@@ -74,7 +74,7 @@ export const ContextActions = ({ context }) => {
               )}
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Copy plaintext URL</TooltipContent>
+          <TooltipContent side="bottom">Copy plaintext URL</TooltipContent>
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -86,7 +86,7 @@ export const ContextActions = ({ context }) => {
               )}
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Copy as Markdown</TooltipContent>
+          <TooltipContent side="bottom">Copy as Markdown</TooltipContent>
         </Tooltip>
         <DropdownMenu modal={false}>
           <Tooltip>
@@ -97,7 +97,7 @@ export const ContextActions = ({ context }) => {
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
-            <TooltipContent>Add to codebase</TooltipContent>
+            <TooltipContent side="bottom">Add to codebase</TooltipContent>
           </Tooltip>
           <DropdownMenuContent align="end" className="w-[300px] p-3">
             <div className="space-y-2">

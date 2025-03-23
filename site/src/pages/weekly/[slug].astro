@@ -6,7 +6,7 @@ import ContextView from "@/components/context.astro";
 import { Post, Vote, User } from "@/db/schema";
 import { db } from "@/lib/db";
 import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, and } from "drizzle-orm";
 import type { CollectionEntry } from "astro:content";
 import { WeeklyLogo } from "@/components/wordmark";
 import { PERSIST_SYMBOL } from "node_modules/astro/dist/core/session";
@@ -25,6 +25,8 @@ type PostWithAuthor = {
   } | null;
 };
 
+const userId = Astro.locals.user?.id;
+
 const [post] = await db
   .select({
     id: Post.id,
@@ -37,6 +39,7 @@ const [post] = await db
     urn: Post.urn,
     slug: Post.slug,
     tags: Post.tags,
+    voteCount: sql<number>`count(${Vote.id})`.as("vote_count"),
     author: {
       id: User.id,
       name: User.name,
@@ -45,29 +48,24 @@ const [post] = await db
     },
   })
   .from(Post)
-  .where(eq(Post.slug, Astro.params.slug))
-  .leftJoin(User, eq(Post.authorId, User.id));
+  .where(eq(Post.slug, Astro.params.slug!))
+  .leftJoin(User, eq(Post.authorId, User.id))
+  .leftJoin(Vote, eq(Post.id, Vote.postId))
+  .groupBy(Post.id, User.id);
+
+const [upvote] =
+  userId &&
+  (await db
+    .select({ id: Vote.id })
+    .from(Vote)
+    .where(and(eq(Vote.postId, post.id), eq(Vote.userId, userId)))
+    .limit(1));
+
+const isUpvoted = upvote?.id !== undefined;
 
 if (post === undefined) {
   return Astro.redirect("/weekly");
 }
-
-const selectedContext = {
-  id: post.id,
-  slug: post.slug,
-  attributedGitHubUser: post.attributedGitHubUser,
-  title: post.title || "",
-  description: post.description || "",
-  tags: post.tags || [],
-  author: post.author,
-  urn: post.urn,
-  data: {
-    title: post.title || "",
-    description: post.description || "",
-    tags: post.tags || [],
-  },
-  body: post.content,
-};
 
 const params = {
   id: "kqa7b3a5ol15455",
@@ -95,11 +93,16 @@ Astro.response.headers.set("Cache-Control", "public, max-age=3600");
         <WeeklyLogo className="h-6 w-auto block" />
       </a>
 
-      <UpvoteButton postId={post.id} variant="header" client:load />
+      <!-- TODO: Add context actions with viewcount etc -->
+      <!-- TODO: figure out how to handle logged out users -->
+      <UpvoteButton
+        postId={post.id}
+        variant="header"
+        client:load
+        initialVoteCount={parseInt(post.voteCount)}
+        isUpvotedInitial={isUpvoted}
+      />
     </div>
-    <!-- <div class="border-x">
-      <WeeklyHeader variant="small" />
-    </div> -->
   </div>
   <ContextView post={post} />
 </Layout>
