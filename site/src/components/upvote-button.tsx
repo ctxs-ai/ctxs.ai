@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowUp, Check, ThumbsUp } from "lucide-react";
+import { ArrowUp, Check, ChevronUp } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { actions } from "astro:actions";
@@ -57,8 +57,8 @@ export const UpvoteButton = ({ variant, postId, isUpvotedInitial, initialVoteCou
         onClick={handleUpvote}
         disabled={isUpvoted || isLoading}
       >
-        <div className="p-4 pt-0">
-          <ThumbsUp className="h-4 w-4" />
+        <div className="p-4 pb-3 pt-0">
+          <ChevronUp className="size-5" />
         </div>
 
         <NumberFlow className="px-4" value={count} trend={0} format={{ notation: "compact" }} />
