@@ -13,25 +13,23 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import copy from "copy-to-clipboard";
 import { useState } from "react";
-import { UpvoteButton } from "@/components/upvote-button";
+import { Post } from "@/db/schema";
 
 interface ContextViewProps {
   context: CollectionEntry<"contexts"> | null;
 }
 
-export const ContextActions = ({ context }: { context: CollectionEntry<"contexts"> }) => {
+export const ContextActions = ({ context }) => {
   const [contextCopied, setContextCopied] = useState(false);
   const [commandCopied, setCommandCopied] = useState(false);
   const [plaintextURLCopied, setPlaintextURLCopied] = useState(false);
 
-  const origin = 'https://ctxs.ai';
+  const origin = import.meta.env.MODE === 'development' ? 'http://localhost:4321' : 'https://ctxs.ai';
 
-  const cliCommand = `npx ctxs add "${origin}/r/gh/${context.id}.json"`;
-  const editURL = `https://github.com/ctxs-ai/ctxs.ai/edit/main/contexts/${context.id}.md`;
-  const plaintextURL = `${origin}/gh/${context.id}.txt`;
+  const cliCommand = `npx ctxs add "${origin}/r/registry-item/${context.urn}.json"`;
+  const plaintextURL = `${origin}/api/txt/${context.urn}`;
 
   const copyPlaintextURLToClipboard = () => {
     if (plaintextURL) {
@@ -65,7 +63,6 @@ export const ContextActions = ({ context }: { context: CollectionEntry<"contexts
 
   return (
     <div className="flex gap-2">
-      <UpvoteButton postId={context.id} />
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>

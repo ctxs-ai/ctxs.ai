@@ -9,21 +9,23 @@ description: "Learn how to use the ctxs CLI to manage and apply context rules."
 The ctxs CLI tool allows you to seamlessly integrate context rules into your development workflow. It provides built-in support for managing and applying Cursor rules directly from your terminal.
 
 ## Installation
-You can use npx to run the CLI without installation:
+You can use `npx` to run the CLI without installation:
 ```bash
 npx ctxs [command]
 ```
 
 ## Adding Context Rules
 To add a context rule to your codebase, use the following command:
+
+For example:
 ```bash
-npx ctxs add "https://ctxs.ai/r/gh/[context-id].json"
+npx ctxs add "https://ctxs.ai/cli/registry-item/urn:ctxs:gh:martinklepsch:qdg6m0.json"
 ```
 
 This will:
 - Download the context rule
 - Validate its contents
-- Add it to your project's configuration
+- Add it to your project
 
 ## Features
 - Seamless integration with your development workflow
@@ -32,4 +34,4 @@ This will:
 - Version control friendly
 
 ## Coming Soon
-MCP server integration is in development and will provide additional features for managing and synchronizing your context rules across your team. 
+MCP server integration is in development and will provide additional features for managing and synchronizing your context. 

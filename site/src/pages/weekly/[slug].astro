@@ -10,6 +10,8 @@ import { eq, sql } from "drizzle-orm";
 import type { CollectionEntry } from "astro:content";
 import { WeeklyLogo } from "@/components/wordmark";
 import { PERSIST_SYMBOL } from "node_modules/astro/dist/core/session";
+import { UpvoteButton } from "@/components/upvote-button";
+
 type PostWithAuthor = {
   id: number;
   title: string | null;
@@ -32,6 +34,8 @@ const [post] = await db
     createdAt: Post.createdAt,
     authorId: Post.authorId,
     attributedGitHubUser: Post.attributedGitHubUser,
+    urn: Post.urn,
+    slug: Post.slug,
     tags: Post.tags,
     author: {
       id: User.id,
@@ -56,6 +60,7 @@ const selectedContext = {
   description: post.description || "",
   tags: post.tags || [],
   author: post.author,
+  urn: post.urn,
   data: {
     title: post.title || "",
     description: post.description || "",
@@ -85,10 +90,12 @@ Astro.response.headers.set("Cache-Control", "public, max-age=3600");
 
 <Layout meta={meta}>
   <div class="max-w-3xl mx-auto px-4">
-    <div class="md:border-x md:px-8 pt-6">
+    <div class="flex justify-between items-center md:border-x md:px-8 pt-6">
       <a href="/weekly">
         <WeeklyLogo className="h-6 w-auto block" />
       </a>
+
+      <UpvoteButton postId={post.id} variant="header" client:load />
     </div>
     <!-- <div class="border-x">
       <WeeklyHeader variant="small" />

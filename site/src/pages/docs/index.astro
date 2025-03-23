@@ -1,0 +1,31 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const docs = await getCollection("docs");
+const meta = {
+  title: "Documentation - ctxs.ai",
+  description:
+    "Documentation for ctxs.ai - Learn how to use context rules effectively.",
+};
+---
+
+<Layout meta={meta}>
+  <div class="container mx-auto py-12">
+    <h1 class="text-4xl font-bold mb-8">Documentation</h1>
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {
+        docs.map((doc) => (
+          <a
+            href={`/docs/${doc.slug}`}
+            class="block p-6 rounded-lg border border-border hover:border-foreground transition-colors"
+          >
+            <h2 class="text-xl font-semibold mb-2">{doc.data.title}</h2>
+            <p class="text-muted-foreground text-sm">{doc.data.description}</p>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</Layout>
