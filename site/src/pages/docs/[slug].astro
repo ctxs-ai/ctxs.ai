@@ -3,14 +3,6 @@ import { LogoWordmark } from "@/components/wordmark";
 import Layout from "@/layouts/Layout.astro";
 import { getCollection } from "astro:content";
 
-export async function getStaticPaths() {
-  const docs = await getCollection("docs");
-  return docs.map((doc) => ({
-    params: { slug: doc.slug },
-    props: { doc },
-  }));
-}
-
 const { slug } = Astro.params;
 
 const posts = Object.values(
@@ -20,8 +12,7 @@ const posts = Object.values(
 );
 
 const { Content, frontmatter } = posts.filter((post) => {
-  console.log(post);
-  return post!.file.endsWith(`${slug}.md`);
+  return post?.file?.endsWith(`${slug}.md`);
 })[0];
 
 const meta = {

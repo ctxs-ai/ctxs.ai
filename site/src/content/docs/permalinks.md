@@ -12,7 +12,10 @@ Permalinks are permanent, reliable URLs that allow you to access and share your 
 There are several ways to use permalinks for your context rules:
 
 ### 1. Direct Access
-Every context rule has a unique URN in the format: `urn:ctxs:gh:[username]:[id]`
+Every context rule has a unique URN in the format: 
+```
+urn:ctxs:[namespace]:[username]:[id]
+```
 
 ### 2. Plaintext Version
 You can access a plaintext version of any context rule by using the format: `https://ctxs.ai/api/txt/[urn]`
@@ -29,6 +32,8 @@ For example:
 ```
 https://ctxs.ai/cli/registry-item/urn:ctxs:gh:martinklepsch:qdg6m0.json
 ```
+
+This format is intended for use with the `ctxs` [CLI](/docs/cli).
 
 ## Benefits
 - Share context rules easily with the community

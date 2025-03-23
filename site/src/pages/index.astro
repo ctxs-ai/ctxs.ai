@@ -42,6 +42,7 @@ const meta = {
         prose-inline-code:font-medium
         prose-pre:px-0.5
         prose-li:my-1
+        prose-a:font-bold
         prose-li:pl-3
         prose-ul:pl-2
         prose-ul:marker:text-foreground
@@ -54,11 +55,24 @@ const meta = {
 					Currently you can:
 				</p>
 				<ul>
-					<li>Browse available content on the left</li>
 					<li>
-						Import context to your project via the <code>ctxs</code> cli
+						Browse submissions on <a class="underline font-bold" href="/weekly"
+							>/weekly</a
+						>
 					</li>
-					<li>Access a plaintext permalink endpoint for each context</li>
+					<li>
+						Import context to your project via the <a
+							class="no-underline"
+							href="/docs/cli"
+							><code class="no-underline border-black/50!">ctxs</code>
+							<span class="underline" class="text-muted-foreground">cli</span
+							></a
+						>
+					</li>
+					<li>
+						Access a <a href="/docs/permalinks">plaintext permalink</a> endpoint
+						for each context
+					</li>
 				</ul>
 			</div>
 		</div>

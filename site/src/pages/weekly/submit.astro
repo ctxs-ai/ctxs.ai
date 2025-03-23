@@ -14,7 +14,9 @@ const meta = {
 };
 
 const isAuthenticated = !!Astro.locals.user;
-const placeholder = `Your goal is to support the user creating a Project Rules file for the Cursor IDE.
+const placeholder = `For example:
+
+Your goal is to support the user creating a Project Rules file for the Cursor IDE.
 
 Using rules in Cursor you can control the behavior of the underlying model.
  You can think of it as instructions and/or a system prompt for LLMs.
@@ -22,9 +24,7 @@ Using rules in Cursor you can control the behavior of the underlying model.
 Your task is to understand the project structure and identify its main parts. 
 
 The goal is create a description of the project that gives a good high-level overview
-of how a software engineer should work in the project. It should be concise focus on whats important.
-
-[…]
+of how a software engineer should work in the project. It should be concise focus on whats important. […]
 `;
 ---
 
@@ -35,9 +35,9 @@ of how a software engineer should work in the project. It should be concise focu
       <h1 class="text-4xl font-bold tracking-tight mb-4">
         Share your context files
       </h1>
-      <p class="text-muted-foreground max-w-md mx-auto">
-        Get a stable permalink to plaintext & <br /> a CLI tool to easily add it
-        to a project. See <a
+      <p class="text-muted-foreground max-w-sm mx-auto">
+        Get a stable permalink to plaintext & a CLI tool to easily add it to a
+        project. See <a
           class="underline"
           href="/weekly/tailwind-v4-cursor-rules-7aem3a">an example</a
         >.
