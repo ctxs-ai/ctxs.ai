@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowUp, Check, ChevronUp } from "lucide-react";
+import { ArrowUp, Check, ChevronUp, ChevronsUp } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { actions } from "astro:actions";
@@ -40,8 +40,8 @@ export const UpvoteButton = ({ variant, postId, isUpvotedInitial, initialVoteCou
   };
 
   const iconClasses = cn(
-    isUpvoted ? "border-black/50 disabled:opacity-100" : "",
-    "flex-col divide-y divide-border px-0 pt-3 h-auto"
+    "flex-col divide-y divide-border px-0 pt-3 h-auto",
+    isUpvoted ? "border-black/50 divide-black/50 disabled:opacity-100" : ""
   );
 
   const classes = cn(buttonVariants({ variant: "outline" }),
@@ -57,11 +57,23 @@ export const UpvoteButton = ({ variant, postId, isUpvotedInitial, initialVoteCou
         onClick={handleUpvote}
         disabled={isUpvoted || isLoading}
       >
-        <div className="p-4 pb-3 pt-0">
-          <ChevronUp className="size-5" />
+        <div className="p-4 pb-3 pt-0 relative">
+          <ChevronUp className="size-5 invisible" />
+          <AnimatePresence>
+            <motion.div
+              className="absolute top-0"
+              key={isUpvoted ? "voted" : "upvote"}
+              initial={isUpvoted ? { opacity: 1, y: 10, scale: 0.9 } : { opacity: 1 }}
+              transition={{ type: 'spring', duration: 0.9, bounce: 0 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -6, scale: 0.7, transition: { type: 'spring', duration: 0.5, bounce: 0 } }}
+            >
+              {isUpvoted ? <ChevronsUp className="size-5" /> : <ChevronUp className="size-5" />}
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        <NumberFlow className="px-4" value={count} trend={0} format={{ notation: "compact" }} />
+        <NumberFlow className="px-4 font-mono" value={count} trend={0} format={{ notation: "compact" }} />
       </button>
     );
   }
@@ -106,7 +118,7 @@ export const UpvoteButton = ({ variant, postId, isUpvotedInitial, initialVoteCou
         </AnimatePresence>
       </div>
       <div className="w-[18px] ml-1 my-1">
-        <NumberFlow value={count} trend={0} format={{ notation: "compact" }} />
+        <NumberFlow className="font-mono" value={count} trend={0} format={{ notation: "compact" }} />
       </div>
     </button>
   );

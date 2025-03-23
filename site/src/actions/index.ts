@@ -49,6 +49,11 @@ const inferAttributedUsers = (content: string): InferredAttributedUsers => {
   }
 };
 
+const inferSourceUrl = (credit: string): string | null => {
+  const url = credit.match(/https?:\/\/[^\s]+/);
+  return url ? url[0] : null;
+}
+
 const generatePostMetadata = async (content: string): Promise<PostMetadata> => {
   const result = await generateObject<PostMetadata>({
     model: openai('gpt-4o-mini'),
@@ -97,6 +102,7 @@ export const server = {
           urn: `urn:ctxs:gh:${userSegment}:${displayId}`,
           attributedGitHubUser: attributedUsers.attributedGithubUser,
           attributedXUser: attributedUsers.attributedXUser,
+          sourceUrl: inferSourceUrl(input.credit || ''),
         }).returning();
 
         console.log('createPost', input)

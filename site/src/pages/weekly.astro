@@ -21,6 +21,7 @@ type PostWithVotes = {
   isUpvoted: boolean;
   attributedGitHubUser: string | null;
   attributedXUser: string | null;
+  sourceUrl: string | null;
   tags: string[];
   author?: {
     id: string;
@@ -40,6 +41,7 @@ const posts = (await db
     createdAt: Post.createdAt,
     attributedGitHubUser: Post.attributedGitHubUser,
     attributedXUser: Post.attributedXUser,
+    sourceUrl: Post.sourceUrl,
     voteCount: sql<string>`cast(count(${Vote.id}) as text)`.as("vote_count"),
     isUpvoted: sql<boolean>`EXISTS (
       SELECT 1 FROM ${Vote} v

@@ -18,6 +18,12 @@ type PostWithAuthor = {
   content: string;
   createdAt: Date;
   authorId: string;
+  attributedGitHubUser: string | null;
+  attributedXUser: string | null;
+  sourceUrl: string | null;
+  urn: string;
+  slug: string;
+  tags: string[];
   author: {
     id: string;
     name: string;
@@ -36,6 +42,8 @@ const [post] = await db
     createdAt: Post.createdAt,
     authorId: Post.authorId,
     attributedGitHubUser: Post.attributedGitHubUser,
+    attributedXUser: Post.attributedXUser,
+    sourceUrl: Post.sourceUrl,
     urn: Post.urn,
     slug: Post.slug,
     tags: Post.tags,

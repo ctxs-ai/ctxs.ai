@@ -18,9 +18,19 @@ export const AuthorName = ({ post, showInfo = true }: { post: any, showInfo?: bo
 
   const isAttributed = post.attributedGitHubUser && post.attributedGitHubUser !== post.author.githubUserName;
 
+  const Element = ({ children }: { children: React.ReactNode }) => {
+    if (post.sourceUrl) {
+      return <a href={post.sourceUrl} target="_blank" rel="noopener noreferrer">{children}</a>
+    } else {
+      return children
+    }
+  }
+
   return (
     <span className="inline-flex items-center gap-1">
-      {displayName}
+      <Element>
+        {displayName}
+      </Element>
       {isAttributed && showInfo && (
         <Tooltip>
           <TooltipTrigger>
