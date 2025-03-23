@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
 import { AccountMenu, Avatar, SignInButton } from "@/components/sidebar-utils";
 import WhySubmit from "@/components/weekly/WhySubmit.astro";
+
 const meta = {
   title: "Submit a Post - ctxs.ai",
   description: "Submit a new post to the weekly discussion",
@@ -18,8 +19,10 @@ const isAuthenticated = !!Astro.locals.user;
 <Layout meta={meta}>
   <WeeklyHeader showSignInButton={false} />
   <div class="max-w-3xl mx-auto px-4 py-8">
-    <div class="mb-8 text-center">
-      <h1 class="text-4xl font-bold tracking-tight mb-4">Submit a Post</h1>
+    <div class="mb-12 text-center">
+      <h1 class="text-4xl font-bold tracking-tight mb-4">
+        Share your context files
+      </h1>
       <p class="text-muted-foreground">
         Share your context window with the community.
       </p>
@@ -38,37 +41,46 @@ const isAuthenticated = !!Astro.locals.user;
           </div>
         </div>
       ) : (
-        <form id="post-form" class="space-y-6 max-w-xl mx-auto">
-          <fieldset class="space-y-2">
-            <Label htmlFor="content">Paste your Context Window</Label>
-            <Textarea
-              name="content"
-              placeholder="Post content"
-              required
-              className="w-full max-h-96 min-h-48"
-            />
-          </fieldset>
-          <fieldset class="space-y-2">
-            <Label htmlFor="credit">Give Credit</Label>
-            <p class="text-sm text-muted-foreground w-3/4">
-              Found this somewhere else?
-              <br /> Provide a link to the source or the original author's
-              social profile
-            </p>
-            <Input
-              className="placeholder:text-muted-foreground/50"
-              id="credit"
-              name="credit"
-              placeholder="https://x.com/martinklepsch/status/1903507215484686431"
-              required
-            />
-          </fieldset>
-          <div class="text-center mt-8">
-            <Button type="submit" size="lg" className="w-64">
-              Create post
-            </Button>
+        <div class="relative">
+          <div
+            id="loading-message"
+            class="hidden text-xl mb-8 flex justify-center items-center text-center absolute inset-0 bg-background"
+          >
+            Saving…
+            <br />
+            This may take a few seconds
           </div>
-        </form>
+          <form id="post-form" class="space-y-6 max-w-xl mx-auto">
+            <fieldset class="space-y-2">
+              <Label htmlFor="content">Paste your Context Window</Label>
+              <Textarea
+                name="content"
+                placeholder="Post content"
+                required
+                className="w-full max-h-96 min-h-48"
+              />
+            </fieldset>
+            <fieldset class="space-y-2">
+              <Label htmlFor="credit">Give Credit</Label>
+              <p class="text-sm text-muted-foreground w-3/4">
+                Found this somewhere else?
+                <br /> Provide a link to the source or the original author's
+                social profile
+              </p>
+              <Input
+                className="placeholder:text-muted-foreground/50"
+                id="credit"
+                name="credit"
+                placeholder="https://x.com/martinklepsch/status/1903507215484686431"
+              />
+            </fieldset>
+            <div class="text-center mt-8">
+              <Button type="submit" size="lg" className="w-64">
+                Create post
+              </Button>
+            </div>
+          </form>
+        </div>
       )
     }
     <div class="mt-28 border-t border-border">
@@ -83,6 +95,9 @@ const isAuthenticated = !!Astro.locals.user;
       document.addEventListener("astro:page-load", () => {
         const postForm = document.getElementById("post-form");
         postForm?.addEventListener("submit", async (e) => {
+          const loadingMessage = document.getElementById("loading-message");
+          loadingMessage?.classList.remove("hidden");
+          // postForm?.classList.add("invisible");
           e.preventDefault();
           const formData = new FormData(e.target as HTMLFormElement);
           const content = formData.get("content") as string;
@@ -91,6 +106,8 @@ const isAuthenticated = !!Astro.locals.user;
           });
 
           if (error) {
+            postForm?.classList.remove("hidden");
+            loadingMessage?.classList.add("hidden");
             alert(error.message);
           } else {
             // Redirect back to weekly page
