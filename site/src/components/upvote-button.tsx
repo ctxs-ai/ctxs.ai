@@ -52,7 +52,7 @@ export const UpvoteButton = ({ variant, postId, isUpvotedInitial, initialVoteCou
   if (variant === "icon") {
     return (
       <button
-        data-s:event="Upvote" 
+        data-s:event="Post upvoted" 
         className={classes}
         onClick={handleUpvote}
         disabled={isUpvoted || isLoading}
@@ -112,7 +112,7 @@ export const UpvoteButton = ({ variant, postId, isUpvotedInitial, initialVoteCou
 
   return (
     <button
-      data-s:event="Upvote" 
+      data-s:event="Post upvoted" 
       className={classes}
       onClick={handleUpvote}
       disabled={isLoading}

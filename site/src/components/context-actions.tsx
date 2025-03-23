@@ -67,7 +67,7 @@ export const ContextActions = ({ context }) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              data-s:event="Copy Plaintext URL"
+              data-s:event="Plaintext URL copied"
               variant="outline"
               size="icon"
               onClick={copyPlaintextURLToClipboard}
@@ -84,7 +84,7 @@ export const ContextActions = ({ context }) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              data-s:event="Copy Context"
+              data-s:event="Context copied"
               variant="outline"
               size="icon"
               onClick={copyContextToClipboard}
@@ -103,9 +103,10 @@ export const ContextActions = ({ context }) => {
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
                 <Button
-
-              data-s:event="Toggle CLI Instructions"
-                 variant="outline" size="icon">
+                  data-s:event="CLI Instructions toggled"
+                  variant="outline"
+                   size="icon"
+                  >
                   <FileCode2 className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -121,7 +122,7 @@ export const ContextActions = ({ context }) => {
                 Run this command in your console
               </div>
               <button
-                data-s:event="Copy CLI Command"
+                data-s:event="CLI Command copied"
                 className="flex items-center gap-2 w-full border border-border hover:border-primary transition-colors rounded py-2 px-3 group cursor-pointer"
                 onClick={copyCommandToClipboard}
               >
