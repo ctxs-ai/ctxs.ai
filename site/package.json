@@ -1,5 +1,5 @@
 {
-  "name": "s",
+  "name": "ctxs-site",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -10,7 +10,8 @@
     "migrate": "drizzle-kit migrate",
     "generate": "drizzle-kit generate",
     "push": "drizzle-kit push",
-    "studio": "drizzle-kit studio"
+    "studio": "drizzle-kit studio",
+    "changeset": "changeset"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.2.7",
@@ -50,6 +51,7 @@
     "wouter": "^3.6.0"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.28.1",
     "@types/glob": "^8.1.0",
     "@types/node": "^22.12.0",
     "@types/react": "^19.0.10",
