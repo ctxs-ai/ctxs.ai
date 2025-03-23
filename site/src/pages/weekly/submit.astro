@@ -14,6 +14,18 @@ const meta = {
 };
 
 const isAuthenticated = !!Astro.locals.user;
+const placeholder = `Your goal is to support the user creating a Project Rules file for the Cursor IDE.
+
+Using rules in Cursor you can control the behavior of the underlying model.
+ You can think of it as instructions and/or a system prompt for LLMs.
+
+Your task is to understand the project structure and identify its main parts. 
+
+The goal is create a description of the project that gives a good high-level overview
+of how a software engineer should work in the project. It should be concise focus on whats important.
+
+[…]
+`;
 ---
 
 <Layout meta={meta}>
@@ -55,9 +67,9 @@ const isAuthenticated = !!Astro.locals.user;
               <Label htmlFor="content">Paste your Context Window</Label>
               <Textarea
                 name="content"
-                placeholder="Post content"
+                placeholder={placeholder}
                 required
-                className="w-full max-h-96 min-h-48"
+                className="w-full max-h-96 min-h-48 placeholder:text-muted-foreground/60"
               />
             </fieldset>
             <fieldset class="space-y-2">
@@ -68,7 +80,7 @@ const isAuthenticated = !!Astro.locals.user;
                 social profile
               </p>
               <Input
-                className="placeholder:text-muted-foreground/50"
+                className="placeholder:text-muted-foreground/60"
                 id="credit"
                 name="credit"
                 placeholder="https://x.com/martinklepsch/status/1903507215484686431"
