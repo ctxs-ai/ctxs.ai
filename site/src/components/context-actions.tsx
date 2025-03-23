@@ -66,7 +66,12 @@ export const ContextActions = ({ context }) => {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="outline" size="icon" onClick={copyPlaintextURLToClipboard}>
+            <Button
+              data-s:event="Copy Plaintext URL"
+              variant="outline"
+              size="icon"
+              onClick={copyPlaintextURLToClipboard}
+            >
               {plaintextURLCopied ? (
                 <Check className="h-4 w-4" />
               ) : (
@@ -78,7 +83,12 @@ export const ContextActions = ({ context }) => {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="outline" size="icon" onClick={copyContextToClipboard}>
+            <Button
+              data-s:event="Copy Context"
+              variant="outline"
+              size="icon"
+              onClick={copyContextToClipboard}
+            >
               {contextCopied ? (
                 <Check className="h-4 w-4" />
               ) : (
@@ -92,7 +102,10 @@ export const ContextActions = ({ context }) => {
           <Tooltip>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
+                <Button
+
+              data-s:event="Toggle CLI Instructions"
+                 variant="outline" size="icon">
                   <FileCode2 className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -108,6 +121,7 @@ export const ContextActions = ({ context }) => {
                 Run this command in your console
               </div>
               <button
+                data-s:event="Copy CLI Command"
                 className="flex items-center gap-2 w-full border border-border hover:border-primary transition-colors rounded py-2 px-3 group cursor-pointer"
                 onClick={copyCommandToClipboard}
               >

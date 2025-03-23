@@ -52,6 +52,7 @@ export const UpvoteButton = ({ variant, postId, isUpvotedInitial, initialVoteCou
   if (variant === "icon") {
     return (
       <button
+        data-s:event="Upvote" 
         className={classes}
         onClick={handleUpvote}
         disabled={isUpvoted || isLoading}
@@ -110,7 +111,12 @@ export const UpvoteButton = ({ variant, postId, isUpvotedInitial, initialVoteCou
   }
 
   return (
-    <button className={classes} onClick={handleUpvote} disabled={isLoading}>
+    <button
+      data-s:event="Upvote" 
+      className={classes}
+      onClick={handleUpvote}
+      disabled={isLoading}
+    >
       <div className="relative w-20 h-full">
         <AnimatePresence>
           {isUpvoted ? <Voted key="voted" visible={isUpvoted} /> : <Upvote key="upvote" visible={!isUpvoted} />}
