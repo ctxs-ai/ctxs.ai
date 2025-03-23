@@ -55,6 +55,7 @@ export const server = {
   createPost: defineAction({
     input: z.object({
       content: z.string(),
+      credit: z.string().optional(),
     }),
     handler: async (input, context) => {
       if (context.locals.user?.id) {
@@ -72,6 +73,7 @@ export const server = {
           displayId: displayId,
           slug: slugify(metadata.title) + '-' + displayId,
           content,
+          // TODO what to do with credit?
           frontmatter,
           tags: metadata.tags,
           createdAt: new Date(),
