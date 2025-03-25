@@ -28,7 +28,7 @@ interface Props {
 const { post } = Astro.props;
 const { frontmatterString, content } = splitFrontmatter(post.content);
 const frontmatterStringWithFences =
-  frontmatterString.length > 0 ? `---\n${frontmatterString}\n---` : null;
+  frontmatterString.trim().length > 0 ? `---\n${frontmatterString}\n---` : null;
 const html = marked(content);
 ---
 
