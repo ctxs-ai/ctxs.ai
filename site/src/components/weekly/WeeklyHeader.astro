@@ -29,7 +29,9 @@ const weeklyIndexPage = Astro.request.url.endsWith("/weekly");
           />
         </AccountMenu>
       ) : (
-        showSignInButton && <SignInButton client:load />
+        showSignInButton && (
+          <SignInButton variant="outline" client:load size="default" />
+        )
       )
     }
   </div>
