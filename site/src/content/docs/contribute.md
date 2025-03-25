@@ -4,6 +4,8 @@ LLMs provide us with a new form of intelligence but it is an intelligence that o
 
 This knowledge can be provided to LLMs in the form of context and that is what you can share and discover on ctxs. For the lack of a better word let's call this *context files*.
 
+As Simon Willison puts it, [Context is King](https://simonwillison.net/2025/Mar/11/using-llms-for-code/#context-is-king).
+
 ## What to contribute
 
 ctxs.ai is an attempt to allow the community to come together and share context files. Context files can be many things:
