@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 const { user, session } = Astro.locals;
 
 const showSignInButton = Astro.props.showSignInButton;
-const weeklyIndexPage = Astro.request.url.endsWith("/weekly");
+const weeklyIndexPage = false; //Astro.request.url.endsWith("/weekly");
 ---
 
 <div class="max-w-3xl mx-auto px-4 py-8">
