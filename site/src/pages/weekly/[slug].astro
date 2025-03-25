@@ -105,6 +105,7 @@ Astro.response.headers.set("Cache-Control", "public, max-age=3600");
       <!-- TODO: figure out how to handle logged out users -->
       <UpvoteButton
         postId={post.id}
+        postSlug={post.slug}
         variant="header"
         client:load
         initialVoteCount={parseInt(post.voteCount)}

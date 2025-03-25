@@ -9,12 +9,13 @@ import { buttonVariants } from "@/components/ui/button";
 import { navigate } from "astro:transitions/client";
 interface UpvoteButtonProps {
   postId: string;
+  postSlug: string;
   variant?: "header" | "icon";
   isUpvotedInitial: boolean;
   initialVoteCount: number;
 }
 
-export const UpvoteButton = ({ variant, postId, isUpvotedInitial, initialVoteCount, ...props }: UpvoteButtonProps) => {
+export const UpvoteButton = ({ variant, postId, postSlug, isUpvotedInitial, initialVoteCount, ...props }: UpvoteButtonProps) => {
   const [isUpvoted, setIsUpvoted] = useState(isUpvotedInitial);
   const [isLoading, setIsLoading] = useState(false);
   const [count, setCount] = useState(initialVoteCount);
@@ -32,7 +33,8 @@ export const UpvoteButton = ({ variant, postId, isUpvotedInitial, initialVoteCou
         setIsUpvoted(true);
         setCount(count + 1);
       } else {
-        navigate("/signin?verb=upvote")
+        const redirectTo = `/weekly/${postSlug}`
+        navigate(`/signin?verb=upvote&redirectTo=${redirectTo}`)
       }
     } catch (error) {
       // TODO implement proper error handling

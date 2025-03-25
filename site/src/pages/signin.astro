@@ -9,6 +9,7 @@ const meta = {
 };
 
 const verb = Astro.url.searchParams.get("verb");
+const callbackUrl = Astro.url.searchParams.get("redirectTo");
 ---
 
 <Layout meta={meta}>
@@ -29,7 +30,7 @@ const verb = Astro.url.searchParams.get("verb");
       <div class="text-center">
         <SignInButton
           client:load
-          size="lg"
+          callbackURL={callbackUrl}
           label="Sign in with GitHub"
           variant="default"
         />

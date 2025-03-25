@@ -33,6 +33,7 @@ const { post } = Astro.props;
       postId={post.id}
       isUpvotedInitial={post.isUpvoted}
       initialVoteCount={parseInt(post.voteCount)}
+      postSlug={post.slug}
     />
   </div>
   <div class="flex-1">

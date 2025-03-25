@@ -40,12 +40,13 @@ export const AccountMenu = ({ children }: { children: React.ReactNode }) => {
     )
 }
 
-export const SignInButton = ({ size = "sm", variant = "outline", label = "Sign in", icon = <Github className="size-4 mr-1" /> }: { size?: "sm" | "default", variant?: "outline" | "default", label?: string, icon?: React.ReactNode }) => {
+export const SignInButton = ({ size = "lg", variant = "default", label = "Sign in", callbackURL }: { size?: string, variant?: string, label?: string, callbackURL?: string }) => {
     const [clicked, setClicked] = useState(false)
     const handleClick = () => {
         setClicked(true)
-        signIn()
+        signIn({ callbackURL: callbackURL })
     }
+    const icon = <Github className="size-4 mr-1" />
     return (
         <Button onClick={handleClick} size={size} variant={variant} className="text-sm">
             {clicked ? <Loader2 className="size-4 mr-1 animate-spin" /> : icon}
