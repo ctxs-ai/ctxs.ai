@@ -1,7 +1,7 @@
 import { defineAction, ActionError } from 'astro:actions';
 import yaml from 'js-yaml';
 import { z } from 'astro:schema';
-import { OPENAI_API_KEY } from 'astro:env/server';
+import { OPENAI_API_KEY, PUSHOVER_APP_TOKEN, PUSHOVER_USER_KEY } from 'astro:env/server';
 import { db } from '@/lib/db';
 import { customAlphabet } from 'nanoid';
 import slugify from '@sindresorhus/slugify';
@@ -71,6 +71,35 @@ const generatePostMetadata = async (content: string): Promise<PostMetadata> => {
   return result.object;
 };
 
+const sendPushoverNotification = async (message: string, url: string) => {
+  if (!PUSHOVER_APP_TOKEN || !PUSHOVER_USER_KEY) {
+    console.log('Pushover credentials not configured, skipping notification');
+    return;
+  }
+
+  try {
+    const formData = new URLSearchParams();
+    formData.append('token', PUSHOVER_APP_TOKEN);
+    formData.append('user', PUSHOVER_USER_KEY);
+    formData.append('message', message);
+    formData.append('url', url);
+
+    const response = await fetch('https://api.pushover.net/1/messages.json', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      console.error('Failed to send Pushover notification:', await response.text());
+    }
+  } catch (error) {
+    console.error('Error sending Pushover notification:', error);
+  }
+};
+
 export const server = {
   createPost: defineAction({
     input: z.object({
@@ -105,6 +134,11 @@ export const server = {
           sourceUrl: inferSourceUrl(input.credit || ''),
         }).returning();
 
+        await sendPushoverNotification(
+          `New post created: ${metadata.title} by ${userSegment}`,
+          `https://ctxs.ai/weekly/${post[0].slug}`
+        );
+
         console.log('createPost', input)
         console.log('createdPost', post)
 
@@ -136,6 +170,18 @@ export const server = {
           userId: context.locals.user.id,
           createdAt: new Date(),
         }).returning();
+
+        const post = await db
+          .select({ title: Post.title, slug: Post.slug })
+          .from(Post)
+          .where(eq(Post.id, input.postId));
+
+        if (post.length > 0) {
+          await sendPushoverNotification(
+            `New upvote on post: ${post[0].title}`,
+            `https://ctxs.ai/weekly/${post[0].slug}`
+          );
+        }
 
         return { success: true, vote };
       } catch (error: any) {

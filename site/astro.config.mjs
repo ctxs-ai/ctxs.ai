@@ -22,6 +22,8 @@ export default defineConfig({
       GITHUB_CLIENT_SECRET: envField.string({ context: "server", access: "secret" }),
       BETTER_AUTH_URL: envField.string({ context: "server", access: "secret", optional: true }),
       BETTER_AUTH_SECRET: envField.string({ context: "server", access: "secret" }),
+      PUSHOVER_APP_TOKEN: envField.string({ context: "server", access: "secret", optional: true }),
+      PUSHOVER_USER_KEY: envField.string({ context: "server", access: "secret", optional: true }),
     }
   },
   // adapter: cloudflare(),
