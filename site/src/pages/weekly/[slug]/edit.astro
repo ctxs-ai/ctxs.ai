@@ -1,0 +1,230 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { availableTags } from "@/lib/constants";
+import { Post } from "@/db/schema";
+import { db } from "@/lib/db";
+import { eq } from "drizzle-orm";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+const isAdmin = Astro.locals.user?.email == "martinklepsch@googlemail.com";
+
+if (!isAdmin) {
+  return Astro.redirect("/weekly");
+}
+
+const [post] = await db
+  .select()
+  .from(Post)
+  .where(eq(Post.slug, Astro.params.slug!));
+
+if (post === undefined) {
+  return Astro.redirect("/weekly");
+}
+
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+    const title = data.get("title")?.toString();
+    const description = data.get("description")?.toString();
+    const content = data.get("content")?.toString();
+    const tags = data.get("tags")?.toString();
+    const attributedGitHubUser = data.get("attributedGitHubUser")?.toString();
+    const sourceUrl = data.get("sourceUrl")?.toString();
+    const isCursorRulesFile = data.get("isCursorRulesFile") === "on";
+    const filename = data.get("filename")?.toString();
+
+    if (content) {
+      await db
+        .update(Post)
+        .set({
+          title,
+          description,
+          content,
+          tags: tags ? tags.split(",").map((t) => t.trim()) : [],
+          attributedGitHubUser,
+          sourceUrl,
+          targetFile: isCursorRulesFile ? filename : null,
+        })
+        .where(eq(Post.id, post.id));
+
+      return Astro.redirect(`/weekly/${post.slug}`);
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+
+Astro.response.headers.set("Cache-Control", "public, max-age=3600");
+---
+
+<Layout meta={{ title: `Edit ${post.title || "Post"} - ctxs.ai` }}>
+  <div class="w-full max-w-5xl mx-auto">
+    <form method="POST" class="">
+      {/* Sticky header with title and submit button */}
+      <div
+        class="sticky top-0 z-10 border-b p-4 flex justify-between items-center bg-white"
+      >
+        <h2 class="text-2xl font-bold">Edit Post</h2>
+        <Button type="submit">Save Changes</Button>
+      </div>
+
+      {/* Main form section */}
+      <div class="border border-t-0">
+        <div class="divide-y">
+          {/* Title field */}
+          <div class="grid grid-cols-1 md:grid-cols-2 md:divide-x">
+            <div class="p-4">
+              <Label htmlFor="title" className="font-medium"> Title </Label>
+              <p class="text-sm text-muted-foreground mt-1">
+                A concise, descriptive title for your post.
+              </p>
+            </div>
+            <div class="p-4">
+              <Input
+                id="title"
+                name="title"
+                defaultValue={post.title || ""}
+                className="max-w-md"
+              />
+            </div>
+          </div>
+
+          {/* Description field */}
+          <div class="grid grid-cols-1 md:grid-cols-2 md:divide-x">
+            <div class="p-4">
+              <Label htmlFor="description" className="font-medium">
+                Description
+              </Label>
+              <p class="text-sm text-muted-foreground mt-1">
+                A brief summary of what this post is about.
+              </p>
+            </div>
+            <div class="p-4">
+              <Textarea
+                id="description"
+                name="description"
+                defaultValue={post.description || ""}
+                className="max-w-md"
+              />
+            </div>
+          </div>
+
+          {/* Content field */}
+          <div class="grid grid-cols-1 md:grid-cols-2 md:divide-x">
+            <div class="p-4">
+              <Label htmlFor="content" className="font-medium"> Content </Label>
+              <p class="text-sm text-muted-foreground mt-1">
+                The full text of your post.
+              </p>
+            </div>
+            <div class="p-4">
+              <div class="relative max-w-md">
+                <Textarea
+                  id="content"
+                  name="content"
+                  defaultValue={post.content}
+                  className="min-h-[150px] max-h-[350px] w-full"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Tags field */}
+          <div class="grid grid-cols-1 md:grid-cols-2 md:divide-x">
+            <div class="p-4">
+              <Label htmlFor="tags" className="font-medium"> Tags </Label>
+              <p class="text-sm text-muted-foreground mt-1">
+                Comma-separated tags to help categorize your post.
+              </p>
+              <div class="flex flex-wrap gap-2 mt-2 pr-8">
+                {
+                  availableTags.map((tag) => (
+                    <Badge variant="outline">{tag}</Badge>
+                  ))
+                }
+              </div>
+            </div>
+            <div class="p-4">
+              <Input
+                id="tags"
+                name="tags"
+                defaultValue={post.tags?.join(", ") || ""}
+                placeholder="ai, productivity, coding, etc."
+                className="max-w-md"
+              />
+            </div>
+          </div>
+
+          {/* Attributed Author GitHub field */}
+          <div class="grid grid-cols-1 md:grid-cols-2 md:divide-x">
+            <div class="p-4">
+              <Label htmlFor="attributedGitHubUser" className="font-medium">
+                Attributed Author GitHub
+              </Label>
+              <p class="text-sm text-muted-foreground mt-1">
+                GitHub username of the original author (if not you).
+              </p>
+            </div>
+            <div class="p-4">
+              <Input
+                id="attributedGitHubUser"
+                name="attributedGitHubUser"
+                defaultValue={post.attributedGitHubUser || ""}
+                placeholder="username"
+                className="max-w-md"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 md:divide-x">
+            <div class="p-4">
+              <Label htmlFor="sourceUrl" className="font-medium">
+                Source URL
+              </Label>
+              <p class="text-sm text-muted-foreground mt-1">
+                Information about where this post came from.
+              </p>
+            </div>
+            <div class="p-4">
+              <Input
+                id="sourceUrl"
+                name="sourceUrl"
+                defaultValue={post.sourceUrl || ""}
+                className="max-w-md"
+                placeholder="e.g., https://github.com/username/repo"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 md:divide-x">
+            <div class="p-4">
+              <Label htmlFor="targetFile" className="font-medium">
+                Target Path
+              </Label>
+              <p class="text-sm text-muted-foreground mt-1">
+                The file will be created at{" "}
+                <code class="text-xs bg-muted/30 px-1 py-0.5 rounded">
+                  {post.targetFile}
+                </code>
+              </p>
+            </div>
+            <div class="p-4">
+              <Input
+                id="targetFile"
+                name="targetFile"
+                defaultValue={post.targetFile || ""}
+                className="max-w-md"
+                placeholder=".cursor/rules/my-rules.mdc"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</Layout>
