@@ -1,7 +1,7 @@
 import { Terminal, Bot, Wind, Code, Tag } from "lucide-react";
 import { ContextTagLogo } from "./context-tag-logo";
 import { buttonVariants } from "@/components/ui/button";
-
+import { SiAnthropic } from "@icons-pack/react-simple-icons";
 interface TagConfig {
   displayName: string;
   icon?: React.ComponentType<{ className?: string }>;
@@ -16,7 +16,7 @@ const tagConfigs: Record<string, TagConfig> = {
   },
   "tool:claude-code": {
     displayName: "Claude Code",
-    icon: Bot,
+    icon: SiAnthropic,
   },
   "tool:windsurf": {
     displayName: "Windsurf",
@@ -58,7 +58,7 @@ export function ContextTag({ tag, href, isActive }: { tag: string, href?: string
       {!config.icon ? (
         <ContextTagLogo tag={tag} className={`size-3 ${isActive ? "text-white" : "text-foreground"}`} />
       ) : Icon ? (
-        <Icon className="h-3 w-3" />
+        <Icon className="size-3" />
       ) : null}
       <span className="font-medium">{config.displayName}</span>
     </a>
