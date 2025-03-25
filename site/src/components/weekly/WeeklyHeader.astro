@@ -1,20 +1,24 @@
 ---
-import {
-  Wordmark,
-  Logo,
-  LogoWordmark,
-  WeeklyLogo,
-} from "@/components/wordmark";
+import { WeeklyLogo } from "@/components/wordmark";
 import { AccountMenu, Avatar, SignInButton } from "@/components/sidebar-utils";
+import { Badge } from "@/components/ui/badge";
 const { user, session } = Astro.locals;
 
 const showSignInButton = Astro.props.showSignInButton;
+const weeklyIndexPage = Astro.request.url.endsWith("/weekly");
 ---
 
 <div class="max-w-3xl mx-auto px-4 py-8">
   <div class="mb-4 flex justify-between items-center">
-    <a href="/weekly">
-      <WeeklyLogo className="h-6 w-auto block" />
+    <a href="/weekly" class="flex items-center gap-3 w-auto">
+      <WeeklyLogo className="h-6" />
+      {
+        weeklyIndexPage && (
+          <Badge variant="secondary" className="font-mono">
+            Launch Week
+          </Badge>
+        )
+      }
     </a>
     {
       session ? (
