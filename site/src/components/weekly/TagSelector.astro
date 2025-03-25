@@ -19,12 +19,15 @@ const path = useExistingPath ? Astro.url.pathname : "/weekly";
 
 <div class="flex flex-wrap gap-2 justify-center mb-8 max-w-lg mx-auto">
   {
-    uniqueTags.map((tag) => (
-      <ContextTag
-        tag={tag}
-        href={`${path}?tag=${tag}`}
-        isActive={tag === selectedTag}
-      />
-    ))
+    uniqueTags.map((tag) => {
+      const active = tag === selectedTag;
+      return (
+        <ContextTag
+          tag={tag}
+          href={active ? path : `${path}?tag=${tag}`}
+          isActive={active}
+        />
+      );
+    })
   }
 </div>
