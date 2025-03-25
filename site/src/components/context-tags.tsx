@@ -1,7 +1,7 @@
 import { Terminal, Bot, Wind, Code, Tag } from "lucide-react";
 import { ContextTagLogo } from "./context-tag-logo";
 import { buttonVariants } from "@/components/ui/button";
-import { SiAnthropic } from "@icons-pack/react-simple-icons";
+import { SiAnthropic, SiRubyonrails } from "@icons-pack/react-simple-icons";
 interface TagConfig {
   displayName: string;
   icon?: React.ComponentType<{ className?: string }>;
@@ -35,7 +35,8 @@ const tagConfigs: Record<string, TagConfig> = {
     displayName: "Astro",
   },
   "lib:rails": {
-    displayName: "Rails",
+    displayName: "Ruby on Rails",
+    icon: SiRubyonrails,
   },
   "lib:nextjs": {
     displayName: "Next.js",
