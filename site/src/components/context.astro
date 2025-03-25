@@ -1,10 +1,9 @@
 ---
 import { ContextActions } from "@/components/context-actions";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ContextTags } from "@/components/context-tags";
 import { marked } from "marked";
 import { authorImage, AuthorName } from "@/db/postHelpers";
-import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
+import { getFrontmatter, splitFrontmatter } from "@/lib/utils";
 
 interface Props {
   post: {
@@ -27,7 +26,8 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const html = marked(post.content);
+const { frontmatterString, content } = splitFrontmatter(post.content);
+const html = marked(content);
 ---
 
 <div class="sticky top-0">
@@ -104,6 +104,7 @@ const html = marked(post.content);
         prose-ul:marker:text-foreground
         prose-ul:list-(--dash-list-marker)"
     >
+      <pre class="p-0 border-none">---<br />{frontmatterString}<br />---</pre>
       <div set:html={html} />
     </div>
   </div>

@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-
+import yaml from 'js-yaml';
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -53,3 +53,16 @@ export function inferXUsername(text: string): string | null {
   return null;
 }
 
+export const getFrontmatter = (content: string) => {
+  const frontmatter = content.match(/^---(.*?)---/s);
+  if (frontmatter) {
+    return frontmatter[1].trim();
+  }
+  return "";
+}
+
+export const splitFrontmatter = (md: string) => {
+  const frontmatterString = getFrontmatter(md);
+  const content = md.replace(/^---.*?---/s, '').trim();
+  return { frontmatterString, content };
+};

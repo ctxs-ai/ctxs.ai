@@ -1,5 +1,5 @@
 import { defineAction, ActionError } from 'astro:actions';
-import yaml from 'js-yaml';
+import { getFrontmatter, splitFrontmatter } from '@/lib/utils';
 import { z } from 'astro:schema';
 import { OPENAI_API_KEY, PUSHOVER_APP_TOKEN, PUSHOVER_USER_KEY } from 'astro:env/server';
 import { db } from '@/lib/db';
@@ -11,23 +11,8 @@ import { generateObject } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 import { eq } from 'drizzle-orm';
 import { inferGitHubUsername, inferXUsername } from '@/lib/utils';
-
+import yaml from 'js-yaml';
 const generateDisplayId = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz', 6);
-
-const getFrontmatter = (content: string) => {
-  const frontmatter = content.match(/^---\n([\s\S]*?)\n---/);
-  if (frontmatter) {
-    return frontmatter[1];
-  }
-  return "";
-}
-
-const splitFrontmatter = (md: string) => {
-  const frontmatterString = getFrontmatter(md);
-  const content = md.replace(/^---\n([\s\S]*?)\n---/, '');
-  const frontmatter = yaml.load(frontmatterString, { schema: yaml.FAILSAFE_SCHEMA })
-  return { frontmatter, content };
-};
 
 type PostMetadata = {
   title: string;
@@ -108,7 +93,8 @@ export const server = {
     }),
     handler: async (input, context) => {
       if (context.locals.user?.id) {
-        const { frontmatter, content } = splitFrontmatter(input.content);
+        const { frontmatterString, content } = splitFrontmatter(input.content);
+        const frontmatter = yaml.load(frontmatterString, { schema: yaml.FAILSAFE_SCHEMA })
         const user = await db.select({ githubUserName: User.githubUserName }).from(User).where(eq(User.id, context.locals.user.id))
         const userSegment = user[0].githubUserName || context.locals.user.id
 
@@ -123,7 +109,7 @@ export const server = {
           displayId: displayId,
           slug: slugify(metadata.title) + '-' + displayId,
           content,
-          // TODO what to do with credit?
+          provenance: input.credit || null,
           frontmatter,
           tags: metadata.tags,
           createdAt: new Date(),
