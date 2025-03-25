@@ -122,7 +122,7 @@ export const server = {
 
         await sendPushoverNotification(
           `New post created: ${metadata.title} by ${userSegment}`,
-          `https://ctxs.ai/weekly/${post[0].slug}`
+          `https://ctxs.ai/weekly/${post.slug}`
         );
 
         console.log('createPost', input)
