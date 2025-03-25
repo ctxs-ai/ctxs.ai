@@ -1,0 +1,39 @@
+---
+import Layout from "../layouts/Layout.astro";
+import WeeklyHeader from "../components/weekly/WeeklyHeader.astro";
+import { SignInButton } from "@/components/sidebar-utils";
+
+const meta = {
+  title: "Sign in to ctxs.ai",
+  description: "Sign in upvote and share context files",
+};
+
+const verb = Astro.url.searchParams.get("verb");
+---
+
+<Layout meta={meta}>
+  <WeeklyHeader showSignInButton={false} />
+  <div class="max-w-3xl mx-auto px-4 py-8">
+    <div class="mb-12 text-center">
+      <h1 class="text-4xl font-bold tracking-tight mb-4">Sign in to {verb}</h1>
+      <p class="text-muted-foreground max-w-sm mx-auto">
+        {
+          verb === "upvote"
+            ? "Sign in to upvote posts"
+            : "Sign in to share context files"
+        }
+      </p>
+    </div>
+
+    <div class="mb-8">
+      <div class="text-center">
+        <SignInButton
+          client:load
+          size="lg"
+          label="Sign in with GitHub"
+          variant="default"
+        />
+      </div>
+    </div>
+  </div>
+</Layout>

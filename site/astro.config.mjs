@@ -10,6 +10,9 @@ import react from '@astrojs/react';
 export default defineConfig({
   site: 'https://ctxs.ai',
   output: 'server',
+  redirects: {
+    '/': '/weekly',
+  },
   env: {
     schema: {
       TURSO_CONNECTION_URL: envField.string({ context: "server", access: "secret" }),

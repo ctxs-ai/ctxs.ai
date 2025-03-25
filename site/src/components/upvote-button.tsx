@@ -6,6 +6,7 @@ import { actions } from "astro:actions";
 import NumberFlow from "@number-flow/react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import { navigate } from "astro:transitions/client";
 interface UpvoteButtonProps {
   postId: string;
   variant?: "header" | "icon";
@@ -30,10 +31,13 @@ export const UpvoteButton = ({ variant, postId, isUpvotedInitial, initialVoteCou
       if (result.data?.success) {
         setIsUpvoted(true);
         setCount(count + 1);
+      } else {
+        navigate("/signin?verb=upvote")
       }
     } catch (error) {
       // TODO implement proper error handling
       console.error('Failed to upvote:', error);
+      navigate("/signin?verb=upvote")
     } finally {
       setIsLoading(false);
     }
