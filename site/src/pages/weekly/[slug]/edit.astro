@@ -33,8 +33,7 @@ if (Astro.request.method === "POST") {
     const tags = data.get("tags")?.toString();
     const attributedGitHubUser = data.get("attributedGitHubUser")?.toString();
     const sourceUrl = data.get("sourceUrl")?.toString();
-    const isCursorRulesFile = data.get("isCursorRulesFile") === "on";
-    const filename = data.get("filename")?.toString();
+    const targetFile = data.get("targetFile")?.toString();
 
     if (content) {
       await db
@@ -46,7 +45,7 @@ if (Astro.request.method === "POST") {
           tags: tags ? tags.split(",").map((t) => t.trim()) : [],
           attributedGitHubUser,
           sourceUrl,
-          targetFile: isCursorRulesFile ? filename : null,
+          targetFile: targetFile,
         })
         .where(eq(Post.id, post.id));
 
