@@ -11,9 +11,7 @@ export const authorImage = (post: any) => {
 
 
 export const AuthorName = ({ post, showInfo = true }: { post: any, showInfo?: boolean }) => {
-  const displayName = post.attributedGitHubUser
-    ? `@${post.attributedGitHubUser}`
-    : `@${post.author?.githubUserName}`;
+  const displayName = post.attributedGitHubUser || post.attributedXUser || post.author?.githubUserName
 
   const isAttributed = post.attributedGitHubUser && post.attributedGitHubUser !== post.author.githubUserName;
 
@@ -28,7 +26,7 @@ export const AuthorName = ({ post, showInfo = true }: { post: any, showInfo?: bo
   return (
     <span className="inline-flex items-center gap-1">
       <Element>
-        {displayName}
+        @{displayName}
       </Element>
       {isAttributed && showInfo && (
         <Tooltip>
