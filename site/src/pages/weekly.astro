@@ -42,7 +42,10 @@ const posts = (await db
     attributedGitHubUser: Post.attributedGitHubUser,
     attributedXUser: Post.attributedXUser,
     sourceUrl: Post.sourceUrl,
-    voteCount: sql<string>`cast(count(${Vote.id}) as text)`.as("vote_count"),
+    voteCount:
+      sql<string>`cast(count(${Vote.id}) + ${Post.voteBump} as text)`.as(
+        "vote_count",
+      ),
     isUpvoted: sql<boolean>`EXISTS (
       SELECT 1 FROM ${Vote} v
       WHERE v.post_id = ${Post.id}

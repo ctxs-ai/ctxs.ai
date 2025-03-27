@@ -34,6 +34,7 @@ if (Astro.request.method === "POST") {
     const attributedGitHubUser = data.get("attributedGitHubUser")?.toString();
     const sourceUrl = data.get("sourceUrl")?.toString();
     const targetFile = data.get("targetFile")?.toString();
+    const voteBump = parseInt(data.get("voteBump")?.toString() || "0");
 
     if (content) {
       await db
@@ -46,6 +47,7 @@ if (Astro.request.method === "POST") {
           attributedGitHubUser,
           sourceUrl,
           targetFile: targetFile,
+          voteBump,
         })
         .where(eq(Post.id, post.id));
 
@@ -219,6 +221,28 @@ Astro.response.headers.set("Cache-Control", "public, max-age=3600");
                 defaultValue={post.targetFile || ""}
                 className="max-w-md"
                 placeholder=".cursor/rules/my-rules.mdc"
+              />
+            </div>
+          </div>
+
+          {/* Vote Bump field */}
+          <div class="grid grid-cols-1 md:grid-cols-2 md:divide-x">
+            <div class="p-4">
+              <Label htmlFor="voteBump" className="font-medium">
+                Vote Bump
+              </Label>
+              <p class="text-sm text-muted-foreground mt-1">
+                Additional votes to add to the actual vote count.
+              </p>
+            </div>
+            <div class="p-4">
+              <Input
+                id="voteBump"
+                name="voteBump"
+                type="number"
+                defaultValue={post.voteBump || 0}
+                className="max-w-md"
+                placeholder="0"
               />
             </div>
           </div>

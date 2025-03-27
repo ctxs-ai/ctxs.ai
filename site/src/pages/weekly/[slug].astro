@@ -47,7 +47,9 @@ const [post] = await db
     urn: Post.urn,
     slug: Post.slug,
     tags: Post.tags,
-    voteCount: sql<number>`count(${Vote.id})`.as("vote_count"),
+    voteCount: sql<number>`count(${Vote.id}) + ${Post.voteBump}`.as(
+      "vote_count",
+    ),
     author: {
       id: User.id,
       name: User.name,

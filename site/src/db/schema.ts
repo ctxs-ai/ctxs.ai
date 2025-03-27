@@ -69,6 +69,7 @@ export const Post = pgTable("post", {
 	sourceUrl: text("source_url"),
 	attributedGitHubUser: text("attributed_github_user"),
 	attributedXUser: text("attributed_x_user"),
+	voteBump: integer("vote_bump").notNull().default(0),
 });
 
 export const Vote = pgTable("vote", {
