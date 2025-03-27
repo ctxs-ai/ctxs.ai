@@ -27,6 +27,7 @@ const meta = {
 };
 
 Astro.response.headers.set("Cache-Control", "public, max-age=3600");
+Astro.redirect("/weekly");
 ---
 
 <Layout meta={meta}>
