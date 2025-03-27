@@ -17,7 +17,12 @@ ctxs.ai is an attempt to allow the community to come together and share context 
 
 Your creativity is the limit!
 
-## 
+## Who is making this
+
+My name is [Martin](https://martinklepsch.org?ref=ctxs). Previously I created a public-good documentation platform for the Clojure ecosystem ([cljdoc.org](https://cljdoc.org)). I made this site for selfish reasons, mostly to learn from how other people use LLMs and steal little bits for my own workflows.
+
+## Updates
+
 Follow on X or Bluesky for a weekly roundup of what people have shared
 
 - [X / Twitter](https://x.com/ctxsdotai)

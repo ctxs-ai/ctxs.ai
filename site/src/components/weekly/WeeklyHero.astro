@@ -11,8 +11,8 @@ interface Props {
 }
 
 const {
-  title = "Freshly baked",
-  description = "Find context files to use with Cursor, Claude or any other LLM. For your framework or the task at hand.",
+  title = "Share & discover",
+  description = "Each post comes with a plaintext permalink and command line integration to add to your project",
   contentTypes = [
     "cursor rules",
     "prompts",
@@ -47,10 +47,10 @@ const { session } = Astro.locals;
   </p>
   <div class="flex justify-center gap-4">
     <a class={buttonVariants({ variant: "default" })} href="/weekly/submit">
-      Submit something
+      Submit context files
     </a>
     <a class={buttonVariants({ variant: "outline" })} href="/docs/contribute">
-      What to submit
+      Learn more
     </a>
   </div>
 </div>
