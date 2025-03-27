@@ -12,6 +12,7 @@ import { WeeklyLogo } from "@/components/wordmark";
 import { PERSIST_SYMBOL } from "node_modules/astro/dist/core/session";
 import { UpvoteButton } from "@/components/upvote-button";
 import VideoGuides from "@/components/VideoGuides.astro";
+import { authorImage } from "@/db/postHelpers";
 
 type PostWithAuthor = {
   id: number;
@@ -82,7 +83,7 @@ const params = {
   id: "kqa7b3a5ol15455",
   title: post.title || "",
   desc: post.description || "",
-  avatar: post.author?.image || "",
+  avatar: authorImage(post),
   handle: `@${post.attributedGitHubUser || post.attributedXUser || post.author?.githubUserName || "anonymous"}`,
 };
 
