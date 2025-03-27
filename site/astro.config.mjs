@@ -11,7 +11,7 @@ export default defineConfig({
   site: 'https://ctxs.ai',
   output: 'server',
   redirects: {
-    '/gh/martinklepsch/cursor-rules-prompt/': '/weekly/cursor-rules-prompt-j9tvia'
+    '/gh/martinklepsch/cursor-rules-prompt/': '/weekly/cursor-rules-prompt-j9tvia',
     '/': '/weekly',
   },
   env: {
