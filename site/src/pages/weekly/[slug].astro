@@ -11,6 +11,7 @@ import type { CollectionEntry } from "astro:content";
 import { WeeklyLogo } from "@/components/wordmark";
 import { PERSIST_SYMBOL } from "node_modules/astro/dist/core/session";
 import { UpvoteButton } from "@/components/upvote-button";
+import VideoGuides from "@/components/VideoGuides.astro";
 
 type PostWithAuthor = {
   id: number;
@@ -116,4 +117,5 @@ Astro.response.headers.set("Cache-Control", "public, max-age=3600");
     </div>
   </div>
   <ContextView post={post} />
+  <VideoGuides />
 </Layout>
