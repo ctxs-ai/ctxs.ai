@@ -43,7 +43,7 @@ const posts = (await db
     attributedXUser: Post.attributedXUser,
     sourceUrl: Post.sourceUrl,
     voteCount:
-      sql<string>`cast(count(${Vote.id}) + ${Post.voteBump} as text)`.as(
+      sql<string>`cast(count(${Vote.id}) + ${Post.voteBump} as int)`.as(
         "vote_count",
       ),
     isUpvoted: sql<boolean>`EXISTS (
