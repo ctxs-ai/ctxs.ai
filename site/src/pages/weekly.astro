@@ -65,7 +65,7 @@ const posts = (await db
   .leftJoin(Vote, eq(Post.id, Vote.postId))
   .leftJoin(User, eq(Post.authorId, User.id))
   .groupBy(Post.id, User.id)
-  .orderBy(sql`created_at desc, vote_count desc`)) as PostWithVotes[];
+  .orderBy(sql`vote_count desc, created_at desc`)) as PostWithVotes[];
 
 // Group posts by week
 const postsByWeek = posts.reduce(
