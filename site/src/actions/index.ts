@@ -164,7 +164,7 @@ export const server = {
 
         if (post.length > 0) {
           await sendPushoverNotification(
-            `New upvote on post: ${post[0].title}`,
+            `New upvote on post: ${post[0].title} by ${context.locals.user.email}`,
             `https://ctxs.ai/weekly/${post[0].slug}`
           );
         }
