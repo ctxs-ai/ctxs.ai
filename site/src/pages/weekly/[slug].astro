@@ -80,7 +80,7 @@ const params = {
   title: post.title || "",
   desc: post.description || "",
   avatar: post.author?.image || "",
-  handle: `@${post.author?.name || "anonymous"}`,
+  handle: `@${post.attributedGitHubUser || post.attributedXUser || post.author?.githubUserName || "anonymous"}`,
 };
 
 const queryString = new URLSearchParams(params).toString();
