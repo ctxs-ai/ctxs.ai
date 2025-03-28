@@ -1,0 +1,23 @@
+// wrangler.jsonc
+{
+  "name": "avatars",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-02-11",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "kv_namespaces": [
+    {
+      "binding": "AVATAR_CACHE",
+      "id": "bff2687c278e40eda29651488f476b06",
+      "preview_id": "bff2687c278e40eda29651488f476b06"
+    }
+  ],
+  "browser": {
+    "binding": "BROWSER"
+  }
+}
