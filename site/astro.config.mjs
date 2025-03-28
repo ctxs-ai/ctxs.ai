@@ -16,8 +16,6 @@ export default defineConfig({
   },
   env: {
     schema: {
-      TURSO_CONNECTION_URL: envField.string({ context: "server", access: "secret" }),
-      TURSO_AUTH_TOKEN: envField.string({ context: "server", access: "secret" }),
       OPENAI_API_KEY: envField.string({ context: "server", access: "secret" }),
       GITHUB_CLIENT_ID: envField.string({ context: "server", access: "secret" }),
       GITHUB_CLIENT_SECRET: envField.string({ context: "server", access: "secret" }),
