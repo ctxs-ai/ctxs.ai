@@ -36,7 +36,7 @@ export const AuthorName = ({ post, showInfo = true }: { post: any, showInfo?: bo
             <Info className="h-4 w-4 text-muted-foreground" />
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            <p>This was submitted by someone else</p>
+            <p>Community contributed</p>
           </TooltipContent>
         </Tooltip>
       )}
