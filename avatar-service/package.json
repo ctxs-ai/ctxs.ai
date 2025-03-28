@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@cloudflare/puppeteer": "^0.0.15"
+  }
+}
