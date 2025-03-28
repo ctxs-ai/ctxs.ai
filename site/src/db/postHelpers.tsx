@@ -3,9 +3,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 
 export const authorImage = (post: any) => {
   if (post.attributedGitHubUser) {
-    return `https://github.com/${post.attributedGitHubUser}.png?size=32`;
+    return `https://avatars.ctxs.ai/github/${post.attributedGitHubUser}/32`;
+  } else if (post.attributedXUser) {
+    return `https://avatars.ctxs.ai/x/${post.attributedXUser}/32`;
   } else {
-    return post.author?.image || `https://github.com/${post.author.githubUserName}.png?size=32`;
+    return post.author?.image || `https://avatars.ctxs.ai/github/${post.author.githubUserName}/32`;
   }
 };
 
