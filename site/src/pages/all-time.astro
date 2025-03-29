@@ -37,7 +37,10 @@ const posts = (await db
     createdAt: Post.createdAt,
     attributedGitHubUser: Post.attributedGitHubUser,
     attributedXUser: Post.attributedXUser,
-    voteCount: sql<number>`count(${Vote.id})`.as("vote_count"),
+    voteCount:
+      sql<string>`cast(count(${Vote.id}) + ${Post.voteBump} as int)`.as(
+        "vote_count",
+      ),
     author: {
       id: User.id,
       name: User.name,
