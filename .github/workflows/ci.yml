@@ -37,7 +37,7 @@ jobs:
         working-directory: ./site
     runs-on: ubuntu-latest
     # needs: run-tests
-    if: github.ref == 'refs/heads/postgres' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     concurrency: deploy-app # optional: ensure only one action runs at a time
     steps:
       - uses: actions/checkout@v4
