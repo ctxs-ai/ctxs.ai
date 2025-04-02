@@ -40,6 +40,7 @@ const inferSourceUrl = (credit: string): string | null => {
 }
 
 const generatePostMetadata = async (content: string): Promise<PostMetadata> => {
+  const contentPreview = content.slice(0, 2000)
   const result = await generateObject<PostMetadata>({
     model: openai('gpt-4o-mini'),
     schema: z.object({
@@ -48,7 +49,7 @@ const generatePostMetadata = async (content: string): Promise<PostMetadata> => {
       tags: z.array(z.string()).describe(`Relevant tags for categorizing the post. `),
     }),
     prompt: `You are managing a library of context windows and prompts.
-     Please generate a title, description, and tags for the following post content:\n\n${content}.
+     Please generate a title, description, and tags for the following post content:\n\n${contentPreview}.
      The list of valid tags: ${JSON.stringify(availableTags)}
      Only add tags if you are confident that they apply to the post.`,
   });
