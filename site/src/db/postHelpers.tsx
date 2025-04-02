@@ -1,5 +1,9 @@
-import { Info } from "lucide-react";
+import { Info, RouteIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 export const authorImage = (post: any) => {
   if (post.attributedGitHubUser) {
@@ -11,7 +15,34 @@ export const authorImage = (post: any) => {
   }
 };
 
-
+export const PostProvenance = ({ provenance }: { provenance: string }) => {
+  return (
+    <>
+      <Dialog>
+        <DialogTrigger>
+          <Tooltip>
+            <TooltipTrigger>
+              <RouteIcon className="size-3 cursor-pointer text-muted-foreground hover:text-foreground" />
+            </TooltipTrigger>
+            <TooltipContent>
+              Provenance Details
+            </TooltipContent>
+          </Tooltip>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Provenance Details</DialogTitle>
+            <DialogDescription className="text-xs">
+              Information about where this content is from, how it was
+              processed, and any other notes that were given by the submitter.
+            </DialogDescription>
+          </DialogHeader>
+          <div dangerouslySetInnerHTML={{ __html: provenance }} />
+        </DialogContent>
+      </Dialog>
+    </>
+  )
+}
 export const AuthorName = ({ post, showInfo = true }: { post: any, showInfo?: boolean }) => {
   const displayName = post.attributedGitHubUser || post.attributedXUser || post.author?.githubUserName
 

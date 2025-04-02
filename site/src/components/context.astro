@@ -2,8 +2,15 @@
 import { ContextActions } from "@/components/context-actions";
 import { ContextTags } from "@/components/context-tags";
 import { marked } from "marked";
-import { authorImage, AuthorName } from "@/db/postHelpers";
+import { authorImage, AuthorName, PostProvenance } from "@/db/postHelpers";
 import { getFrontmatter, splitFrontmatter } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { RouteIcon } from "lucide-react";
 
 interface Props {
   post: {
@@ -17,6 +24,7 @@ interface Props {
     slug: string;
     tags: string[] | null;
     contentFormat: string | null;
+    provenance: string | null;
     author: {
       id: string;
       name: string;
@@ -31,6 +39,7 @@ const { frontmatterString, content } = splitFrontmatter(post.content);
 const frontmatterStringWithFences =
   frontmatterString.trim().length > 0 ? `---\n${frontmatterString}\n---` : null;
 const html = post.contentFormat === "markdown" ? marked(content) : content;
+const provenanceHtml = post.provenance ? marked(post.provenance) : null;
 ---
 
 <div class="sticky top-0">
@@ -73,6 +82,11 @@ const html = post.contentFormat === "markdown" ? marked(content) : content;
           <p class="text-muted-foreground text-sm">
             <AuthorName post={post} client:load />
           </p>
+          {
+            post.provenance && (
+              <PostProvenance provenance={provenanceHtml} client:load />
+            )
+          }
         </div>
         <ContextTags tags={post.tags || []} />
       </div>
