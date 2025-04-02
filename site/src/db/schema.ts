@@ -59,6 +59,7 @@ export const Post = pgTable("post", {
 	title: text("title"),
 	description: text("description"),
 	content: text("content").notNull(),
+	contentFormat: text("content_format").notNull().default("markdown"),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	authorId: text("author_id").notNull().references(() => User.id),
 	targetFile: text("target_file"),

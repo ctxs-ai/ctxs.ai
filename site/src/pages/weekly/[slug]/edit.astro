@@ -35,6 +35,7 @@ if (Astro.request.method === "POST") {
     const sourceUrl = data.get("sourceUrl")?.toString();
     const targetFile = data.get("targetFile")?.toString();
     const voteBump = parseInt(data.get("voteBump")?.toString() || "0");
+    const contentFormat = data.get("contentFormat")?.toString() || "markdown";
 
     if (content) {
       await db
@@ -48,6 +49,7 @@ if (Astro.request.method === "POST") {
           sourceUrl,
           targetFile: targetFile,
           voteBump,
+          contentFormat,
         })
         .where(eq(Post.id, post.id));
 
@@ -222,6 +224,29 @@ Astro.response.headers.set("Cache-Control", "public, max-age=3600");
                 className="max-w-md"
                 placeholder=".cursor/rules/my-rules.mdc"
               />
+            </div>
+          </div>
+
+          {/* Content Format field */}
+          <div class="grid grid-cols-1 md:grid-cols-2 md:divide-x">
+            <div class="p-4">
+              <Label htmlFor="contentFormat" className="font-medium"
+                >Content Format</Label
+              >
+              <p class="text-sm text-muted-foreground mt-1">
+                The format of the content. Markdown or XML.
+              </p>
+            </div>
+            <div class="p-4">
+              <select
+                id="contentFormat"
+                name="contentFormat"
+                value={post.contentFormat || "markdown"}
+                class="max-w-md w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+              >
+                <option value="markdown">Markdown</option>
+                <option value="xml">XML</option>
+              </select>
             </div>
           </div>
 

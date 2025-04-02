@@ -16,6 +16,7 @@ interface Props {
     urn: string | null;
     slug: string;
     tags: string[] | null;
+    contentFormat: string | null;
     author: {
       id: string;
       name: string;
@@ -29,7 +30,7 @@ const { post } = Astro.props;
 const { frontmatterString, content } = splitFrontmatter(post.content);
 const frontmatterStringWithFences =
   frontmatterString.trim().length > 0 ? `---\n${frontmatterString}\n---` : null;
-const html = marked(content);
+const html = post.contentFormat === "markdown" ? marked(content) : content;
 ---
 
 <div class="sticky top-0">
@@ -111,7 +112,13 @@ const html = marked(content);
           <pre class="p-0 border-none">{frontmatterStringWithFences}</pre>
         )
       }
-      <div set:html={html} />
+      {
+        post.contentFormat === "markdown" ? (
+          <div set:html={html} />
+        ) : (
+          <pre class="whitespace-pre-wrap border-none p-0">{html}</pre>
+        )
+      }
     </div>
   </div>
 </div>
