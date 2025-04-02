@@ -19,16 +19,16 @@ export const PostProvenance = ({ provenance }: { provenance: string }) => {
   return (
     <>
       <Dialog>
-        <DialogTrigger>
-          <Tooltip>
-            <TooltipTrigger>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DialogTrigger>
               <RouteIcon className="size-3 cursor-pointer text-muted-foreground hover:text-foreground" />
-            </TooltipTrigger>
-            <TooltipContent>
-              Provenance Details
-            </TooltipContent>
-          </Tooltip>
-        </DialogTrigger>
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            Provenance Details
+          </TooltipContent>
+        </Tooltip>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Provenance Details</DialogTitle>
@@ -37,7 +37,7 @@ export const PostProvenance = ({ provenance }: { provenance: string }) => {
               processed, and any other notes that were given by the submitter.
             </DialogDescription>
           </DialogHeader>
-          <div dangerouslySetInnerHTML={{ __html: provenance }} />
+          <div className="prose" dangerouslySetInnerHTML={{ __html: provenance }} />
         </DialogContent>
       </Dialog>
     </>

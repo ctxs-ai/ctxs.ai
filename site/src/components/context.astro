@@ -83,7 +83,7 @@ const provenanceHtml = post.provenance ? marked(post.provenance) : null;
             <AuthorName post={post} client:load />
           </p>
           {
-            post.provenance && (
+            provenanceHtml && (
               <PostProvenance provenance={provenanceHtml} client:load />
             )
           }
