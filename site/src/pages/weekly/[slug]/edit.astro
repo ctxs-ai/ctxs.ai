@@ -36,6 +36,7 @@ if (Astro.request.method === "POST") {
     const targetFile = data.get("targetFile")?.toString();
     const voteBump = parseInt(data.get("voteBump")?.toString() || "0");
     const contentFormat = data.get("contentFormat")?.toString() || "markdown";
+    const provenance = data.get("provenance")?.toString();
 
     if (content) {
       await db
@@ -50,6 +51,7 @@ if (Astro.request.method === "POST") {
           targetFile: targetFile,
           voteBump,
           contentFormat,
+          provenance,
         })
         .where(eq(Post.id, post.id));
 
@@ -247,6 +249,28 @@ Astro.response.headers.set("Cache-Control", "public, max-age=3600");
                 <option value="markdown">Markdown</option>
                 <option value="xml">XML</option>
               </select>
+            </div>
+          </div>
+
+          {/* Provenance field */}
+          <div class="grid grid-cols-1 md:grid-cols-2 md:divide-x">
+            <div class="p-4">
+              <Label htmlFor="provenance" className="font-medium">
+                Provenance
+              </Label>
+              <p class="text-sm text-muted-foreground mt-1">
+                Information about where this content came from and how it was
+                processed.
+              </p>
+            </div>
+            <div class="p-4">
+              <Textarea
+                id="provenance"
+                name="provenance"
+                defaultValue={post.provenance || ""}
+                className="max-w-md h-24"
+                placeholder="e.g. Extracted from GitHub issue #123 using GPT-4"
+              />
             </div>
           </div>
 
