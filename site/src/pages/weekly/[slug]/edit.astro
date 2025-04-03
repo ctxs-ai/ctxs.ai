@@ -64,7 +64,7 @@ if (Astro.request.method === "POST") {
   }
 }
 
-Astro.response.headers.set("Cache-Control", "public, max-age=3600");
+console.log({ contentFormat: post.contentFormat });
 ---
 
 <Layout meta={{ title: `Edit ${post.title || "Post"} - ctxs.ai` }}>
@@ -243,11 +243,15 @@ Astro.response.headers.set("Cache-Control", "public, max-age=3600");
               <select
                 id="contentFormat"
                 name="contentFormat"
-                value={post.contentFormat || "markdown"}
                 class="max-w-md w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
               >
-                <option value="markdown">Markdown</option>
-                <option value="xml">XML</option>
+                <option
+                  value="markdown"
+                  selected={post.contentFormat === "markdown"}>Markdown</option
+                >
+                <option value="xml" selected={post.contentFormat === "xml"}
+                  >XML</option
+                >
               </select>
             </div>
           </div>
