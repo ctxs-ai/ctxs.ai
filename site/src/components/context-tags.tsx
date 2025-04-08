@@ -61,7 +61,7 @@ export function ContextTag({ tag, href, isActive }: { tag: string, href?: string
         boxShadow: isActive ? "0 0 0 1px #ccc" : "none",
       }}>
       {!config.icon ? (
-        <ContextTagLogo tag={tag} className={`size-3 ${isActive ? "text-white" : "text-foreground"}`} />
+        <ContextTagLogo tag={tag} className={`size-3 ${isActive ? "text-background" : "text-foreground"}`} />
       ) : Icon ? (
         <Icon className="size-3" />
       ) : null}
