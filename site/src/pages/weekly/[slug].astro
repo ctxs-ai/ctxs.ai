@@ -7,9 +7,7 @@ import { Post, Vote, User } from "@/db/schema";
 import { db } from "@/lib/db";
 import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
 import { eq, sql, and } from "drizzle-orm";
-import type { CollectionEntry } from "astro:content";
-import { WeeklyLogo } from "@/components/wordmark";
-import { PERSIST_SYMBOL } from "node_modules/astro/dist/core/session";
+import { Logo } from "@/components/wordmark";
 import { UpvoteButton } from "@/components/upvote-button";
 import VideoGuides from "@/components/VideoGuides.astro";
 import { authorImage } from "@/db/postHelpers";
@@ -104,7 +102,7 @@ Astro.response.headers.set("Cache-Control", "public, max-age=3600");
   <div class="max-w-3xl mx-auto px-4">
     <div class="flex justify-between items-center md:border-x md:px-8 pt-6">
       <a href="/weekly">
-        <WeeklyLogo className="h-6 w-auto block" />
+        <Logo className="h-6 w-auto block" />
       </a>
 
       <!-- TODO: Add context actions with viewcount etc -->
