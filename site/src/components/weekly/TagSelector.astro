@@ -9,25 +9,70 @@ const tags = await db
   })
   .from(Post);
 
-const allTags = tags.flatMap(({ tag }) => tag).filter((tag) => tag !== null);
+const allTags = tags
+  .flatMap(({ tag }) => tag)
+  .filter((tag) => tag !== null) as string[];
 const uniqueTags = [...new Set(allTags)];
 const selectedTag = Astro.url.searchParams.get("tag");
 
 const useExistingPath = Astro.url.pathname.startsWith("/top");
 const path = useExistingPath ? Astro.url.pathname : "/weekly";
+
+// Group tags into specific categories
+const groupedTags = uniqueTags.reduce(
+  (acc, tag) => {
+    const [prefix] = tag.split(":");
+    if (prefix === "lang" || prefix === "lib") {
+      acc["Ecosystem"] = acc["Ecosystem"] || [];
+      acc["Ecosystem"].push(tag);
+    } else if (prefix === "tool") {
+      acc["Tool"] = acc["Tool"] || [];
+      acc["Tool"].push(tag);
+    } else if (prefix === "type") {
+      acc["Workflow"] = acc["Workflow"] || [];
+      acc["Workflow"].push(tag);
+    }
+    return acc;
+  },
+  {} as Record<string, string[]>,
+);
+
+// Sort tags within each group
+Object.keys(groupedTags).forEach((group) => {
+  groupedTags[group].sort();
+});
+
+// Define the display order
+const groupOrder = ["Ecosystem", "Tool", "Workflow"];
 ---
 
-<div class="flex flex-wrap gap-2 justify-center mb-8 max-w-lg mx-auto">
+<div
+  class="max-w-3xl mx-auto mb-4 border-border md:border-x border-y py-3 px-6"
+>
   {
-    uniqueTags.map((tag) => {
-      const active = tag === selectedTag;
-      return (
-        <ContextTag
-          tag={tag}
-          href={active ? path : `${path}?tag=${tag}`}
-          isActive={active}
-        />
-      );
-    })
+    groupOrder.map(
+      (group) =>
+        groupedTags[group] && (
+          <div class="grid grid-cols-10 gap-2 py-2 border-b last:border-b-0 border-border">
+            <div class="col-span-2">
+              <h3 class="text-sm mt-1 font-medium text-muted-foreground">
+                {group}
+              </h3>
+            </div>
+            <div class="col-span-8 flex flex-wrap gap-1.5">
+              {groupedTags[group].map((tag) => {
+                const active = tag === selectedTag;
+                return (
+                  <ContextTag
+                    tag={tag}
+                    href={active ? path : `${path}?tag=${tag}`}
+                    isActive={active}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        ),
+    )
   }
 </div>
