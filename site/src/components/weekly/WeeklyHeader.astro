@@ -1,5 +1,5 @@
 ---
-import { Logo } from "@/components/wordmark";
+import { LogoIcon } from "@/components/wordmark";
 import { AccountMenu, Avatar, SignInButton } from "@/components/sidebar-utils";
 import { Badge } from "@/components/ui/badge";
 const { user, session } = Astro.locals;
@@ -11,7 +11,7 @@ const weeklyIndexPage = false; //Astro.request.url.endsWith("/weekly");
 <div class="max-w-3xl mx-auto px-4 py-8">
   <div class="mb-4 flex justify-between items-center">
     <a href="/weekly" class="flex items-center gap-3 w-auto">
-      <Logo className="h-6 w-auto" />
+      <LogoIcon className="h-6 w-auto" />
       {
         weeklyIndexPage && (
           <Badge variant="secondary" className="font-mono">
