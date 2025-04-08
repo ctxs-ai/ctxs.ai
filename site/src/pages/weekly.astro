@@ -114,10 +114,12 @@ const uniqueTags = [...new Set(allTags)];
   <WeeklyHeader showSignInButton={true} />
   <div class="max-w-2xl mx-auto px-4 py-8">
     <WeeklyHero />
-    <div id="search" class="pt-8">
-      <TagSelector />
-    </div>
+    <div id="search" class="pt-8"></div>
+  </div>
 
+  <TagSelector />
+
+  <div class="max-w-2xl mx-auto px-4 py-8">
     <div class="space-y-8" transition:animate="fade">
       {
         sortedWeeks.map(([weekStart, weekPosts]: [string, PostWithVotes[]]) => (
