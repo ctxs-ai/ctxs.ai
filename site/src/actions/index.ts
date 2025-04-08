@@ -18,6 +18,7 @@ type PostMetadata = {
   title: string;
   description: string;
   tags: string[];
+  slug: string;
 };
 
 const openai = createOpenAI({ apiKey: OPENAI_API_KEY })
@@ -45,6 +46,7 @@ const generatePostMetadata = async (content: string): Promise<PostMetadata> => {
     model: openai('gpt-4o-mini'),
     schema: z.object({
       title: z.string().describe('A concise, descriptive title for the context window'),
+      slug: z.string().describe('a 30 character or less keyword oriented slug'),
       description: z.string().describe('A brief summary of what this context window might help with, 120 characters maximum.'),
       tags: z.array(z.string()).describe(`Relevant tags for categorizing the post. `),
     }),
@@ -108,7 +110,7 @@ export const server = {
           title: metadata.title,
           description: metadata.description,
           displayId: displayId,
-          slug: slugify(metadata.title) + '-' + displayId,
+          slug: slugify(metadata.slug) + '-' + displayId,
           content,
           provenance: input.credit || null,
           frontmatter,
