@@ -1,51 +1,11 @@
-import { Terminal, Bot, Wind, Code, Tag } from "lucide-react";
+import { Tag } from "lucide-react";
 import { ContextTagLogo } from "./context-tag-logo";
 import { buttonVariants } from "@/components/ui/button";
-import { SiAnthropic, SiRubyonrails, SiVite } from "@icons-pack/react-simple-icons";
+import { tagConfigs } from "@/lib/tags";
 interface TagConfig {
   displayName: string;
   icon?: React.ComponentType<{ className?: string }>;
 }
-
-const tagConfigs: Record<string, TagConfig> = {
-  "type:prompt": {
-    displayName: "Prompt",
-  },
-  "tool:cursor": {
-    displayName: "Cursor",
-  },
-  "tool:claude-code": {
-    displayName: "Claude Code",
-    icon: SiAnthropic,
-  },
-  "tool:windsurf": {
-    displayName: "Windsurf",
-    icon: Wind,
-  },
-  "lang:clojure": {
-    displayName: "Clojure",
-  },
-  "lib:react": {
-    displayName: "React",
-  },
-  "lib:tailwindcss": {
-    displayName: "Tailwind CSS",
-  },
-  "lib:astro": {
-    displayName: "Astro",
-  },
-  "lib:rails": {
-    displayName: "Ruby on Rails",
-    icon: SiRubyonrails,
-  },
-  "lib:nextjs": {
-    displayName: "Next.js",
-  },
-  "lib:vite": {
-    displayName: "Vite",
-    icon: SiVite,
-  },
-};
 
 interface ContextTagsProps {
   tags?: string[];

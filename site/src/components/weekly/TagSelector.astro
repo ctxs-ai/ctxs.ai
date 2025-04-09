@@ -2,6 +2,7 @@
 import { ContextTag } from "@/components/context-tags";
 import { db } from "@/lib/db";
 import { Post } from "@/db/schema";
+import { groupTagsByPrefix, groupOrder } from "@/lib/tags";
 
 const tags = await db
   .selectDistinct({
@@ -18,32 +19,13 @@ const selectedTag = Astro.url.searchParams.get("tag");
 const useExistingPath = Astro.url.pathname.startsWith("/top");
 const path = useExistingPath ? Astro.url.pathname : "/weekly";
 
-// Group tags into specific categories
-const groupedTags = uniqueTags.reduce(
-  (acc, tag) => {
-    const [prefix] = tag.split(":");
-    if (prefix === "lang" || prefix === "lib") {
-      acc["Ecosystem"] = acc["Ecosystem"] || [];
-      acc["Ecosystem"].push(tag);
-    } else if (prefix === "tool") {
-      acc["Tool"] = acc["Tool"] || [];
-      acc["Tool"].push(tag);
-    } else if (prefix === "type") {
-      acc["Workflow"] = acc["Workflow"] || [];
-      acc["Workflow"].push(tag);
-    }
-    return acc;
-  },
-  {} as Record<string, string[]>,
-);
+// Group tags using the centralized grouping function
+const groupedTags = groupTagsByPrefix(uniqueTags);
 
 // Sort tags within each group
 Object.keys(groupedTags).forEach((group) => {
   groupedTags[group].sort();
 });
-
-// Define the display order
-const groupOrder = ["Ecosystem", "Tool", "Workflow"];
 ---
 
 <div
@@ -54,7 +36,7 @@ const groupOrder = ["Ecosystem", "Tool", "Workflow"];
       (group) =>
         groupedTags[group] && (
           <div class="flex gap-2 py-2 border-b last:border-b-0 border-border">
-            <div class="w-1/4">
+            <div class="w-1/4 shrink-0">
               <h3 class="text-sm mt-1 font-medium text-muted-foreground">
                 {group}
               </h3>
