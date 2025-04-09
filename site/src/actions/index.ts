@@ -132,7 +132,7 @@ export const server = {
         console.log('createPost', input)
         console.log('createdPost', post)
 
-        return post;
+        return { post: { ...post, slug: post.displayId } };
       } else {
         throw new ActionError({
           code: "UNAUTHORIZED",
