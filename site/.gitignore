@@ -1,3 +1,5 @@
 .wrangler/
 dist/
 .env
+.dev.vars
+.prod.vars

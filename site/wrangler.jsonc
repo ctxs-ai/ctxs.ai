@@ -1,17 +1,19 @@
 {
   "name": "ctxs-ai",
   "compatibility_date": "2025-03-06",
-  "pages_build_output_dir": "./dist",
-  "kv_namespaces": [
-    {
-      "binding": "CTXS_KV",
-      "id": "ef4b59d30f304a018d507d73e58a9805"
-    }
+    "compatibility_flags": [
+    "nodejs_compat"
   ],
-  "analytics_engine_datasets": [
+  "main": "src/workers/index.ts",
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "workflows": [
     {
-      "binding": "ANALYTICS",
-      "dataset": "ctxsAnalytics"
+      "name": "workflows-starter",
+      "binding": "MY_WORKFLOW",
+      "class_name": "MyWorkflow"
     }
   ]
 }

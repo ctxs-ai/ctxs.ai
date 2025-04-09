@@ -1,7 +1,7 @@
 import { defineAction, ActionError } from 'astro:actions';
 import { getFrontmatter, splitFrontmatter } from '@/lib/utils';
 import { z } from 'astro:schema';
-import { OPENAI_API_KEY, PUSHOVER_APP_TOKEN, PUSHOVER_USER_KEY } from 'astro:env/server';
+import { OPENAI_API_KEY, CF_ENDPOINT, API_SECRET } from 'astro:env/server';
 import { db } from '@/lib/db';
 import { customAlphabet } from 'nanoid';
 import slugify from '@sindresorhus/slugify';
@@ -12,6 +12,8 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { eq } from 'drizzle-orm';
 import { inferGitHubUsername, inferXUsername } from '@/lib/utils';
 import yaml from 'js-yaml';
+import { triggerWorkflow } from '@/lib/cloudflare';
+import { sendPushoverNotification } from '@/lib/pushover';
 const generateDisplayId = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz', 6);
 
 type PostMetadata = {
@@ -59,35 +61,6 @@ const generatePostMetadata = async (content: string): Promise<PostMetadata> => {
   return result.object;
 };
 
-const sendPushoverNotification = async (message: string, url: string) => {
-  if (!PUSHOVER_APP_TOKEN || !PUSHOVER_USER_KEY) {
-    console.log('Pushover credentials not configured, skipping notification');
-    return;
-  }
-
-  try {
-    const formData = new URLSearchParams();
-    formData.append('token', PUSHOVER_APP_TOKEN);
-    formData.append('user', PUSHOVER_USER_KEY);
-    formData.append('message', message);
-    formData.append('url', url);
-
-    const response = await fetch('https://api.pushover.net/1/messages.json', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: formData,
-    });
-
-    if (!response.ok) {
-      console.error('Failed to send Pushover notification:', await response.text());
-    }
-  } catch (error) {
-    console.error('Error sending Pushover notification:', error);
-  }
-};
-
 export const server = {
   createPost: defineAction({
     input: z.object({
@@ -101,20 +74,16 @@ export const server = {
         const user = await db.select({ githubUserName: User.githubUserName }).from(User).where(eq(User.id, context.locals.user.id))
         const userSegment = user[0].githubUserName || context.locals.user.id
 
-        // Generate title, description and tags using OpenAI
-        const metadata = await generatePostMetadata(content);
-        const attributedUsers = inferAttributedUsers(input.credit || '');
         const displayId = generateDisplayId()
 
+        // Generate title, description and tags using OpenAI
+        const attributedUsers = inferAttributedUsers(input.credit || '');
+
         const [post] = await db.insert(Post).values({
-          title: metadata.title,
-          description: metadata.description,
           displayId: displayId,
-          slug: slugify(metadata.slug) + '-' + displayId,
           content,
           provenance: input.credit || null,
           frontmatter,
-          tags: metadata.tags,
           createdAt: new Date(),
           authorId: context.locals.user.id,
           urn: `urn:ctxs:gh:${userSegment}:${displayId}`,
@@ -123,15 +92,32 @@ export const server = {
           sourceUrl: inferSourceUrl(input.credit || ''),
         }).returning();
 
+        console.log('post', post)
+
         await sendPushoverNotification(
-          `New post created: ${metadata.title} by ${userSegment}`,
+          `New post created by ${userSegment}`,
           `https://ctxs.ai/weekly/${post.slug}`
         );
+
+        const workflowInstance = await triggerWorkflow(`urn:ctxs:gh:${userSegment}:${displayId}`)
+        console.log('workflowInstance', workflowInstance)
+
+        console.log('apiurl', `${CF_ENDPOINT}/`)
+        const apiReq = await fetch(`${CF_ENDPOINT}/`, {
+          method: 'POST',
+          headers: {
+            'X-API-Secret': API_SECRET,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ postUrn: post.urn }),
+        })
+
+        console.log('apiReq', apiReq)
 
         console.log('createPost', input)
         console.log('createdPost', post)
 
-        return post;
+        return { ...post, slug: post.displayId };
       } else {
         throw new ActionError({
           code: "UNAUTHORIZED",

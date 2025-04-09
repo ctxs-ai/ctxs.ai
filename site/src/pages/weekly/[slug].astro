@@ -6,7 +6,7 @@ import ContextView from "@/components/context.astro";
 import { Post, Vote, User } from "@/db/schema";
 import { db } from "@/lib/db";
 import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
-import { eq, sql, and } from "drizzle-orm";
+import { eq, sql, and, or } from "drizzle-orm";
 import { Logo } from "@/components/wordmark";
 import { UpvoteButton } from "@/components/upvote-button";
 import VideoGuides from "@/components/VideoGuides.astro";
@@ -60,10 +60,17 @@ const [post] = await db
     },
   })
   .from(Post)
-  .where(eq(Post.slug, Astro.params.slug!))
+  .where(
+    or(
+      eq(Post.slug, Astro.params.slug!),
+      eq(Post.displayId, Astro.params.slug!),
+    ),
+  )
   .leftJoin(User, eq(Post.authorId, User.id))
   .leftJoin(Vote, eq(Post.id, Vote.postId))
   .groupBy(Post.id, User.id);
+
+console.log({ post });
 
 const upvotes =
   userId &&
@@ -77,6 +84,10 @@ const isUpvoted = upvotes && upvotes.length > 0;
 
 if (post === undefined) {
   return Astro.redirect("/weekly");
+}
+
+if (post.slug && post.slug !== Astro.params.slug) {
+  return Astro.redirect(`/weekly/${post.slug}`);
 }
 
 const params = {

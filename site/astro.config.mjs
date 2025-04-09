@@ -23,6 +23,12 @@ export default defineConfig({
       BETTER_AUTH_SECRET: envField.string({ context: "server", access: "secret" }),
       PUSHOVER_APP_TOKEN: envField.string({ context: "server", access: "secret", optional: true }),
       PUSHOVER_USER_KEY: envField.string({ context: "server", access: "secret", optional: true }),
+      // maybe no longer used -- start
+      CLOUDFLARE_API_TOKEN: envField.string({ context: "server", access: "secret" }),
+      CLOUDFLARE_ACCOUNT_ID: envField.string({ context: "server", access: "secret" }),
+      // maybe no longer used -- end
+      CF_ENDPOINT: envField.string({ context: "server", access: "secret" }),
+      API_SECRET: envField.string({ context: "server", access: "secret" }),
     }
   },
   // adapter: cloudflare(),
