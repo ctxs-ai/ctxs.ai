@@ -52,7 +52,7 @@ export const UpvoteButton = ({ variant, postId, postSlug, isUpvotedInitial, init
 
   const classes = cn(buttonVariants({ variant: "outline" }),
     "flex cursor-pointer divide-border border",
-    variant === "icon" ? iconClasses : "divide-x border-black/50 px-3"
+    variant === "icon" ? iconClasses : "divide-x border-foreground/50 px-3"
   );
 
   if (variant === "icon") {
