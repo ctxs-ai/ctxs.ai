@@ -53,13 +53,13 @@ const groupOrder = ["Ecosystem", "Tool", "Workflow"];
     groupOrder.map(
       (group) =>
         groupedTags[group] && (
-          <div class="grid grid-cols-10 gap-2 py-2 border-b last:border-b-0 border-border">
-            <div class="col-span-2">
+          <div class="flex gap-2 py-2 border-b last:border-b-0 border-border">
+            <div class="w-1/4">
               <h3 class="text-sm mt-1 font-medium text-muted-foreground">
                 {group}
               </h3>
             </div>
-            <div class="col-span-8 flex flex-wrap gap-1.5">
+            <div class="flex flex-wrap gap-1.5">
               {groupedTags[group].map((tag) => {
                 const active = tag === selectedTag;
                 return (
