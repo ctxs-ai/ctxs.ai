@@ -117,7 +117,7 @@ export const server = {
         console.log('createPost', input)
         console.log('createdPost', post)
 
-        return { ...post, slug: post.displayId };
+        return { post: { ...post, slug: post.displayId }, workflow: workflowInstance };
       } else {
         throw new ActionError({
           code: "UNAUTHORIZED",
