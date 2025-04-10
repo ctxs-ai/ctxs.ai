@@ -50,7 +50,7 @@ jobs:
         run: bun run build
 
       - name: Migrate DB
-        run: bun run test
+        run: bun run push
         env:
           DATABASE_URL: postgresql://ctxs_dev:ctxs_dev@localhost:5432/ctxs_dev
 
