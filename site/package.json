@@ -11,7 +11,12 @@
     "generate": "drizzle-kit generate",
     "push": "drizzle-kit push",
     "studio": "drizzle-kit studio",
-    "changeset": "changeset"
+    "changeset": "changeset",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:report": "playwright show-report",
+    "setup:playwright": "./scripts/setup-playwright.sh"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.2.7",
@@ -54,6 +59,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.28.1",
+    "@playwright/test": "^1.51.1",
     "@types/glob": "^8.1.0",
     "@types/node": "^22.12.0",
     "@types/react": "^19.0.10",
