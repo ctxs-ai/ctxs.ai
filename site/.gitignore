@@ -1,3 +1,12 @@
 .wrangler/
 dist/
 .env
+.dev.vars
+node_modules
+dist
+.DS_Store
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
