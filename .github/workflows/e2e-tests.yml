@@ -53,6 +53,7 @@ jobs:
         run: bun run test
         env:
           OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
+          BETTER_AUTH_SECRET: "foobar"
           DATABASE_URL: postgresql://ctxs_dev:ctxs_dev@localhost:5432/ctxs_dev
 
       - name: Upload Playwright report
