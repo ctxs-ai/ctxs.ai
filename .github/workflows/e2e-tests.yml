@@ -49,6 +49,9 @@ jobs:
       - name: Build project
         run: bun run build
 
+      - name: Migrate DB
+        run: bun run push
+
       - name: Run Playwright tests
         run: bun run test
         env:
