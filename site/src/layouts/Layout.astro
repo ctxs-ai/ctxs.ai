@@ -4,6 +4,7 @@ import "@fontsource/geist-mono";
 import { ClientRouter } from "astro:transitions";
 import Metadata from "@/components/Metadata.astro";
 import Footer from "@/components/footer.astro";
+import LoadingIndicator from "@/components/LoadingIndicator.astro";
 
 const meta = Astro.props.meta;
 ---
@@ -21,7 +22,7 @@ const meta = Astro.props.meta;
 	console.log({ isDark });
 	console.log(window.matchMedia("(prefers-color-scheme: dark)").matches);
 
-        // document.documentElement.classList[isDark ? "add" : "remove"]("dark");
+	// document.documentElement.classList[isDark ? "add" : "remove"]("dark");
 
 	if (typeof localStorage !== "undefined") {
 		const observer = new MutationObserver(() => {
@@ -49,6 +50,7 @@ const meta = Astro.props.meta;
 		<ClientRouter />
 	</head>
 	<body>
+		<LoadingIndicator color="var(--color-primary)" />
 		<slot />
 		<Footer />
 		<script>
