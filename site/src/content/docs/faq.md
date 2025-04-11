@@ -1,3 +1,8 @@
+---
+title: "FAQ"
+description: "Frequently asked questions about ctxs.ai."
+---
+
 # Questions & Answers
 
 ## What is this?
