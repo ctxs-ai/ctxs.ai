@@ -1,3 +1,8 @@
+---
+title: "Contribute"
+description: "Learn how to contribute to ctxs.ai."
+---
+
 # Why Contribute?
 
 LLMs provide us with a new form of intelligence but it is an intelligence that often lacks context. Knowledge about our projects, systems toolchains etc.
