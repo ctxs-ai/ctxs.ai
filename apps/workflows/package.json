@@ -4,13 +4,13 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "wrangler dev",
-    "build": ""
+    "build": "",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.2.7",
     "@ctxs/db": "workspace:^",
     "@ctxs/util": "workspace:^",
-    "@neondatabase/serverless": "^1.0.0",
     "@sindresorhus/slugify": "^2.2.1",
     "ai": "^4.1.66",
     "drizzle-orm": "^0.40.1",
