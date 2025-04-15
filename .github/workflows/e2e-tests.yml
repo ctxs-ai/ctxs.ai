@@ -3,15 +3,15 @@ name: E2E Tests
 on:
   push:
     branches:
-      - '*'
+      - "*"
   pull_request:
     branches:
-      - '*'
+      - "*"
   workflow_dispatch:
 
 jobs:
   test:
-    name: 'Playwright Tests'
+    name: "Playwright Tests"
     runs-on: ubuntu-latest
     timeout-minutes: 15
     services:
@@ -55,15 +55,16 @@ jobs:
         run: |
           pnpm --filter workflows dev &
           pnpm --filter web preview &
+          pnpx wait-on http://localhost:4321 http://localhost:8787
 
       - name: Run Playwright tests
         run: pnpm run test
         working-directory: apps/web
         env:
           OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
-          CF_ENDPOINT: 'http://localhost:8787'
-          CF_API_SECRET: 'wrong'
-          BETTER_AUTH_SECRET: 'foobar'
+          CF_ENDPOINT: "http://localhost:8787"
+          CF_API_SECRET: "wrong"
+          BETTER_AUTH_SECRET: "foobar"
           DATABASE_URL: postgresql://ctxs_dev:ctxs_dev@localhost:5432/ctxs_dev
 
       - name: Upload Playwright report

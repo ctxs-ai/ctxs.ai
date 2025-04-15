@@ -1,21 +1,21 @@
-import { defineAction, ActionError } from 'astro:actions';
-import { getFrontmatter, splitFrontmatter } from '@/lib/utils';
-import { z } from 'astro:schema';
-import { OPENAI_API_KEY } from 'astro:env/server';
-import { db } from '@/lib/db';
-import { customAlphabet } from 'nanoid';
-import { availableTags } from '@ctxs/util';
-import { Post, User, Vote } from '@ctxs/db';
-import { generateObject } from 'ai';
-import { createOpenAI } from '@ai-sdk/openai';
-import { eq } from 'drizzle-orm';
-import { inferGitHubUsername, inferXUsername } from '@/lib/utils';
-import yaml from 'js-yaml';
-import { sendPushoverNotification } from '@/lib/pushover';
-import { triggerWorkflow } from '@/lib/cloudflare';
+import { defineAction, ActionError } from "astro:actions";
+import { getFrontmatter, splitFrontmatter } from "@/lib/utils";
+import { z } from "astro:schema";
+import { OPENAI_API_KEY } from "astro:env/server";
+import { db } from "@/lib/db";
+import { customAlphabet } from "nanoid";
+import { availableTags } from "@ctxs/util";
+import { Post, User, Vote } from "@ctxs/db";
+import { generateObject } from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
+import { eq } from "drizzle-orm";
+import { inferGitHubUsername, inferXUsername } from "@/lib/utils";
+import yaml from "js-yaml";
+import { sendPushoverNotification } from "@/lib/pushover";
+import { triggerWorkflow } from "@/lib/cloudflare";
 
 const generateDisplayId = customAlphabet(
-  '0123456789abcdefghijklmnopqrstuvwxyz',
+  "0123456789abcdefghijklmnopqrstuvwxyz",
   6
 );
 
@@ -48,16 +48,16 @@ const inferSourceUrl = (credit: string): string | null => {
 const generatePostMetadata = async (content: string): Promise<PostMetadata> => {
   const contentPreview = content.slice(0, 2000);
   const result = await generateObject<PostMetadata>({
-    model: openai('gpt-4o-mini'),
+    model: openai("gpt-4o-mini"),
     schema: z.object({
       title: z
         .string()
-        .describe('A concise, descriptive title for the context window'),
-      slug: z.string().describe('a 30 character or less keyword oriented slug'),
+        .describe("A concise, descriptive title for the context window"),
+      slug: z.string().describe("a 30 character or less keyword oriented slug"),
       description: z
         .string()
         .describe(
-          'A brief summary of what this context window might help with, 120 characters maximum.'
+          "A brief summary of what this context window might help with, 120 characters maximum."
         ),
       tags: z
         .array(z.string())
@@ -93,7 +93,7 @@ export const server = {
         const displayId = generateDisplayId();
 
         // Generate title, description and tags using OpenAI
-        const attributedUsers = inferAttributedUsers(input.credit || '');
+        const attributedUsers = inferAttributedUsers(input.credit || "");
 
         const [post] = await db
           .insert(Post)
@@ -107,11 +107,11 @@ export const server = {
             urn: `urn:ctxs:gh:${userSegment}:${displayId}`,
             attributedGitHubUser: attributedUsers.attributedGithubUser,
             attributedXUser: attributedUsers.attributedXUser,
-            sourceUrl: inferSourceUrl(input.credit || ''),
+            sourceUrl: inferSourceUrl(input.credit || ""),
           })
           .returning();
 
-        console.log('post', post);
+        console.log("post", post);
 
         await sendPushoverNotification(
           `New post created by ${userSegment}`,
@@ -121,10 +121,10 @@ export const server = {
         const workflowInstance = await triggerWorkflow(
           `urn:ctxs:gh:${userSegment}:${displayId}`
         );
-        console.log('workflowInstance', workflowInstance);
+        console.log("workflowInstance", workflowInstance);
 
-        console.log('createPost', input);
-        console.log('createdPost', post);
+        console.log("createPost", input);
+        console.log("createdPost", post);
 
         return {
           post: { ...post, slug: post.displayId },
@@ -132,8 +132,8 @@ export const server = {
         };
       } else {
         throw new ActionError({
-          code: 'UNAUTHORIZED',
-          message: 'User must be logged in.',
+          code: "UNAUTHORIZED",
+          message: "User must be logged in.",
         });
       }
     },
@@ -146,8 +146,8 @@ export const server = {
     handler: async (input, context) => {
       if (!context.locals.user?.id) {
         throw new ActionError({
-          code: 'UNAUTHORIZED',
-          message: 'User must be logged in to upvote.',
+          code: "UNAUTHORIZED",
+          message: "User must be logged in to upvote.",
         });
       }
 
@@ -178,8 +178,8 @@ export const server = {
         // If the vote already exists, that's fine - we'll return success
         // PostgreSQL error code for unique constraint violation is 23505
         if (
-          error.code === '23505' ||
-          error.code === 'SQLITE_CONSTRAINT_UNIQUE'
+          error.code === "23505" ||
+          error.code === "SQLITE_CONSTRAINT_UNIQUE"
         ) {
           return { success: true };
         }
