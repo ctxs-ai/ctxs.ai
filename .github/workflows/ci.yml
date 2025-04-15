@@ -32,9 +32,6 @@ jobs:
 
   fly-deploy:
     name: Deploy app to Fly.io
-    defaults:
-      run:
-        working-directory: ./site
     runs-on: ubuntu-latest
     # needs: run-tests
     if: github.ref == 'refs/heads/pnpm-monorepo' && github.event_name == 'push'
