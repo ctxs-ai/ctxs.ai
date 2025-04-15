@@ -1,17 +1,15 @@
 {
-  "name": "ctxs-ai",
-  "compatibility_date": "2025-03-06",
-  "pages_build_output_dir": "./dist",
-  "kv_namespaces": [
-    {
-      "binding": "CTXS_KV",
-      "id": "ef4b59d30f304a018d507d73e58a9805"
-    }
-  ],
-  "analytics_engine_datasets": [
-    {
-      "binding": "ANALYTICS",
-      "dataset": "ctxsAnalytics"
-    }
-  ]
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "my-astro-app",
+  "main": "./dist/_worker.js/index.js",
+  // Update to today's date
+  "compatibility_date": "2025-03-25",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+  "observability": {
+    "enabled": true
+  }
 }
