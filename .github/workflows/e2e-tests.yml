@@ -56,16 +56,17 @@ jobs:
           pnpm --filter workflows dev &
           pnpm --filter web preview &
           pnpx wait-on http://localhost:4321 http://localhost:8787
+        env:
+          OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
+          CF_ENDPOINT: "http://localhost:8787"
+          CF_API_SECRET: "foobar"
+          BETTER_AUTH_SECRET: "foobar"
+          DATABASE_URL: postgresql://ctxs_dev:ctxs_dev@localhost:5432/ctxs_dev
 
       - name: Run Playwright tests
         run: pnpm run test
         working-directory: apps/web
         env:
-          OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
-          CF_ENDPOINT: "http://localhost:8787"
-          CF_API_SECRET: "wrong"
-          BETTER_AUTH_SECRET: "foobar"
-          DATABASE_URL: postgresql://ctxs_dev:ctxs_dev@localhost:5432/ctxs_dev
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
