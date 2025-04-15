@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsup --watch",
+    "dev": "pnpx tsup --watch",
     "build": "tsup"
   },
   "exports": {

@@ -13,6 +13,7 @@ import { eq } from 'drizzle-orm';
 import { inferGitHubUsername, inferXUsername } from '@/lib/utils';
 import yaml from 'js-yaml';
 import { sendPushoverNotification } from '@/lib/pushover';
+import { triggerWorkflow } from '@/lib/cloudflare';
 
 const generateDisplayId = customAlphabet(
   '0123456789abcdefghijklmnopqrstuvwxyz',
@@ -133,7 +134,7 @@ export const server = {
         //   body: JSON.stringify({ postUrn: post.urn }),
         // });
 
-        console.log('apiReq', apiReq);
+        // console.log('apiReq', apiReq);
 
         console.log('createPost', input);
         console.log('createdPost', post);

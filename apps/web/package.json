@@ -1,5 +1,5 @@
 {
-  "name": "ctxs-site",
+  "name": "@ctxs/web",
   "type": "module",
   "version": "0.0.1",
   "scripts": {

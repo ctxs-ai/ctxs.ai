@@ -1,16 +1,16 @@
 ---
-import type { GetStaticPaths } from "astro";
-import Layout from "@/layouts/Layout.astro";
-import Page from "@/components/Page.astro";
-import ContextView from "@/components/context.astro";
-import { Post, Vote, User } from "@ctxs/db";
-import { db } from "@/lib/db";
-import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
-import { eq, sql, and, or } from "drizzle-orm";
-import { Logo } from "@/components/wordmark";
-import { UpvoteButton } from "@/components/upvote-button";
-import VideoGuides from "@/components/VideoGuides.astro";
-import { authorImage } from "@/db/postHelpers";
+import type { GetStaticPaths } from 'astro';
+import Layout from '@/layouts/Layout.astro';
+import Page from '@/components/Page.astro';
+import ContextView from '@/components/context.astro';
+import { Post, Vote, User } from '@ctxs/db';
+import { db } from '@/lib/db';
+import WeeklyHeader from '@/components/weekly/WeeklyHeader.astro';
+import { eq, sql, and, or } from 'drizzle-orm';
+import { Logo } from '@/components/wordmark';
+import { UpvoteButton } from '@/components/upvote-button';
+import VideoGuides from '@/components/VideoGuides.astro';
+import { authorImage } from '@/db/postHelpers';
 
 type PostWithAuthor = {
   id: number;
@@ -50,7 +50,7 @@ const [post] = await db
     slug: Post.slug,
     tags: Post.tags,
     voteCount: sql<number>`count(${Vote.id}) + ${Post.voteBump}`.as(
-      "vote_count",
+      'vote_count'
     ),
     author: {
       id: User.id,
@@ -63,12 +63,16 @@ const [post] = await db
   .where(
     or(
       eq(Post.slug, Astro.params.slug!),
-      eq(Post.displayId, Astro.params.slug!),
-    ),
+      eq(Post.displayId, Astro.params.slug!)
+    )
   )
   .leftJoin(User, eq(Post.authorId, User.id))
   .leftJoin(Vote, eq(Post.id, Vote.postId))
   .groupBy(Post.id, User.id);
+
+if (post === undefined) {
+  return Astro.redirect('/weekly');
+}
 
 const upvotes =
   userId &&
@@ -80,20 +84,16 @@ const upvotes =
 
 const isUpvoted = upvotes && upvotes.length > 0;
 
-if (post === undefined) {
-  return Astro.redirect("/weekly");
-}
-
 if (post.slug && post.slug !== Astro.params.slug) {
   return Astro.redirect(`/weekly/${post.slug}`);
 }
 
 const params = {
-  id: "kqa7b3a5ol15455",
-  title: post.title || "",
-  desc: post.description || "",
+  id: 'kqa7b3a5ol15455',
+  title: post.title || '',
+  desc: post.description || '',
   avatar: authorImage(post),
-  handle: `@${post.attributedGitHubUser || post.attributedXUser || post.author?.githubUserName || "anonymous"}`,
+  handle: `@${post.attributedGitHubUser || post.attributedXUser || post.author?.githubUserName || 'anonymous'}`,
 };
 
 const queryString = new URLSearchParams(params).toString();
@@ -104,7 +104,7 @@ const meta = {
   ogImage: ogImage,
 };
 
-Astro.response.headers.set("Cache-Control", "public, max-age=3600");
+Astro.response.headers.set('Cache-Control', 'public, max-age=3600');
 ---
 
 <Layout meta={meta}>
