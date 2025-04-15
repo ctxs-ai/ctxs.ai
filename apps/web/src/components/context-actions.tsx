@@ -1,24 +1,24 @@
-import type { CollectionEntry } from "astro:content";
-import { Button } from "@/components/ui/button";
-import { Check, Copy, Edit, FileCode2, Link } from "lucide-react";
+import type { CollectionEntry } from 'astro:content';
+import { Button } from '@/components/ui/button';
+import { Check, Copy, FileCode2, Link } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import copy from "copy-to-clipboard";
-import { useState } from "react";
-import { Post } from "@ctxs/db";
+} from '@/components/ui/tooltip';
+import copy from 'copy-to-clipboard';
+import { useState } from 'react';
+import { Post } from '@ctxs/db';
 
 interface ContextViewProps {
-  context: CollectionEntry<"contexts"> | null;
+  context: CollectionEntry<'contexts'> | null;
 }
 
 export const ContextActions = ({ context }) => {
@@ -26,7 +26,10 @@ export const ContextActions = ({ context }) => {
   const [commandCopied, setCommandCopied] = useState(false);
   const [plaintextURLCopied, setPlaintextURLCopied] = useState(false);
 
-  const origin = import.meta.env.MODE === 'development' ? 'http://localhost:4321' : 'https://ctxs.ai';
+  const origin =
+    import.meta.env.MODE === 'development'
+      ? 'http://localhost:4321'
+      : 'https://ctxs.ai';
 
   const cliCommand = `npx ctxs add "${origin}/r/registry-item/${context.urn}.json"`;
   const plaintextURL = `${origin}/api/txt/${context.urn}`;
@@ -105,8 +108,8 @@ export const ContextActions = ({ context }) => {
                 <Button
                   data-s:event="CLI Instructions toggled"
                   variant="outline"
-                   size="icon"
-                  >
+                  size="icon"
+                >
                   <FileCode2 className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -118,9 +121,7 @@ export const ContextActions = ({ context }) => {
               <div className="font-medium text-sm flex items-center gap-2">
                 <FileCode2 className="h-4 w-4" /> Add to codebase
               </div>
-              <div className="text-sm">
-                Run this command in your console
-              </div>
+              <div className="text-sm">Run this command in your console</div>
               <button
                 data-s:event="CLI Command copied"
                 className="flex items-center gap-2 w-full border border-border hover:border-primary transition-colors rounded py-2 px-3 group cursor-pointer"
@@ -140,7 +141,7 @@ export const ContextActions = ({ context }) => {
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
-      </TooltipProvider >
-    </div >
+      </TooltipProvider>
+    </div>
   );
 };

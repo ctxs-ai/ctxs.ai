@@ -4,7 +4,6 @@ import { z } from 'astro:schema';
 import { OPENAI_API_KEY } from 'astro:env/server';
 import { db } from '@/lib/db';
 import { customAlphabet } from 'nanoid';
-import slugify from '@sindresorhus/slugify';
 import { availableTags } from '@ctxs/util';
 import { Post, User, Vote } from '@ctxs/db';
 import { generateObject } from 'ai';
