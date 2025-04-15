@@ -5,7 +5,7 @@ import { OPENAI_API_KEY } from 'astro:env/server';
 import { db } from '@/lib/db';
 import { customAlphabet } from 'nanoid';
 import slugify from '@sindresorhus/slugify';
-import { availableTags } from '@/lib/constants';
+import { availableTags } from '@ctxs/util';
 import { Post, User, Vote } from '@ctxs/db';
 import { generateObject } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
@@ -123,18 +123,6 @@ export const server = {
           `urn:ctxs:gh:${userSegment}:${displayId}`
         );
         console.log('workflowInstance', workflowInstance);
-
-        // console.log('apiurl', `${CF_ENDPOINT}/`);
-        // const apiReq = await fetch(`${CF_ENDPOINT}/`, {
-        //   method: 'POST',
-        //   headers: {
-        //     'X-API-Secret': API_SECRET,
-        //     'Content-Type': 'application/json',
-        //   },
-        //   body: JSON.stringify({ postUrn: post.urn }),
-        // });
-
-        // console.log('apiReq', apiReq);
 
         console.log('createPost', input);
         console.log('createdPost', post);

@@ -1,13 +1,21 @@
 {
-  "name": "ctxs-workflows",
+  "name": "@ctxs/workflows",
   "type": "module",
   "version": "0.0.1",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": ""
+  },
   "dependencies": {
     "@ai-sdk/openai": "^1.2.7",
+    "@ctxs/db": "workspace:^",
+    "@ctxs/util": "workspace:^",
     "@neondatabase/serverless": "^1.0.0",
+    "@sindresorhus/slugify": "^2.2.1",
     "ai": "^4.1.66",
     "drizzle-orm": "^0.40.1",
-    "nanoid": "^5.1.2"
+    "nanoid": "^5.1.2",
+    "postgres": "^3.4.5"
   },
   "devDependencies": {
     "wrangler": "^4.9.1"

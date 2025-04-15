@@ -1,18 +1,18 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import { availableTags } from "@/lib/constants";
-import { Post } from "@ctxs/db";
-import { db } from "@/lib/db";
-import { eq } from "drizzle-orm";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-const isAdmin = Astro.locals.user?.email == "martinklepsch@googlemail.com";
+import Layout from '@/layouts/Layout.astro';
+import { availableTags } from '@ctxs/util';
+import { Post } from '@ctxs/db';
+import { db } from '@/lib/db';
+import { eq } from 'drizzle-orm';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+const isAdmin = Astro.locals.user?.email == 'martinklepsch@googlemail.com';
 
 if (!isAdmin) {
-  return Astro.redirect("/weekly");
+  return Astro.redirect('/weekly');
 }
 
 const [post] = await db
@@ -21,22 +21,22 @@ const [post] = await db
   .where(eq(Post.slug, Astro.params.slug!));
 
 if (post === undefined) {
-  return Astro.redirect("/weekly");
+  return Astro.redirect('/weekly');
 }
 
-if (Astro.request.method === "POST") {
+if (Astro.request.method === 'POST') {
   try {
     const data = await Astro.request.formData();
-    const title = data.get("title")?.toString();
-    const description = data.get("description")?.toString();
-    const content = data.get("content")?.toString();
-    const tags = data.get("tags")?.toString();
-    const attributedGitHubUser = data.get("attributedGitHubUser")?.toString();
-    const sourceUrl = data.get("sourceUrl")?.toString();
-    const targetFile = data.get("targetFile")?.toString();
-    const voteBump = parseInt(data.get("voteBump")?.toString() || "0");
-    const contentFormat = data.get("contentFormat")?.toString() || "markdown";
-    const provenance = data.get("provenance")?.toString();
+    const title = data.get('title')?.toString();
+    const description = data.get('description')?.toString();
+    const content = data.get('content')?.toString();
+    const tags = data.get('tags')?.toString();
+    const attributedGitHubUser = data.get('attributedGitHubUser')?.toString();
+    const sourceUrl = data.get('sourceUrl')?.toString();
+    const targetFile = data.get('targetFile')?.toString();
+    const voteBump = parseInt(data.get('voteBump')?.toString() || '0');
+    const contentFormat = data.get('contentFormat')?.toString() || 'markdown';
+    const provenance = data.get('provenance')?.toString();
 
     if (content) {
       await db
@@ -45,7 +45,7 @@ if (Astro.request.method === "POST") {
           title,
           description,
           content,
-          tags: tags ? tags.split(",").map((t) => t.trim()) : [],
+          tags: tags ? tags.split(',').map((t) => t.trim()) : [],
           attributedGitHubUser,
           sourceUrl,
           targetFile: targetFile,
@@ -67,7 +67,7 @@ if (Astro.request.method === "POST") {
 console.log({ contentFormat: post.contentFormat });
 ---
 
-<Layout meta={{ title: `Edit ${post.title || "Post"} - ctxs.ai` }}>
+<Layout meta={{ title: `Edit ${post.title || 'Post'} - ctxs.ai` }}>
   <div class="w-full max-w-5xl mx-auto">
     <form method="POST" class="">
       {/* Sticky header with title and submit button */}
@@ -93,7 +93,7 @@ console.log({ contentFormat: post.contentFormat });
               <Input
                 id="title"
                 name="title"
-                defaultValue={post.title || ""}
+                defaultValue={post.title || ''}
                 className="max-w-md"
               />
             </div>
@@ -113,7 +113,7 @@ console.log({ contentFormat: post.contentFormat });
               <Textarea
                 id="description"
                 name="description"
-                defaultValue={post.description || ""}
+                defaultValue={post.description || ''}
                 className="max-w-md"
               />
             </div>
@@ -158,7 +158,7 @@ console.log({ contentFormat: post.contentFormat });
               <Input
                 id="tags"
                 name="tags"
-                defaultValue={post.tags?.join(", ") || ""}
+                defaultValue={post.tags?.join(', ') || ''}
                 placeholder="ai, productivity, coding, etc."
                 className="max-w-md"
               />
@@ -179,7 +179,7 @@ console.log({ contentFormat: post.contentFormat });
               <Input
                 id="attributedGitHubUser"
                 name="attributedGitHubUser"
-                defaultValue={post.attributedGitHubUser || ""}
+                defaultValue={post.attributedGitHubUser || ''}
                 placeholder="username"
                 className="max-w-md"
               />
@@ -199,7 +199,7 @@ console.log({ contentFormat: post.contentFormat });
               <Input
                 id="sourceUrl"
                 name="sourceUrl"
-                defaultValue={post.sourceUrl || ""}
+                defaultValue={post.sourceUrl || ''}
                 className="max-w-md"
                 placeholder="e.g., https://github.com/username/repo"
               />
@@ -212,7 +212,7 @@ console.log({ contentFormat: post.contentFormat });
                 Target Path
               </Label>
               <p class="text-sm text-muted-foreground mt-1">
-                The file will be created at{" "}
+                The file will be created at{' '}
                 <code class="text-xs bg-muted/30 px-1 py-0.5 rounded">
                   {post.targetFile}
                 </code>
@@ -222,7 +222,7 @@ console.log({ contentFormat: post.contentFormat });
               <Input
                 id="targetFile"
                 name="targetFile"
-                defaultValue={post.targetFile || ""}
+                defaultValue={post.targetFile || ''}
                 className="max-w-md"
                 placeholder=".cursor/rules/my-rules.mdc"
               />
@@ -247,9 +247,9 @@ console.log({ contentFormat: post.contentFormat });
               >
                 <option
                   value="markdown"
-                  selected={post.contentFormat === "markdown"}>Markdown</option
+                  selected={post.contentFormat === 'markdown'}>Markdown</option
                 >
-                <option value="xml" selected={post.contentFormat === "xml"}
+                <option value="xml" selected={post.contentFormat === 'xml'}
                   >XML</option
                 >
               </select>
@@ -271,7 +271,7 @@ console.log({ contentFormat: post.contentFormat });
               <Textarea
                 id="provenance"
                 name="provenance"
-                defaultValue={post.provenance || ""}
+                defaultValue={post.provenance || ''}
                 className="max-w-md h-24"
                 placeholder="e.g. Extracted from GitHub issue #123 using GPT-4"
               />

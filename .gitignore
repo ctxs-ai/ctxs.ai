@@ -1,5 +1,8 @@
 .clj-kondo/imports
 .clj-kondo/.cache
 .lsp
+.wrangler
 apps/web/.astro
 node_modules
+dist
+.dev.vars

@@ -1,16 +1,16 @@
-import Cloudflare from 'cloudflare';
-import { CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID } from 'astro:env/server';
-
-const client = new Cloudflare({
-  apiToken: process.env.CLOUDFLARE_API_TOKEN!,
-});
-
-const accountId = process.env.CLOUDFLARE_ACCOUNT_ID!;
+import { CF_ENDPOINT, CF_API_SECRET } from 'astro:env/server';
 
 export const triggerWorkflow = async (postUrn: string) => {
-  const instance = await client.workflows.instances.create(
-    'workflows-starter',
-    { account_id: accountId, params: { postUrn } }
-  );
-  return instance;
+  console.log('apiurl', `${CF_ENDPOINT}/`);
+  const apiReq = await fetch(`${CF_ENDPOINT}/`, {
+    method: 'POST',
+    headers: {
+      'X-API-Secret': CF_API_SECRET,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ postUrn: postUrn }),
+  });
+  const body = await apiReq.json();
+  console.log('apiRes', body);
+  return body;
 };

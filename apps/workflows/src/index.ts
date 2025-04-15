@@ -1,20 +1,24 @@
-import { WorkflowEntrypoint, WorkflowStep, WorkflowEvent, Workflow } from 'cloudflare:workers';
-import { drizzle } from "drizzle-orm/postgres-js";
+import {
+  WorkflowEntrypoint,
+  WorkflowStep,
+  WorkflowEvent,
+  Workflow,
+} from 'cloudflare:workers';
+import { drizzle } from 'drizzle-orm/postgres-js';
 import { z } from 'zod';
-import { availableTags } from '@/lib/constants';
-import postgres from "postgres";
-import * as schema from "@/db/schema";
+import { availableTags, sendPushoverNotification } from '@ctxs/util';
+import postgres from 'postgres';
+import * as schema from '@ctxs/db';
 import { generateObject } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 import { eq } from 'drizzle-orm';
 import slugify from '@sindresorhus/slugify';
-import { sendPushoverNotification } from '@/lib/pushover';
 
 type Env = {
   // Add your bindings here, e.g. Workers KV, D1, Workers AI, etc.
   MY_WORKFLOW: Workflow;
   DATABASE_URL: string;
-  API_SECRET: string;
+  CF_API_SECRET: string;
   PUSHOVER_APP_TOKEN: string;
   PUSHOVER_USER_KEY: string;
   OPENAI_API_KEY: string;
@@ -33,16 +37,27 @@ type PostMetadata = {
   slug: string;
 };
 
-const generatePostMetadata = async (apiKey: string, content: string): Promise<PostMetadata> => {
-  const openai = createOpenAI({ apiKey })
-  const contentPreview = content.slice(0, 2000)
+const generatePostMetadata = async (
+  apiKey: string,
+  content: string
+): Promise<PostMetadata> => {
+  const openai = createOpenAI({ apiKey });
+  const contentPreview = content.slice(0, 2000);
   const result = await generateObject<PostMetadata>({
     model: openai('gpt-4o-mini'),
     schema: z.object({
-      title: z.string().describe('A concise, descriptive title for the context window'),
+      title: z
+        .string()
+        .describe('A concise, descriptive title for the context window'),
       slug: z.string().describe('a 30 character or less keyword oriented slug'),
-      description: z.string().describe('A brief summary of what this context window might help with, 120 characters maximum.'),
-      tags: z.array(z.string()).describe(`Relevant tags for categorizing the post. `),
+      description: z
+        .string()
+        .describe(
+          'A brief summary of what this context window might help with, 120 characters maximum.'
+        ),
+      tags: z
+        .array(z.string())
+        .describe(`Relevant tags for categorizing the post. `),
     }),
     prompt: `You are managing a library of context windows and prompts.
      Please generate a title, description, and tags for the following post content:\n\n${contentPreview}.
@@ -52,7 +67,6 @@ const generatePostMetadata = async (apiKey: string, content: string): Promise<Po
 
   return result.object;
 };
-
 
 export class MyWorkflow extends WorkflowEntrypoint<Env, Params> {
   async run(event: WorkflowEvent<Params>, step: WorkflowStep) {
@@ -67,27 +81,38 @@ export class MyWorkflow extends WorkflowEntrypoint<Env, Params> {
     const db = drizzle(client, { schema });
 
     const post = await step.do('get post', async () => {
-      const posts = await db.select().from(schema.Post).where(eq(schema.Post.urn, postUrn));
-      console.log({ posts })
-      return posts[0]
+      const posts = await db
+        .select()
+        .from(schema.Post)
+        .where(eq(schema.Post.urn, postUrn));
+      console.log({ posts });
+      return posts[0];
     });
 
     const metadata = await step.do('infer post metadata', async () => {
-      const metadata = await generatePostMetadata(this.env.OPENAI_API_KEY!, post.content)
-      console.log({ metadata })
+      const metadata = await generatePostMetadata(
+        this.env.OPENAI_API_KEY!,
+        post.content
+      );
+      console.log({ metadata });
       return metadata;
     });
 
     const updatedPost = await step.do('update post metadata', async () => {
-      const newSlug = post.slug || slugify(metadata.slug) + '-' + post.displayId
-      const [updatedPost] = await db.update(schema.Post).set({
-        title: metadata.title,
-        description: metadata.description,
-        slug: newSlug,
-        tags: metadata.tags,
-      }).where(eq(schema.Post.urn, postUrn)).returning();
-      console.log({ updatedPost })
-      return updatedPost
+      const newSlug =
+        post.slug || slugify(metadata.slug) + '-' + post.displayId;
+      const [updatedPost] = await db
+        .update(schema.Post)
+        .set({
+          title: metadata.title,
+          description: metadata.description,
+          slug: newSlug,
+          tags: metadata.tags,
+        })
+        .where(eq(schema.Post.urn, postUrn))
+        .returning();
+      console.log({ updatedPost });
+      return updatedPost;
     });
 
     // Send Pushover notification about the completed metadata update
@@ -96,10 +121,7 @@ export class MyWorkflow extends WorkflowEntrypoint<Env, Params> {
       const postUrl = `${baseUrl}${updatedPost.slug}`;
       const message = `Post metadata updated: "${updatedPost.title}"`;
 
-      await sendPushoverNotification(
-        message,
-        postUrl
-      );
+      await sendPushoverNotification(message, postUrl);
 
       return { notificationSent: true };
     });
@@ -139,13 +161,10 @@ export default {
 
     // Check API Secret authentication
     const apiSecret = req.headers.get('X-API-Secret');
-    console.log({ apiSecret })
-    console.log({ env: env.API_SECRET })
-    if (!apiSecret || apiSecret !== env.API_SECRET) {
-      return Response.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+    console.log({ apiSecret });
+    console.log({ env: env.CF_API_SECRET });
+    if (!apiSecret || apiSecret !== env.CF_API_SECRET) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     if (url.pathname.startsWith('/favicon')) {
@@ -169,7 +188,7 @@ export default {
     if (req.method === 'POST') {
       try {
         const payload = await req.json();
-        console.log("http payload", payload)
+        console.log('http payload', payload);
         let instance = await env.MY_WORKFLOW.create({ params: payload });
         return Response.json({
           id: instance.id,
@@ -184,9 +203,6 @@ export default {
     }
 
     // Default case - return 405 Method Not Allowed
-    return Response.json(
-      { error: 'Method not allowed' },
-      { status: 405 }
-    );
+    return Response.json({ error: 'Method not allowed' }, { status: 405 });
   },
 };

@@ -1,8 +1,8 @@
 ---
-import { SignInButton, SubmitOrSignInButton } from "@/components/sidebar-utils";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { weeklyTagline } from "@/lib/constants";
-import { Fragment } from "react";
+import { SignInButton, SubmitOrSignInButton } from '@/components/sidebar-utils';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { weeklyTagline } from '@ctxs/util';
+import { Fragment } from 'react';
 
 interface Props {
   title?: string;
@@ -11,16 +11,16 @@ interface Props {
 }
 
 const {
-  title = "Share & discover",
-  description = "Each post comes with a plaintext permalink and command line integration to add to your project",
+  title = 'Share & discover',
+  description = 'Each post comes with a plaintext permalink and command line integration to add to your project',
   contentTypes = [
-    "cursor rules",
-    "prompts",
-    "cline rules",
-    "context windows",
-    "aider conventions",
-    "markdown files",
-    "CLAUDE.md",
+    'cursor rules',
+    'prompts',
+    'cline rules',
+    'context windows',
+    'aider conventions',
+    'markdown files',
+    'CLAUDE.md',
   ],
 } = Astro.props;
 
@@ -37,7 +37,7 @@ const { session } = Astro.locals;
   </h1>
   <p class="text-muted-foreground text-xl mb-6 text-balance">
     {
-      description.split("\n").map((line) => (
+      description.split('\n').map((line) => (
         <Fragment>
           {line}
           <br />
@@ -46,32 +46,32 @@ const { session } = Astro.locals;
     }
   </p>
   <div class="flex justify-center gap-4">
-    <a class={buttonVariants({ variant: "default" })} href="/weekly/submit">
+    <a class={buttonVariants({ variant: 'default' })} href="/weekly/submit">
       Submit context files
     </a>
-    <a class={buttonVariants({ variant: "outline" })} href="/docs/contribute">
+    <a class={buttonVariants({ variant: 'outline' })} href="/docs/contribute">
       Learn more
     </a>
   </div>
 </div>
 
 <script define:vars={{ contentTypes }}>
-  const postTypesElement = document.getElementById("post-types");
+  const postTypesElement = document.getElementById('post-types');
   let currentIndex = 0;
 
   function updateText() {
     if (!postTypesElement) return;
 
-    postTypesElement.style.opacity = "0";
+    postTypesElement.style.opacity = '0';
     setTimeout(() => {
       currentIndex = (currentIndex + 1) % contentTypes.length;
       postTypesElement.textContent = contentTypes[currentIndex];
-      postTypesElement.style.opacity = "1";
+      postTypesElement.style.opacity = '1';
     }, 500);
   }
 
   if (postTypesElement) {
-    postTypesElement.style.transition = "opacity 0.3s ease-in-out";
+    postTypesElement.style.transition = 'opacity 0.3s ease-in-out';
     setInterval(updateText, 3000);
   }
 </script>
