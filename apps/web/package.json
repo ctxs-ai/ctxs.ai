@@ -2,6 +2,7 @@
   "name": "@ctxs/web",
   "type": "module",
   "version": "0.0.1",
+  "files": ["dist"],
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",

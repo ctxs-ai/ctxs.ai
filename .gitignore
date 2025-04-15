@@ -2,6 +2,7 @@
 .clj-kondo/.cache
 .lsp
 .wrangler
+out
 apps/web/.astro
 node_modules
 dist
