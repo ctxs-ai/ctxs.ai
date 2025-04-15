@@ -131,11 +131,14 @@ export const server = {
       }
 
       try {
-        const [vote] = await db.insert(Vote).values({
-          postId: input.postId,
-          userId: context.locals.user.id,
-          createdAt: new Date(),
-        }).returning();
+        const [vote] = await db
+          .insert(Vote)
+          .values({
+            postId: input.postId,
+            userId: context.locals.user.id,
+            createdAt: new Date(),
+          })
+          .returning();
 
         const post = await db
           .select({ title: Post.title, slug: Post.slug })
@@ -153,11 +156,14 @@ export const server = {
       } catch (error: any) {
         // If the vote already exists, that's fine - we'll return success
         // PostgreSQL error code for unique constraint violation is 23505
-        if (error.code === '23505' || error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+        if (
+          error.code === '23505' ||
+          error.code === 'SQLITE_CONSTRAINT_UNIQUE'
+        ) {
           return { success: true };
         }
         throw error;
       }
-    }
-  })
-} 
+    },
+  }),
+};

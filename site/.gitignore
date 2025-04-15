@@ -10,3 +10,4 @@ dist
 /test-results/
 /playwright-report/
 /playwright/.cache/
+.prod.vars
