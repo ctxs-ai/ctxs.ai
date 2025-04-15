@@ -51,11 +51,18 @@ jobs:
         env:
           DATABASE_URL: postgresql://ctxs_dev:ctxs_dev@localhost:5432/ctxs_dev
 
+      - name: Start services
+        run: |
+          pnpm --filter workflows dev &
+          pnpm --filter web preview &
+
       - name: Run Playwright tests
         run: pnpm run test
         working-directory: apps/web
         env:
           OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
+          CF_ENDPOINT: 'http://localhost:8787'
+          CF_API_KEY: 'wrong'
           BETTER_AUTH_SECRET: 'foobar'
           DATABASE_URL: postgresql://ctxs_dev:ctxs_dev@localhost:5432/ctxs_dev
 
