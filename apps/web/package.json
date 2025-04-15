@@ -47,6 +47,7 @@
     "copy-to-clipboard": "^3.3.3",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.40.1",
+    "js-yaml": "^4.1.0",
     "lucide-react": "^0.475.0",
     "marked": "^15.0.7",
     "motion": "^12.5.0",
