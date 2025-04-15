@@ -16,7 +16,6 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        working-directory: ./apps/web
 
     services:
       postgres:
@@ -48,15 +47,16 @@ jobs:
         run: pnpx playwright install --with-deps chromium
 
       - name: Build project
-        run: pnpm run build
+        run: pnpm -r build
 
       - name: Migrate DB
-        run: pnpm run push
+        run: pnpm -r push
         env:
           DATABASE_URL: postgresql://ctxs_dev:ctxs_dev@localhost:5432/ctxs_dev
 
       - name: Run Playwright tests
         run: pnpm run test
+        working-directory: apps/web
         env:
           OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
           BETTER_AUTH_SECRET: 'foobar'
