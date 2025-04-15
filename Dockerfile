@@ -1,3 +1,5 @@
+# this was instrumental to make this work, what a mission
+# https://www.captaincodeman.com/build-a-docker-container-from-a-pnpm-monorepo
 # Stage 1: Install dependencies
 FROM node:20 AS builder
 RUN corepack enable
