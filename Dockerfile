@@ -1,47 +1,28 @@
-# FROM node:20-slim AS base
-
-# ENV PNPM_HOME="/pnpm"
-# ENV PATH="$PNPM_HOME:$PATH"
-# RUN corepack enable
-
-# FROM base AS prod
-
-# WORKDIR /app
-# COPY pnpm-lock.yaml /app
-# RUN pnpm fetch --prod
-
-# COPY . /app
-# RUN pnpm run -r build
-
-# FROM base
-# COPY --from=prod /app/apps/web/node_modules /app/node_modules
-# COPY --from=prod /app/apps/web/dist /app/dist
-# EXPOSE 4321
-# CMD [ "node", "/app/apps/web/dist/server/entry.mjs" ]
-
-FROM node:20 AS base
-FROM base AS deps
+# Stage 1: Install dependencies
+FROM node:20 AS builder
 RUN corepack enable
 WORKDIR /app
 COPY package.json pnpm-lock.yaml .npmrc ./
+# Copy workspace package.json files to leverage Docker cache
 COPY apps/web/package.json ./apps/web/package.json
 COPY packages/db/package.json ./packages/db/package.json
-RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm fetch --frozen-lockfile
-RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
-FROM deps AS build
-RUN corepack enable
-WORKDIR /app
-# COPY package.json pnpm-lock.yaml ./
-# RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm fetch --frozen-lockfile
-# RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
+# Add other workspace package.json copies here if needed
+RUN pnpm fetch --frozen-lockfile
+RUN pnpm install --frozen-lockfile
+
+# Stage 2: Build the application
 COPY . .
+# Leverage cached dependencies from previous stage
 RUN pnpm -r build
-RUN pnpm deploy --filter=web --prod out
-# FROM base
-WORKDIR /app/out
-# COPY --from=build /app/apps/web/node_modules /app/node_modules
-# COPY --from=build /app/apps/web/dist /app/dist
+# Create production deployment in /app/out, including only production dependencies
+RUN pnpm deploy --filter=web --prod /app/out
+
+# Stage 3: Production image
+FROM node:20-slim AS runner
+WORKDIR /app
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
+# Copy the production-ready output from the builder stage
+COPY --from=builder /app/out .
 EXPOSE 4321
 CMD ["node", "./dist/server/entry.mjs"]
