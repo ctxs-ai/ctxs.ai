@@ -15,7 +15,8 @@
     "ai": "^4.1.66",
     "drizzle-orm": "^0.40.1",
     "nanoid": "^5.1.2",
-    "postgres": "^3.4.5"
+    "postgres": "^3.4.5",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "wrangler": "^4.9.1"

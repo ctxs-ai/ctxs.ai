@@ -198,6 +198,9 @@ importers:
       postgres:
         specifier: ^3.4.5
         version: 3.4.5
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       wrangler:
         specifier: ^4.9.1
