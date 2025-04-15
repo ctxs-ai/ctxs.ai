@@ -1,0 +1,15 @@
+{
+  "name": "ctxs-workflows",
+  "type": "module",
+  "version": "0.0.1",
+  "dependencies": {
+    "@ai-sdk/openai": "^1.2.7",
+    "@neondatabase/serverless": "^1.0.0",
+    "ai": "^4.1.66",
+    "drizzle-orm": "^0.40.1",
+    "nanoid": "^5.1.2"
+  },
+  "devDependencies": {
+    "wrangler": "^4.9.1"
+  }
+}
