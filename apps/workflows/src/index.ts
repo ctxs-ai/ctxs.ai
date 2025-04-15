@@ -3,16 +3,16 @@ import {
   WorkflowStep,
   WorkflowEvent,
   Workflow,
-} from 'cloudflare:workers';
-import { drizzle } from 'drizzle-orm/postgres-js';
-import { z } from 'zod';
-import { availableTags, sendPushoverNotification } from '@ctxs/util';
-import postgres from 'postgres';
-import * as schema from '@ctxs/db';
-import { generateObject } from 'ai';
-import { createOpenAI } from '@ai-sdk/openai';
-import { eq } from 'drizzle-orm';
-import slugify from '@sindresorhus/slugify';
+} from "cloudflare:workers";
+import { drizzle } from "drizzle-orm/postgres-js";
+import { z } from "zod";
+import { availableTags, sendPushoverNotification } from "@ctxs/util";
+import postgres from "postgres";
+import * as schema from "@ctxs/db";
+import { generateObject } from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
+import { eq } from "drizzle-orm";
+import slugify from "@sindresorhus/slugify";
 
 type Env = {
   // Add your bindings here, e.g. Workers KV, D1, Workers AI, etc.
@@ -44,16 +44,16 @@ const generatePostMetadata = async (
   const openai = createOpenAI({ apiKey });
   const contentPreview = content.slice(0, 2000);
   const result = await generateObject<PostMetadata>({
-    model: openai('gpt-4o-mini'),
+    model: openai("gpt-4o-mini"),
     schema: z.object({
       title: z
         .string()
-        .describe('A concise, descriptive title for the context window'),
-      slug: z.string().describe('a 30 character or less keyword oriented slug'),
+        .describe("A concise, descriptive title for the context window"),
+      slug: z.string().describe("a 30 character or less keyword oriented slug"),
       description: z
         .string()
         .describe(
-          'A brief summary of what this context window might help with, 120 characters maximum.'
+          "A brief summary of what this context window might help with, 120 characters maximum."
         ),
       tags: z
         .array(z.string())
@@ -80,7 +80,7 @@ export class MyWorkflow extends WorkflowEntrypoint<Env, Params> {
     const client = postgres(connectionString, { max: 5, fetch_types: true });
     const db = drizzle(client, { schema });
 
-    const post = await step.do('get post', async () => {
+    const post = await step.do("get post", async () => {
       const posts = await db
         .select()
         .from(schema.Post)
@@ -89,7 +89,7 @@ export class MyWorkflow extends WorkflowEntrypoint<Env, Params> {
       return posts[0];
     });
 
-    const metadata = await step.do('infer post metadata', async () => {
+    const metadata = await step.do("infer post metadata", async () => {
       const metadata = await generatePostMetadata(
         this.env.OPENAI_API_KEY!,
         post.content
@@ -98,9 +98,9 @@ export class MyWorkflow extends WorkflowEntrypoint<Env, Params> {
       return metadata;
     });
 
-    const updatedPost = await step.do('update post metadata', async () => {
+    const updatedPost = await step.do("update post metadata", async () => {
       const newSlug =
-        post.slug || slugify(metadata.slug) + '-' + post.displayId;
+        post.slug || slugify(metadata.slug) + "-" + post.displayId;
       const [updatedPost] = await db
         .update(schema.Post)
         .set({
@@ -116,8 +116,8 @@ export class MyWorkflow extends WorkflowEntrypoint<Env, Params> {
     });
 
     // Send Pushover notification about the completed metadata update
-    await step.do('send notification', async () => {
-      const baseUrl = 'https://ctxs.ai/p/';
+    await step.do("send notification", async () => {
+      const baseUrl = "https://ctxs.ai/p/";
       const postUrl = `${baseUrl}${updatedPost.slug}`;
       const message = `Post metadata updated: "${updatedPost.title}"`;
 
@@ -159,21 +159,25 @@ export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     let url = new URL(req.url);
 
+    if (req.method === "HEAD") {
+      Response.json({});
+    }
+
     // Check API Secret authentication
-    const apiSecret = req.headers.get('X-API-Secret');
+    const apiSecret = req.headers.get("X-API-Secret");
     console.log({ apiSecret });
     console.log({ env: env.CF_API_SECRET });
     if (!apiSecret || apiSecret !== env.CF_API_SECRET) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (url.pathname.startsWith('/favicon')) {
+    if (url.pathname.startsWith("/favicon")) {
       return Response.json({}, { status: 404 });
     }
 
     // Handle GET request with instanceId
-    if (req.method === 'GET') {
-      let id = url.searchParams.get('instanceId');
+    if (req.method === "GET") {
+      let id = url.searchParams.get("instanceId");
       if (id) {
         let instance = await env.MY_WORKFLOW.get(id);
         return Response.json({
@@ -185,10 +189,10 @@ export default {
     // Handle POST request with JSON body
     // TODO: implement super simple jwt based bearer auth
     // port this to hono
-    if (req.method === 'POST') {
+    if (req.method === "POST") {
       try {
         const payload = await req.json();
-        console.log('http payload', payload);
+        console.log("http payload", payload);
         let instance = await env.MY_WORKFLOW.create({ params: payload });
         return Response.json({
           id: instance.id,
@@ -196,13 +200,13 @@ export default {
         });
       } catch (error) {
         return Response.json(
-          { error: 'Invalid JSON payload' },
+          { error: "Invalid JSON payload" },
           { status: 400 }
         );
       }
     }
 
     // Default case - return 405 Method Not Allowed
-    return Response.json({ error: 'Method not allowed' }, { status: 405 });
+    return Response.json({ error: "Method not allowed" }, { status: 405 });
   },
 };
