@@ -16,7 +16,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.6.1",
   "devDependencies": {
     "@types/pg": "^8.11.13",
     "drizzle-kit": "^0.30.6",
