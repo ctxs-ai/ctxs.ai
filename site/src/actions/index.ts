@@ -103,6 +103,7 @@ export const server = {
 
         // Generate title, description and tags using OpenAI
         const metadata = await generatePostMetadata(content);
+        console.log({metadata})
         const attributedUsers = inferAttributedUsers(input.credit || '');
         const displayId = generateDisplayId()
 
