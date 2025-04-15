@@ -1,7 +1,7 @@
 import { defineAction, ActionError } from 'astro:actions';
 import { getFrontmatter, splitFrontmatter } from '@/lib/utils';
 import { z } from 'astro:schema';
-import { OPENAI_API_KEY, PUSHOVER_APP_TOKEN, PUSHOVER_USER_KEY } from 'astro:env/server';
+import { OPENAI_API_KEY, CF_ENDPOINT, API_SECRET } from 'astro:env/server';
 import { db } from '@/lib/db';
 import { customAlphabet } from 'nanoid';
 import slugify from '@sindresorhus/slugify';
@@ -26,7 +26,7 @@ type PostMetadata = {
   slug: string;
 };
 
-const openai = createOpenAI({ apiKey: OPENAI_API_KEY })
+const openai = createOpenAI({ apiKey: OPENAI_API_KEY });
 
 type InferredAttributedUsers = {
   attributedGithubUser: string | null;
@@ -37,23 +37,31 @@ const inferAttributedUsers = (content: string): InferredAttributedUsers => {
   return {
     attributedGithubUser: inferGitHubUsername(content),
     attributedXUser: inferXUsername(content),
-  }
+  };
 };
 
 const inferSourceUrl = (credit: string): string | null => {
   const url = credit.match(/https?:\/\/[^\s]+/);
   return url ? url[0] : null;
-}
+};
 
 const generatePostMetadata = async (content: string): Promise<PostMetadata> => {
-  const contentPreview = content.slice(0, 2000)
+  const contentPreview = content.slice(0, 2000);
   const result = await generateObject<PostMetadata>({
     model: openai('gpt-4o-mini'),
     schema: z.object({
-      title: z.string().describe('A concise, descriptive title for the context window'),
+      title: z
+        .string()
+        .describe('A concise, descriptive title for the context window'),
       slug: z.string().describe('a 30 character or less keyword oriented slug'),
-      description: z.string().describe('A brief summary of what this context window might help with, 120 characters maximum.'),
-      tags: z.array(z.string()).describe(`Relevant tags for categorizing the post. `),
+      description: z
+        .string()
+        .describe(
+          'A brief summary of what this context window might help with, 120 characters maximum.'
+        ),
+      tags: z
+        .array(z.string())
+        .describe(`Relevant tags for categorizing the post. `),
     }),
     prompt: `You are managing a library of context windows and prompts.
      Please generate a title, description, and tags for the following post content:\n\n${contentPreview}.
@@ -73,49 +81,74 @@ export const server = {
     handler: async (input, context) => {
       if (context.locals.user?.id) {
         const { frontmatterString, content } = splitFrontmatter(input.content);
-        const frontmatter = yaml.load(frontmatterString, { schema: yaml.FAILSAFE_SCHEMA })
-        const user = await db.select({ githubUserName: User.githubUserName }).from(User).where(eq(User.id, context.locals.user.id))
-        const userSegment = user[0].githubUserName || context.locals.user.id
+        const frontmatter = yaml.load(frontmatterString, {
+          schema: yaml.FAILSAFE_SCHEMA,
+        });
+        const user = await db
+          .select({ githubUserName: User.githubUserName })
+          .from(User)
+          .where(eq(User.id, context.locals.user.id));
+        const userSegment = user[0].githubUserName || context.locals.user.id;
+
+        const displayId = generateDisplayId();
 
         // Generate title, description and tags using OpenAI
-        const metadata = await generatePostMetadata(content);
-        console.log({metadata})
         const attributedUsers = inferAttributedUsers(input.credit || '');
-        const displayId = generateDisplayId()
 
-        const [post] = await db.insert(Post).values({
-          title: metadata.title,
-          description: metadata.description,
-          displayId: displayId,
-          slug: slugify(metadata.slug) + '-' + displayId,
-          content,
-          provenance: input.credit || null,
-          frontmatter,
-          tags: metadata.tags,
-          createdAt: new Date(),
-          authorId: context.locals.user.id,
-          urn: `urn:ctxs:gh:${userSegment}:${displayId}`,
-          attributedGitHubUser: attributedUsers.attributedGithubUser,
-          attributedXUser: attributedUsers.attributedXUser,
-          sourceUrl: inferSourceUrl(input.credit || ''),
-        }).returning();
+        const [post] = await db
+          .insert(Post)
+          .values({
+            displayId: displayId,
+            content,
+            provenance: input.credit || null,
+            frontmatter,
+            createdAt: new Date(),
+            authorId: context.locals.user.id,
+            urn: `urn:ctxs:gh:${userSegment}:${displayId}`,
+            attributedGitHubUser: attributedUsers.attributedGithubUser,
+            attributedXUser: attributedUsers.attributedXUser,
+            sourceUrl: inferSourceUrl(input.credit || ''),
+          })
+          .returning();
+
+        console.log('post', post);
 
         await sendPushoverNotification(
-          `New post created: ${metadata.title} by ${userSegment}`,
+          `New post created by ${userSegment}`,
           `https://ctxs.ai/weekly/${post.slug}`
         );
 
-        console.log('createPost', input)
-        console.log('createdPost', post)
+        const workflowInstance = await triggerWorkflow(
+          `urn:ctxs:gh:${userSegment}:${displayId}`
+        );
+        console.log('workflowInstance', workflowInstance);
 
-        return { post: { ...post, slug: post.displayId } };
+        console.log('apiurl', `${CF_ENDPOINT}/`);
+        const apiReq = await fetch(`${CF_ENDPOINT}/`, {
+          method: 'POST',
+          headers: {
+            'X-API-Secret': API_SECRET,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ postUrn: post.urn }),
+        });
+
+        console.log('apiReq', apiReq);
+
+        console.log('createPost', input);
+        console.log('createdPost', post);
+
+        return {
+          post: { ...post, slug: post.displayId },
+          workflow: workflowInstance,
+        };
       } else {
         throw new ActionError({
-          code: "UNAUTHORIZED",
-          message: "User must be logged in.",
+          code: 'UNAUTHORIZED',
+          message: 'User must be logged in.',
         });
       }
-    }
+    },
   }),
 
   upvotePost: defineAction({
@@ -125,8 +158,8 @@ export const server = {
     handler: async (input, context) => {
       if (!context.locals.user?.id) {
         throw new ActionError({
-          code: "UNAUTHORIZED",
-          message: "User must be logged in to upvote.",
+          code: 'UNAUTHORIZED',
+          message: 'User must be logged in to upvote.',
         });
       }
 

@@ -41,6 +41,7 @@
     "astro": "^5.2.0",
     "better-auth": "^1.2.4",
     "class-variance-authority": "^0.7.1",
+    "cloudflare": "^4.2.0",
     "clsx": "^2.1.1",
     "copy-to-clipboard": "^3.3.3",
     "dotenv": "^16.4.7",
@@ -67,7 +68,6 @@
     "drizzle-kit": "^0.30.5",
     "glob": "^11.0.1",
     "gray-matter": "^4.0.3",
-    "tailwindcss-view-transitions": "^0.1.1",
-    "wrangler": "^3.109.3"
+    "tailwindcss-view-transitions": "^0.1.1"
   }
 }
