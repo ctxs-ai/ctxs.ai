@@ -3,7 +3,7 @@ import type { GetStaticPaths } from "astro";
 import Layout from "@/layouts/Layout.astro";
 import Page from "@/components/Page.astro";
 import ContextView from "@/components/context.astro";
-import { Post, Vote, User } from "@/db/schema";
+import { Post, Vote, User } from "@ctxs/db";
 import { db } from "@/lib/db";
 import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
 import { eq, sql, and, or } from "drizzle-orm";

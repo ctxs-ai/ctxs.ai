@@ -1,12 +1,12 @@
 import { defineAction, ActionError } from 'astro:actions';
 import { getFrontmatter, splitFrontmatter } from '@/lib/utils';
 import { z } from 'astro:schema';
-import { OPENAI_API_KEY, CF_ENDPOINT, API_SECRET } from 'astro:env/server';
+import { OPENAI_API_KEY } from 'astro:env/server';
 import { db } from '@/lib/db';
 import { customAlphabet } from 'nanoid';
 import slugify from '@sindresorhus/slugify';
 import { availableTags } from '@/lib/constants';
-import { Post, User, Vote } from '@/db/schema';
+import { Post, User, Vote } from '@ctxs/db';
 import { generateObject } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 import { eq } from 'drizzle-orm';
@@ -123,15 +123,15 @@ export const server = {
         );
         console.log('workflowInstance', workflowInstance);
 
-        console.log('apiurl', `${CF_ENDPOINT}/`);
-        const apiReq = await fetch(`${CF_ENDPOINT}/`, {
-          method: 'POST',
-          headers: {
-            'X-API-Secret': API_SECRET,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ postUrn: post.urn }),
-        });
+        // console.log('apiurl', `${CF_ENDPOINT}/`);
+        // const apiReq = await fetch(`${CF_ENDPOINT}/`, {
+        //   method: 'POST',
+        //   headers: {
+        //     'X-API-Secret': API_SECRET,
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: JSON.stringify({ postUrn: post.urn }),
+        // });
 
         console.log('apiReq', apiReq);
 

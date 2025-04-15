@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { Account, Session, User, Verification } from "@/db/schema";
+import { Account, Session, User, Verification } from "@ctxs/db";
 import { createAuthMiddleware } from "better-auth/api";
 import { BETTER_AUTH_URL, BETTER_AUTH_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "astro:env/server";
 import { db } from "@/lib/db";

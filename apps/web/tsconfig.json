@@ -9,6 +9,7 @@
     "dist"
   ],
   "compilerOptions": {
+    "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
       "@/*": [

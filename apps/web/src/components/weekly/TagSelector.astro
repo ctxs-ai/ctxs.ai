@@ -1,7 +1,7 @@
 ---
 import { ContextTag } from "@/components/context-tags";
 import { db } from "@/lib/db";
-import { Post } from "@/db/schema";
+import { Post } from "@ctxs/db";
 import { groupTagsByPrefix, groupOrder } from "@/lib/tags";
 
 const tags = await db

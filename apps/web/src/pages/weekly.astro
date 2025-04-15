@@ -1,14 +1,14 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import { Post, Vote, User } from "@/db/schema";
-import { db } from "@/lib/db";
-import { eq, sql, isNotNull, arrayContains, and } from "drizzle-orm";
-import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";
-import WeeklyHero from "@/components/weekly/WeeklyHero.astro";
-import TagSelector from "@/components/weekly/TagSelector.astro";
-import PostComponent from "@/components/weekly/Post.astro";
+import Layout from '../layouts/Layout.astro';
+import { Post, User, Vote } from '@ctxs/db';
+import { db } from '@/lib/db';
+import { eq, sql, isNotNull, arrayContains, and } from 'drizzle-orm';
+import WeeklyHeader from '@/components/weekly/WeeklyHeader.astro';
+import WeeklyHero from '@/components/weekly/WeeklyHero.astro';
+import TagSelector from '@/components/weekly/TagSelector.astro';
+import PostComponent from '@/components/weekly/Post.astro';
 
-const selectedTag = Astro.url.searchParams.get("tag");
+const selectedTag = Astro.url.searchParams.get('tag');
 const userId = Astro.locals.user?.id;
 
 type PostWithVotes = {
@@ -44,7 +44,7 @@ const posts = (await db
     sourceUrl: Post.sourceUrl,
     voteCount:
       sql<string>`cast(count(${Vote.id}) + ${Post.voteBump} as int)`.as(
-        "vote_count",
+        'vote_count'
       ),
     isUpvoted: sql<boolean>`EXISTS (
       SELECT 1 FROM ${Vote} v
@@ -83,26 +83,26 @@ const postsByWeek = posts.reduce(
     acc[weekKey].push(post);
     return acc;
   },
-  {},
+  {}
 );
 
 // Sort weeks in descending order
 const sortedWeeks = Object.entries(postsByWeek).sort(
-  (a, b) => new Date(b[0]).getTime() - new Date(a[0]).getTime(),
+  (a, b) => new Date(b[0]).getTime() - new Date(a[0]).getTime()
 );
 
 const params = {
-  id: "e196lx95sb92jep",
-  title: "Every week, vote on the best prompts and context windows",
+  id: 'e196lx95sb92jep',
+  title: 'Every week, vote on the best prompts and context windows',
 };
 
 const queryString = new URLSearchParams(params).toString();
 const ogImage = `https://dynogee.com/gen?${queryString}`;
 
 const meta = {
-  title: "ctxs.ai context registry",
+  title: 'ctxs.ai context registry',
   description:
-    "An open-source, community-curated registry of contexts for use with LLMs",
+    'An open-source, community-curated registry of contexts for use with LLMs',
   ogImage: ogImage,
 };
 
@@ -125,11 +125,11 @@ const uniqueTags = [...new Set(allTags)];
         sortedWeeks.map(([weekStart, weekPosts]: [string, PostWithVotes[]]) => (
           <div>
             <h3 class="text-lg font-semibold mb-4">
-              Week of{" "}
-              {new Date(weekStart).toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
+              Week of{' '}
+              {new Date(weekStart).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
               })}
             </h3>
             <div class="space-y-4">

@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { Post, Vote, User } from "@/db/schema";
+import { Post, Vote, User } from "@ctxs/db";
 import { db } from "@/lib/db";
 import { eq, sql, isNotNull } from "drizzle-orm";
 import WeeklyHeader from "@/components/weekly/WeeklyHeader.astro";

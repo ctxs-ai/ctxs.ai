@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 import copy from "copy-to-clipboard";
 import { useState } from "react";
-import { Post } from "@/db/schema";
+import { Post } from "@ctxs/db";
 
 interface ContextViewProps {
   context: CollectionEntry<"contexts"> | null;

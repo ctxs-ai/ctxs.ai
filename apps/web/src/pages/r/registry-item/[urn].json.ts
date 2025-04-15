@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { db } from '@/lib/db';
-import { Post } from '@/db/schema';
+import { Post } from '@ctxs/db';
 import { eq } from 'drizzle-orm';
 
 export const GET: APIRoute = async ({ params }) => {
@@ -11,7 +11,10 @@ export const GET: APIRoute = async ({ params }) => {
   }
 
   try {
-    const posts = await db.select().from(Post).where(eq(Post.urn, urn as string));
+    const posts = await db
+      .select()
+      .from(Post)
+      .where(eq(Post.urn, urn as string));
     const post = posts[0];
 
     if (!post || !post.content) {
@@ -23,7 +26,7 @@ export const GET: APIRoute = async ({ params }) => {
 
     // Construct response object matching registry-item schema
     const response = {
-      "$schema": "https://ctxs.ai/schema/registry-item.json",
+      $schema: 'https://ctxs.ai/schema/registry-item.json',
       name: post.displayId,
       type: 'registry:file',
       author: author,
@@ -32,12 +35,14 @@ export const GET: APIRoute = async ({ params }) => {
       dependencies: [],
       devDependencies: [],
       registryDependencies: [],
-      files: [{
-        "path": `/r/registry-item/${post.urn}.json`,
-        "content": post.content,
-        "type": "registry:file",
-        "target": post.targetFile || `ctxs/${post.slug}.md`
-      }]
+      files: [
+        {
+          path: `/r/registry-item/${post.urn}.json`,
+          content: post.content,
+          type: 'registry:file',
+          target: post.targetFile || `ctxs/${post.slug}.md`,
+        },
+      ],
     };
 
     return new Response(JSON.stringify(response), {
@@ -56,6 +61,6 @@ export async function getStaticPaths() {
   const posts = await db.select().from(Post);
 
   return posts.map((post: typeof Post.$inferSelect) => ({
-    params: { urn: post.urn }
+    params: { urn: post.urn },
   }));
-} 
+}

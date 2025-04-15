@@ -1,7 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { availableTags } from "@/lib/constants";
-import { Post } from "@/db/schema";
+import { Post } from "@ctxs/db";
 import { db } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import { Button } from "@/components/ui/button";
