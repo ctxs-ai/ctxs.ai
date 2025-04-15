@@ -12,7 +12,12 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { eq } from 'drizzle-orm';
 import { inferGitHubUsername, inferXUsername } from '@/lib/utils';
 import yaml from 'js-yaml';
-const generateDisplayId = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz', 6);
+import { sendPushoverNotification } from '@/lib/pushover';
+
+const generateDisplayId = customAlphabet(
+  '0123456789abcdefghijklmnopqrstuvwxyz',
+  6
+);
 
 type PostMetadata = {
   title: string;
@@ -57,35 +62,6 @@ const generatePostMetadata = async (content: string): Promise<PostMetadata> => {
   });
 
   return result.object;
-};
-
-const sendPushoverNotification = async (message: string, url: string) => {
-  if (!PUSHOVER_APP_TOKEN || !PUSHOVER_USER_KEY) {
-    console.log('Pushover credentials not configured, skipping notification');
-    return;
-  }
-
-  try {
-    const formData = new URLSearchParams();
-    formData.append('token', PUSHOVER_APP_TOKEN);
-    formData.append('user', PUSHOVER_USER_KEY);
-    formData.append('message', message);
-    formData.append('url', url);
-
-    const response = await fetch('https://api.pushover.net/1/messages.json', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: formData,
-    });
-
-    if (!response.ok) {
-      console.error('Failed to send Pushover notification:', await response.text());
-    }
-  } catch (error) {
-    console.error('Error sending Pushover notification:', error);
-  }
 };
 
 export const server = {
