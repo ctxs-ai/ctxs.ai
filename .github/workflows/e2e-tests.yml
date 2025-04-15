@@ -14,9 +14,6 @@ jobs:
     name: 'Playwright Tests'
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    defaults:
-      run:
-
     services:
       postgres:
         image: postgres:15
